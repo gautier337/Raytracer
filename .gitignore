@@ -1,0 +1,12 @@
+Makefile
+CMakeCache.txt
+cmake-build-debug
+CMakeFiles
+raytracer
+build
+.idea
+.vscode
+*.so
+*.cmake
+vgcore.*
+valgrind.log
