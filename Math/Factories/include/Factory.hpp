@@ -7,6 +7,7 @@
 
 #pragma once
 #include "IFactory.hpp"
+#include "IVector3D.hpp"
 
 namespace Math {
     class Factory : public IFactory {

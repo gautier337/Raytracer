@@ -13,6 +13,10 @@ namespace Maths {
             Point3D();
             ~Point3D();
             Point3D(double x, double y, double z);
+            Point3D(const Point3D &point);
+            Point3D(Point3D &&point) noexcept;
+            Point3D &operator=(const Point3D &point);
+            Point3D &operator=(Point3D &&point) noexcept;
 
         protected:
         private:
