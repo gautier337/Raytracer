@@ -8,10 +8,16 @@ include_directories(
         Math/Factories/include
         Math/include
         Math/Vectors/include
+        Math/Point3D/include
+        Raytracer/Ray/include
+        Raytracer/Sphere/include
+        Raytracer/Rectangle3D/include
+        Raytracer/Camera/include
 )
 
 set(EXECUTABLE_NAME "raytracer")
 set(MATH_DIRECTORY Math/)
+set(RAYTRACER_DIRECTORY Raytracer/)
 
 set(SRC_MAIN
         src/main.cpp
@@ -28,6 +34,16 @@ set(MATH_DIRECTORY Math/)
 set(SRC_MATH
         Factories/src/Factory.cpp
         Vectors/src/Vector3D.cpp
+        Point3D/src/Point3D.cpp
+)
+
+# Raytracer Sources
+set(RAYTRACER_DIRECTORY Raytracer/)
+set(SRC_RAYTRACER
+        Ray/src/Ray.cpp
+        Sphere/src/Sphere.cpp
+        Rectangle3D/src/Rectangle3D.cpp
+        Camera/src/Camera.cpp
 )
 
 set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")
@@ -36,9 +52,10 @@ set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")
 list(TRANSFORM SRC_MAIN PREPEND ${CORE_DIRECTORY})
 list(TRANSFORM SRC_CORE PREPEND ${CORE_DIRECTORY})
 list(TRANSFORM SRC_MATH PREPEND ${MATH_DIRECTORY})
+list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
-add_executable(${EXECUTABLE_NAME} ${SRC_MAIN} ${SRC_CORE} ${SRC_MATH})
+add_executable(${EXECUTABLE_NAME} ${SRC_MAIN} ${SRC_CORE} ${SRC_MATH} ${SRC_RAYTRACER})
 
 target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS})

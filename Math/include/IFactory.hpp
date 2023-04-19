@@ -8,14 +8,14 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "IVector3D.hpp"
+#include "Vector3D.hpp"
 
 namespace Math {
     class IFactory {
         public:
             virtual ~IFactory() = default;
-            virtual std::unique_ptr<Math::IVector3D> createVector3D() = 0;
-            virtual std::unique_ptr<Math::IVector3D> createVector3D(
+            virtual std::unique_ptr<Math::Vector3D> createVector3D() = 0;
+            virtual std::unique_ptr<Math::Vector3D> createVector3D(
                 float x,
                 float y,
                 float z

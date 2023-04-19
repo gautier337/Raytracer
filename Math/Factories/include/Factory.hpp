@@ -7,15 +7,15 @@
 
 #pragma once
 #include "IFactory.hpp"
-#include "IVector3D.hpp"
+#include "Vector3D.hpp"
 
 namespace Math {
     class Factory : public IFactory {
         public:
             Factory() = default;
             ~Factory() override;
-            std::unique_ptr<Math::IVector3D> createVector3D() override;
-            std::unique_ptr<Math::IVector3D> createVector3D(
+            std::unique_ptr<Math::Vector3D> createVector3D() override;
+            std::unique_ptr<Math::Vector3D> createVector3D(
                 float x,
                 float y,
                 float z

@@ -12,12 +12,12 @@ Math::Factory::~Factory()
 {
 }
 
-std::unique_ptr<Math::IVector3D> Math::Factory::createVector3D()
+std::unique_ptr<Math::Vector3D> Math::Factory::createVector3D()
 {
     return std::make_unique<Math::Vector3D>();
 }
 
-std::unique_ptr<Math::IVector3D> Math::Factory::createVector3D(
+std::unique_ptr<Math::Vector3D> Math::Factory::createVector3D(
     float x,
     float y,
     float z

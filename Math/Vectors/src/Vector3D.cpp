@@ -30,7 +30,7 @@ Math::Vector3D::Vector3D(Math::Vector3D &&vector) : x(vector.x), y(vector.y), z(
 {
 }
 
-Math::IVector3D &Math::Vector3D::operator=(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator=(const Math::Vector3D &vector)
 {
     this->x = vector.getX();
     this->y = vector.getY();
@@ -38,7 +38,7 @@ Math::IVector3D &Math::Vector3D::operator=(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator=(Math::IVector3D &&vector)
+Math::Vector3D &Math::Vector3D::operator=(Math::Vector3D &&vector)
 {
     this->x = vector.getX();
     this->y = vector.getY();
@@ -46,7 +46,7 @@ Math::IVector3D &Math::Vector3D::operator=(Math::IVector3D &&vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator+=(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator+=(const Math::Vector3D &vector)
 {
     this->x += vector.getX();
     this->y += vector.getY();
@@ -54,7 +54,7 @@ Math::IVector3D &Math::Vector3D::operator+=(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator-=(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator-=(const Math::Vector3D &vector)
 {
     this->x -= vector.getX();
     this->y -= vector.getY();
@@ -62,7 +62,7 @@ Math::IVector3D &Math::Vector3D::operator-=(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator*=(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator*=(const Math::Vector3D &vector)
 {
     this->x *= vector.getX();
     this->y *= vector.getY();
@@ -70,7 +70,7 @@ Math::IVector3D &Math::Vector3D::operator*=(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator/=(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator/=(const Math::Vector3D &vector)
 {
     this->x /= vector.getX();
     this->y /= vector.getY();
@@ -78,7 +78,7 @@ Math::IVector3D &Math::Vector3D::operator/=(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator+(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator+(const Math::Vector3D &vector)
 {
     this->x += vector.getX();
     this->y += vector.getY();
@@ -86,7 +86,7 @@ Math::IVector3D &Math::Vector3D::operator+(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator-(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator-(const Math::Vector3D &vector)
 {
     this->x -= vector.getX();
     this->y -= vector.getY();
@@ -94,7 +94,7 @@ Math::IVector3D &Math::Vector3D::operator-(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator*(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator*(const Math::Vector3D &vector)
 {
     this->x *= vector.getX();
     this->y *= vector.getY();
@@ -102,7 +102,7 @@ Math::IVector3D &Math::Vector3D::operator*(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator/(const Math::IVector3D &vector)
+Math::Vector3D &Math::Vector3D::operator/(const Math::Vector3D &vector)
 {
     this->x /= vector.getX();
     this->y /= vector.getY();
@@ -110,7 +110,7 @@ Math::IVector3D &Math::Vector3D::operator/(const Math::IVector3D &vector)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator+=(double value)
+Math::Vector3D &Math::Vector3D::operator+=(double value)
 {
     this->x += value;
     this->y += value;
@@ -118,7 +118,7 @@ Math::IVector3D &Math::Vector3D::operator+=(double value)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator-=(double value)
+Math::Vector3D &Math::Vector3D::operator-=(double value)
 {
     this->x -= value;
     this->y -= value;
@@ -126,7 +126,7 @@ Math::IVector3D &Math::Vector3D::operator-=(double value)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator*=(double value)
+Math::Vector3D &Math::Vector3D::operator*=(double value)
 {
     this->x *= value;
     this->y *= value;
@@ -134,7 +134,7 @@ Math::IVector3D &Math::Vector3D::operator*=(double value)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator/=(double value)
+Math::Vector3D &Math::Vector3D::operator/=(double value)
 {
     this->x /= value;
     this->y /= value;
@@ -142,7 +142,7 @@ Math::IVector3D &Math::Vector3D::operator/=(double value)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator+(double value)
+Math::Vector3D &Math::Vector3D::operator+(double value)
 {
     this->x += value;
     this->y += value;
@@ -150,7 +150,7 @@ Math::IVector3D &Math::Vector3D::operator+(double value)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator-(double value)
+Math::Vector3D &Math::Vector3D::operator-(double value)
 {
     this->x -= value;
     this->y -= value;
@@ -158,7 +158,7 @@ Math::IVector3D &Math::Vector3D::operator-(double value)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator*(double value)
+Math::Vector3D &Math::Vector3D::operator*(double value)
 {
     this->x *= value;
     this->y *= value;
@@ -166,7 +166,7 @@ Math::IVector3D &Math::Vector3D::operator*(double value)
     return *this;
 }
 
-Math::IVector3D &Math::Vector3D::operator/(double value)
+Math::Vector3D &Math::Vector3D::operator/(double value)
 {
     this->x /= value;
     this->y /= value;
@@ -179,7 +179,7 @@ double Math::Vector3D::length()
     return sqrt(pow(this->x, 2) + pow(this->y, 2) + pow(this->z, 2));
 }
 
-double Math::Vector3D::dot(const Math::IVector3D &vector)
+double Math::Vector3D::dot(const Math::Vector3D &vector)
 {
     return this->x * vector.getX() + this->y * vector.getY() + this->z * vector.getZ();
 }
