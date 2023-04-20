@@ -3,12 +3,17 @@ project(raytracer)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
+find_package(SFML 2.5
+        COMPONENTS
+        system window graphics audio REQUIRED)
+include_directories(${SFML_INCLUDE_DIR})
+
 include_directories(
         Core/include
         Math/Factories/include
         Math/include
-        Math/Vectors/include
         Math/Point3D/include
+        Math/Vectors/include
         Raytracer/Ray/include
         Raytracer/Sphere/include
         Raytracer/Rectangle3D/include
@@ -33,8 +38,8 @@ set(SRC_CORE
 set(MATH_DIRECTORY Math/)
 set(SRC_MATH
         Factories/src/Factory.cpp
-        Vectors/src/Vector3D.cpp
         Point3D/src/Point3D.cpp
+        Vectors/src/Vector3D.cpp
 )
 
 # Raytracer Sources
@@ -56,6 +61,8 @@ list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
+
 add_executable(${EXECUTABLE_NAME} ${SRC_MAIN} ${SRC_CORE} ${SRC_MATH} ${SRC_RAYTRACER})
 
 target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS})
+target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)

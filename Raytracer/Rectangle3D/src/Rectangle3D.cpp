@@ -10,8 +10,6 @@
 
 RayTracer::Rectangle3D::Rectangle3D() : origin(0, 0, 0), bottom_side(1, 0, 0), left_side(0, 1, 0)
 {
-    std::cout << "origin: " << this->origin.getX() << " " << this->origin.getY() << " " << this->origin.getZ() << std::endl;
-    std::cout << "bottom_side: " << this->bottom_side.getX() << " " << this->bottom_side.getY() << " " << this->bottom_side.getZ() << std::endl;
 }
 
 RayTracer::Rectangle3D::~Rectangle3D()
@@ -46,10 +44,39 @@ RayTracer::Rectangle3D &RayTracer::Rectangle3D::operator=(Rectangle3D &&rectangl
     return *this;
 }
 
+bool RayTracer::Rectangle3D::hits(const Ray ray)
+{
+    Math::Vector3D w(this->origin.getX() - ray.getOrigin().getX(), this->origin.getY() - ray.getOrigin().getY(), this->origin.getZ() - ray.getOrigin().getZ());
+    double a = w.dot(ray.getDirection());
+    double b = ray.getDirection().dot(ray.getDirection());
+    double r = a / b;
+
+    if (r < 0)
+        return false;
+
+    Math::Point3D p = ray.getOrigin() + (ray.getDirection() * r);
+    Math::Vector3D d(p.getX() - this->origin.getX(), p.getY() - this->origin.getY(), p.getZ() - this->origin.getZ());
+
+    double ddota = d.dot(this->bottom_side);
+    if (ddota < 0 || ddota > this->bottom_side.dot(this->bottom_side))
+        return false;
+
+    double ddotb = d.dot(this->left_side);
+    if (ddotb < 0 || ddotb > this->left_side.dot(this->left_side))
+        return false;
+
+    return true;
+}
+
 Math::Point3D RayTracer::Rectangle3D::pointAt(double u, double v)
 {
     if (u < 0 || u > 1 || v < 0 || v > 1)
         throw std::invalid_argument("u and v must be between 0 and 1");
 
     return this->origin + (this->bottom_side * u) + (this->left_side * v);
+}
+
+void RayTracer::Rectangle3D::translate(Math::Vector3D translation)
+{
+    this->origin = this->origin + translation;
 }

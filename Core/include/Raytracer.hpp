@@ -11,6 +11,9 @@
 #include <fcntl.h>
 #include <iostream>
 #include <unistd.h>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 
 // Macros
 #define SUCCESS 0

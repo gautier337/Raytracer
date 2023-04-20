@@ -5,7 +5,6 @@
 ** Sphere
 */
 
-
 #pragma once
 #include "Point3D.hpp"
 #include "Ray.hpp"
@@ -21,6 +20,10 @@ namespace RayTracer {
             Sphere &operator=(const Sphere &sphere);
             Sphere &operator=(Sphere &&sphere);
             bool hits(Ray ray);
+            void translate(Math::Vector3D translation);
+            void rotateX(double angle);
+            void rotateY(double angle);
+            void rotateZ(double angle);
 
         protected:
         private:

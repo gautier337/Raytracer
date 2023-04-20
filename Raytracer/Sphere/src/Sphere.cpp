@@ -6,6 +6,7 @@
 */
 
 #include "Sphere.hpp"
+#include <cmath>
 
 RayTracer::Sphere::Sphere() : center(), radius(0)
 {
@@ -40,19 +41,52 @@ RayTracer::Sphere &RayTracer::Sphere::operator=(Sphere &&sphere)
     this->radius = sphere.radius;
     return *this;
 }
-#include <iostream>
+
 bool RayTracer::Sphere::hits(Ray ray)
 {
     Math::Vector3D oc((ray.getOrigin() - this->center).getX(), (ray.getOrigin() - this->center).getY(), (ray.getOrigin() - this->center).getZ());
-    //std::cout << "---------------DEBUG------------" << std::endl;
-    //std::cout << "|" << "Ray origin: {x: " << ray.getOrigin().getX() << " y: " << ray.getOrigin().getY() << " z: " << ray.getOrigin().getZ() << "}" << std::endl;
-    //std::cout << "|" << "Ray direction: {x: " << ray.getDirection().getX() << " y: " << ray.getDirection().getY() << " z: " << ray.getDirection().getZ() << "}" << std::endl;
-    //std::cout << "|" << "OC: {x: " << oc.getX() << " y: " << oc.getY() << " z: " << oc.getZ() << "}" << std::endl;
-    //std::cout << "|--------------------------------" << std::endl;
 
     double a = ray.getDirection().dot(ray.getDirection());
     double b = 2.0 * oc.dot(ray.getDirection());
     double c = oc.dot(oc) - this->radius * this->radius;
     double discriminant = b * b - 4 * a * c;
     return (discriminant > 0);
+}
+
+void RayTracer::Sphere::translate(Math::Vector3D vector)
+{
+    this->center = this->center + vector;
+}
+
+void RayTracer::Sphere::rotateX(double angle)
+{
+    double radians = angle * M_PI / 180.0;
+    double cosA = cos(radians);
+    double sinA = sin(radians);
+    double yPrime = cosA * this->center.getY() - sinA * this->center.getZ();
+    double zPrime = sinA * this->center.getY() + cosA * this->center.getZ();
+    this->center.setY(yPrime);
+    this->center.setZ(zPrime);
+}
+
+void RayTracer::Sphere::rotateY(double angle)
+{
+    double radians = angle * M_PI / 180.0;
+    double cosA = cos(radians);
+    double sinA = sin(radians);
+    double xPrime = cosA * this->center.getX() + sinA * this->center.getZ();
+    double zPrime = -sinA * this->center.getX() + cosA * this->center.getZ();
+    this->center.setX(xPrime);
+    this->center.setZ(zPrime);
+}
+
+void RayTracer::Sphere::rotateZ(double angle)
+{
+    double radians = angle * M_PI / 180.0;
+    double cosA = cos(radians);
+    double sinA = sin(radians);
+    double xPrime = cosA * this->center.getX() - sinA * this->center.getY();
+    double yPrime = sinA * this->center.getX() + cosA * this->center.getY();
+    this->center.setX(xPrime);
+    this->center.setY(yPrime);
 }

@@ -20,6 +20,8 @@ namespace RayTracer {
             Camera &operator=(const Camera &camera);
             Camera &operator=(Camera &&camera);
             Ray ray(double u, double v);
+            void translate(Math::Vector3D translation);
+            void rotate(double x, double y);
 
         protected:
         private:

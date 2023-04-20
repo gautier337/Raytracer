@@ -7,6 +7,7 @@
 
 #pragma once
 #include "Point3D.hpp"
+#include "Ray.hpp"
 
 namespace RayTracer {
     class Rectangle3D {
@@ -18,7 +19,9 @@ namespace RayTracer {
             Rectangle3D(Rectangle3D &&rectangle);
             Rectangle3D &operator=(const Rectangle3D &rectangle);
             Rectangle3D &operator=(Rectangle3D &&rectangle);
+            bool hits(Ray ray);
             Math::Point3D pointAt(double u, double v);
+            void translate(Math::Vector3D translation);
 
         protected:
         private:

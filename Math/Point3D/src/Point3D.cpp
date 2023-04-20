@@ -113,3 +113,18 @@ double Math::Point3D::getZ() const
 {
     return this->z;
 }
+
+void Math::Point3D::setX(double x)
+{
+    this->x = x;
+}
+
+void Math::Point3D::setY(double y)
+{
+    this->y = y;
+}
+
+void Math::Point3D::setZ(double z)
+{
+    this->z = z;
+}
