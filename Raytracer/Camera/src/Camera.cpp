@@ -7,7 +7,7 @@
 
 #include "Camera.hpp"
 
-RayTracer::Camera::Camera() : origin(), screen()
+RayTracer::Camera::Camera() : origin(), screen(Math::Point3D(0, 0, -1), Math::Vector3D(1, 0, 0), Math::Vector3D(0, 1, 0))
 {
 }
 
@@ -44,6 +44,6 @@ RayTracer::Camera &RayTracer::Camera::operator=(Camera &&camera)
 RayTracer::Ray RayTracer::Camera::ray(double u, double v)
 {
     Math::Point3D point = this->screen.pointAt(u, v);
-    Math::Vector3D direction((point - this->origin).getX(), (point - this->origin).getY(), (point - this->origin).getZ());
+    Math::Vector3D direction((point - this->origin).getX(), (point - this->origin).getY(), ((point - this->origin).getZ()));
     return Ray(this->origin, direction);
 }

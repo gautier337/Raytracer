@@ -16,24 +16,21 @@
 
 int raytracer(std::string const &sceneFile)
 {
-    /*Math::Factory factory;
-    std::unique_ptr<Math::IVector3D> vector = factory.createVector3D(1, 2, 3);
-    std::unique_ptr<Math::IVector3D> vector2 = factory.createVector3D(4, 5, 6);
-    std::cout << vector->length() << std::endl;
-    *vector += *vector2;
-    std::cout << vector->length() << std::endl;*/
-
     RayTracer::Camera cam;
-    RayTracer::Sphere s(Math::Point3D(0, 0, -1), 0.5);
-    for (float x = 0; x < 1; x += 0.1) {
-        for (float y = 0; y < 1; y += 0.1) {
+    RayTracer::Sphere s(Math::Point3D(5, 5, -10), 3);
+
+    std::cout << "P3" << std::endl;
+    std::cout << "100 100" << std::endl;
+    std::cout << "255" << std::endl;
+    for (double y = 0; y < 1; y += 0.010) {
+        for (double x = 0; x < 1; x += 0.010) {
             double u = x;
             double v = y;
-            RayTracer::Ray r = cam.ray (u, v);
+            RayTracer::Ray r = cam.ray(u, v);
             if (s.hits(r)) {
-                std::cout << "X";
+                std::cout << "255 0 0" << std::endl;
             } else {
-                std::cout << " ";
+                std::cout << "0 0 255" << std::endl;
             }
         }
     }

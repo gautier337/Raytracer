@@ -10,3 +10,4 @@ build
 *.cmake
 vgcore.*
 valgrind.log
+*.ppm

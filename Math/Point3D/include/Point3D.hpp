@@ -19,12 +19,17 @@ namespace Math {
             Point3D &operator=(const Point3D &point);
             Point3D &operator=(Point3D &&point);
             Point3D &operator+=(const Vector3D &vector);
-            Point3D &operator+(const Vector3D &vector);
+            Point3D operator+(const Vector3D &vector);
+            Point3D &operator-=(const Vector3D &vector);
+            Point3D operator-(const Vector3D &vector);
+            Point3D &operator+=(const Point3D &point);
+            Point3D operator+(const Point3D &point);
             Point3D &operator-=(const Point3D &point);
-            Point3D &operator-(const Point3D &point);
+            Point3D operator-(const Point3D &point);
             double getX() const;
             double getY() const;
             double getZ() const;
+
         protected:
         private:
             double x;

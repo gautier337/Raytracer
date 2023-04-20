@@ -40,10 +40,16 @@ RayTracer::Sphere &RayTracer::Sphere::operator=(Sphere &&sphere)
     this->radius = sphere.radius;
     return *this;
 }
-
+#include <iostream>
 bool RayTracer::Sphere::hits(Ray ray)
 {
     Math::Vector3D oc((ray.getOrigin() - this->center).getX(), (ray.getOrigin() - this->center).getY(), (ray.getOrigin() - this->center).getZ());
+    //std::cout << "---------------DEBUG------------" << std::endl;
+    //std::cout << "|" << "Ray origin: {x: " << ray.getOrigin().getX() << " y: " << ray.getOrigin().getY() << " z: " << ray.getOrigin().getZ() << "}" << std::endl;
+    //std::cout << "|" << "Ray direction: {x: " << ray.getDirection().getX() << " y: " << ray.getDirection().getY() << " z: " << ray.getDirection().getZ() << "}" << std::endl;
+    //std::cout << "|" << "OC: {x: " << oc.getX() << " y: " << oc.getY() << " z: " << oc.getZ() << "}" << std::endl;
+    //std::cout << "|--------------------------------" << std::endl;
+
     double a = ray.getDirection().dot(ray.getDirection());
     double b = 2.0 * oc.dot(ray.getDirection());
     double c = oc.dot(oc) - this->radius * this->radius;

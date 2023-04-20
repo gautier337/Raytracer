@@ -29,10 +29,10 @@ namespace Math {
             Vector3D &operator-=(double value);
             Vector3D &operator*=(double value);
             Vector3D &operator/=(double value);
-            Vector3D &operator+(double value);
-            Vector3D &operator-(double value);
-            Vector3D &operator*(double value);
-            Vector3D &operator/(double value);
+            Vector3D operator+(double value);
+            Vector3D operator-(double value);
+            Vector3D operator*(double value);
+            Vector3D operator/(double value);
             double length();
             double dot(const Vector3D &vector);
             double getX() const;

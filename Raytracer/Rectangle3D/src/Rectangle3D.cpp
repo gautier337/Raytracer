@@ -6,9 +6,12 @@
 */
 
 #include "Rectangle3D.hpp"
+#include <iostream>
 
-RayTracer::Rectangle3D::Rectangle3D() : origin(), bottom_side(), left_side()
+RayTracer::Rectangle3D::Rectangle3D() : origin(0, 0, 0), bottom_side(1, 0, 0), left_side(0, 1, 0)
 {
+    std::cout << "origin: " << this->origin.getX() << " " << this->origin.getY() << " " << this->origin.getZ() << std::endl;
+    std::cout << "bottom_side: " << this->bottom_side.getX() << " " << this->bottom_side.getY() << " " << this->bottom_side.getZ() << std::endl;
 }
 
 RayTracer::Rectangle3D::~Rectangle3D()
@@ -46,7 +49,7 @@ RayTracer::Rectangle3D &RayTracer::Rectangle3D::operator=(Rectangle3D &&rectangl
 Math::Point3D RayTracer::Rectangle3D::pointAt(double u, double v)
 {
     if (u < 0 || u > 1 || v < 0 || v > 1)
-        return Math::Point3D();
-        //throw std::invalid_argument("u and v must be between 0 and 1");
+        throw std::invalid_argument("u and v must be between 0 and 1");
+
     return this->origin + (this->bottom_side * u) + (this->left_side * v);
 }

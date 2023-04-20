@@ -51,9 +51,38 @@ Math::Point3D &Math::Point3D::operator+=(const Math::Vector3D &vector)
     return *this;
 }
 
-Math::Point3D &Math::Point3D::operator+(const Math::Vector3D &vector)
+Math::Point3D Math::Point3D::operator+(const Math::Vector3D &vector)
 {
-    return *this += vector;
+    Math::Point3D other(this->x + vector.getX(), this->y + vector.getY(), this->z + vector.getZ());
+    return other;
+}
+
+Math::Point3D &Math::Point3D::operator-=(const Math::Vector3D &vector)
+{
+    this->x -= vector.getX();
+    this->y -= vector.getY();
+    this->z -= vector.getZ();
+    return *this;
+}
+
+Math::Point3D Math::Point3D::operator-(const Math::Vector3D &vector)
+{
+    Math::Point3D other(this->x - vector.getX(), this->y - vector.getY(), this->z - vector.getZ());
+    return other;
+}
+
+Math::Point3D &Math::Point3D::operator+=(const Math::Point3D &point)
+{
+    this->x += point.x;
+    this->y += point.y;
+    this->z += point.z;
+    return *this;
+}
+
+Math::Point3D Math::Point3D::operator+(const Math::Point3D &point)
+{
+    Math::Point3D other(this->x + point.getX(), this->y + point.getY(), this->z + point.getZ());
+    return other;
 }
 
 Math::Point3D &Math::Point3D::operator-=(const Math::Point3D &point)
@@ -64,9 +93,10 @@ Math::Point3D &Math::Point3D::operator-=(const Math::Point3D &point)
     return *this;
 }
 
-Math::Point3D &Math::Point3D::operator-(const Math::Point3D &point)
+Math::Point3D Math::Point3D::operator-(const Math::Point3D &point)
 {
-    return *this -= point;
+    Math::Point3D other(this->x - point.getX(), this->y - point.getY(), this->z - point.getZ());
+    return other;
 }
 
 double Math::Point3D::getX() const

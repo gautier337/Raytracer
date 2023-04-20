@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <array>
+#include <exception>
 
 Math::Vector3D::Vector3D() : x(0), y(0), z(0)
 {
@@ -142,36 +143,31 @@ Math::Vector3D &Math::Vector3D::operator/=(double value)
     return *this;
 }
 
-Math::Vector3D &Math::Vector3D::operator+(double value)
+Math::Vector3D Math::Vector3D::operator+(double value)
 {
-    this->x += value;
-    this->y += value;
-    this->z += value;
-    return *this;
+    Math::Vector3D vector(this->x + value, this->y + value, this->z + value);
+    return vector;
 }
 
-Math::Vector3D &Math::Vector3D::operator-(double value)
+Math::Vector3D Math::Vector3D::operator-(double value)
 {
-    this->x -= value;
-    this->y -= value;
-    this->z -= value;
-    return *this;
+    Math::Vector3D vector(this->x - value, this->y - value, this->z - value);
+    return vector;
 }
 
-Math::Vector3D &Math::Vector3D::operator*(double value)
+Math::Vector3D Math::Vector3D::operator*(double value)
 {
-    this->x *= value;
-    this->y *= value;
-    this->z *= value;
-    return *this;
+    Math::Vector3D vector(this->x * value, this->y * value, this->z * value);
+    return vector;
 }
 
-Math::Vector3D &Math::Vector3D::operator/(double value)
+Math::Vector3D Math::Vector3D::operator/(double value)
 {
-    this->x /= value;
-    this->y /= value;
-    this->z /= value;
-    return *this;
+    if (value == 0)
+        throw std::invalid_argument("Division by 0");
+
+    Math::Vector3D vector(this->x / value, this->y / value, this->z / value);
+    return vector;
 }
 
 double Math::Vector3D::length()
