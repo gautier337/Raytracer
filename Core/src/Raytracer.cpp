@@ -22,35 +22,25 @@ int raytracer(std::string const &sceneFile)
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Raytracer", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::Event event;
+    bool shouldUpdatePoints = true;
 
-    /* std::cout << "P3" << std::endl;
-    std::cout << "100 100" << std::endl;
-    std::cout << "255" << std::endl;
-    for (double y = 1; y >= 0; y -= 0.010) {
-        for (double x = 0; x < 1; x += 0.010) {
-            double u = x;
-            double v = y;
-            RayTracer::Ray r = cam.ray(u, v);
-            if (s.hits(r)) {
-                std::cout << "255 0 0" << std::endl;
-            } else if (ground.hits(r)) {
-                std::cout << "0 255 0" << std::endl;
-            } else {
-                std::cout << "0 0 0" << std::endl;
-            }
-        }
-    } */
     std::vector<sf::RectangleShape> points;
-    for (int i = 0; i < 1000 * 1000; i++) {
-        sf::RectangleShape point(sf::Vector2f(1, 1));
-        point.setPosition(i % 1000, i / 1000);
+    const int pixelSize = 25;
+    const int screenSize = 1000;
+    const int numPixels = screenSize / pixelSize;
+
+    for (int i = 0; i < numPixels * numPixels; i++) {
+        sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize));
+        point.setPosition((i % numPixels) * pixelSize, (i / numPixels) * pixelSize);
         points.push_back(point);
     }
+
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed) {
+                shouldUpdatePoints = true;
                 switch (event.key.code) {
                     case sf::Keyboard::Escape:
                         window.close();
@@ -90,22 +80,28 @@ int raytracer(std::string const &sceneFile)
                 }
             }
         }
-        window.clear();
-        int index = 0;
-        for (double y = 1; y >= 0; y -= 0.001) {
-            for (double x = 0; x < 1; x += 0.001) {
-                double u = x;
-                double v = y;
-                RayTracer::Ray r = cam.ray(u, v);
-                if (s.hits(r))
-                    points[index].setFillColor(sf::Color::Red);
-                else if (ground.hits(r))
-                    points[index].setFillColor(sf::Color::Green);
-                else
-                    points[index].setFillColor(sf::Color::Black);
-                window.draw(points[index]);
-                index += 1;
+        if (shouldUpdatePoints) {
+            int index = 0;
+            for (double y = 1; y >= 0; y -= static_cast<double>(pixelSize) / screenSize) {
+                for (double x = 0; x < 1; x += static_cast<double>(pixelSize) / screenSize) {
+                    double u = x;
+                    double v = y;
+                    RayTracer::Ray r = cam.ray(u, v);
+                    if (s.hits(r))
+                        points[index].setFillColor(sf::Color::Red);
+                    else if (ground.hits(r))
+                        points[index].setFillColor(sf::Color::Green);
+                    else
+                        points[index].setFillColor(sf::Color::Black);
+                    index += 1;
+                }
             }
+            shouldUpdatePoints = false;
+        }
+
+        window.clear();
+        for (const auto &point : points) {
+            window.draw(point);
         }
         window.display();
     }
