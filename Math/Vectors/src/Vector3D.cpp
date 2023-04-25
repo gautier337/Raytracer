@@ -195,10 +195,14 @@ double Math::Vector3D::getZ() const
     return this->z;
 }
 
-void Math::Vector3D::normalize()
+Math::Vector3D Math::Vector3D::normalize()
 {
     double length = this->length();
-    this->x /= length;
-    this->y /= length;
-    this->z /= length;
+
+    Math::Vector3D normal(
+        this->x /= length,
+        this->y /= length,
+        this->z /= length
+    );
+    return normal;
 }
