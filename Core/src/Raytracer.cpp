@@ -14,20 +14,31 @@
 #include "Ray.hpp"
 #include "Scene.hpp"
 #include "Color.hpp"
+#include "parse_config.hpp"
 #include <memory>
 
 int raytracer(std::string const &sceneFile)
 {
     RayTracer::Scene scene;
-    sf::RenderWindow window(sf::VideoMode(1650, 1650), "Raytracer", sf::Style::Close);
+    ParseConfig config(sceneFile);
+    libconfig::Setting &camera_config = config.get_config("camera");
+
+    if (!camera_config.exists("resolution") || !camera_config["resolution"].exists("width")
+        || !camera_config["resolution"].exists("height")) {
+        std::cerr << "Error: resolution width or height is not set in config" << std::endl;
+        return ERROR;
+    }
+
+    const int screenWidth = static_cast<int>(camera_config["resolution"]["width"]);
+    const int screenHeight = static_cast<int>(camera_config["resolution"]["height"]);
+
+    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Raytracer", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::Event event;
     bool shouldUpdatePoints = true;
 
     std::vector<sf::RectangleShape> points;
     const int pixelSize = 1;
-    const int screenWidth = 1500;
-    const int screenHeight = 1500;
     const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
 
     for (int i = 0; i < numPixels; i++) {
