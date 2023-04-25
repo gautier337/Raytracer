@@ -26,6 +26,9 @@ namespace RayTracer {
             void rotateX(double angle);
             void rotateY(double angle);
             void rotateZ(double angle);
+            double getCenterX() const;
+            double getCenterY() const;
+            double getCenterZ() const;
 
         protected:
         private:

@@ -126,3 +126,18 @@ void RayTracer::Sphere::rotateZ(double angle)
     this->center.setX(xPrime);
     this->center.setY(yPrime);
 }
+
+double RayTracer::Sphere::getCenterX() const
+{
+    return this->center.getX();
+}
+
+double RayTracer::Sphere::getCenterY() const
+{
+    return this->center.getY();
+}
+
+double RayTracer::Sphere::getCenterZ() const
+{
+    return this->center.getZ();
+}

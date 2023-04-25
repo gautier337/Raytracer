@@ -21,6 +21,9 @@ RayTracer::Scene::Scene()
     RayTracer::Sphere s(Math::Point3D(0, 0, 2), 0.5, RayTracer::Color(1, 1, 1, 1));
     this->addObject(s);
 
+    RayTracer::Sphere s2(Math::Point3D(-1, 0, 4), 0.5, RayTracer::Color(0, 1, 0, 1));
+    this->addObject(s2);
+
     RayTracer::Rectangle3D ground(
         Math::Point3D(0, -5000, 0),
         Math::Vector3D(0, 10000, 10000),
@@ -76,14 +79,20 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
         for (double x = 0; x < 1; x += static_cast<double>(pixelSize) / width) {
             Color color(0, 0, 0, 1);
             Ray ray = camera.ray(x, y);
+            auto sortedRectangles = rectangles;
+            auto sortedSpheres = spheres;
 
-            for (auto rectangle : rectangles) {
+            std::sort(sortedSpheres.begin(), sortedSpheres.end(), [&ray](Sphere &a, Sphere &b) {
+                return a.getCenterZ() > b.getCenterZ();
+            });
+
+            for (auto rectangle : sortedRectangles) {
                 if (rectangle.hits(ray)) {
                     color = rectangle.computeColor(ray);
                 }
             }
 
-            for (auto sphere : spheres) {
+            for (auto sphere : sortedSpheres) {
                 if (sphere.hits(ray)) {
                     color = sphere.computeColor(ray);
                 }
