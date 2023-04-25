@@ -18,6 +18,7 @@ include_directories(
         Raytracer/Sphere/include
         Raytracer/Rectangle3D/include
         Raytracer/Camera/include
+        Raytracer/Cylinder/include
 )
 
 set(EXECUTABLE_NAME "raytracer")
@@ -49,6 +50,7 @@ set(SRC_RAYTRACER
         Sphere/src/Sphere.cpp
         Rectangle3D/src/Rectangle3D.cpp
         Camera/src/Camera.cpp
+        Cylinder/src/Cylinder.cpp
 )
 
 set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")

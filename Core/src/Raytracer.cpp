@@ -11,13 +11,14 @@
 #include "Factory.hpp"
 #include "Camera.hpp"
 #include "Sphere.hpp"
+#include "Cylinder.hpp"
 #include "Ray.hpp"
 #include <memory>
 
 int raytracer(std::string const &sceneFile)
 {
     RayTracer::Camera cam(Math::Point3D(0, 0, 0), RayTracer::Rectangle3D(Math::Point3D(-0.5, -0.5, 1), Math::Vector3D(1, 0, 0), Math::Vector3D(0, 1, 0)));
-    RayTracer::Sphere s(Math::Point3D(0, 0, 2), 0.5);
+    RayTracer::Cylinder cyl(Math::Point3D(0, 0, 2), Math::Vector3D(0, 1, 0), 0.25, 1);
     RayTracer::Rectangle3D ground(Math::Point3D(0, -500, 0), Math::Vector3D(0, 1000, 1000), Math::Vector3D(0, 0, 0));
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Raytracer", sf::Style::Close);
     window.setFramerateLimit(60);
@@ -25,7 +26,7 @@ int raytracer(std::string const &sceneFile)
     bool shouldUpdatePoints = true;
 
     std::vector<sf::RectangleShape> points;
-    const int pixelSize = 25;
+    const int pixelSize = 5;
     const int screenSize = 1000;
     const int numPixels = screenSize / pixelSize;
 
@@ -44,18 +45,6 @@ int raytracer(std::string const &sceneFile)
                 switch (event.key.code) {
                     case sf::Keyboard::Escape:
                         window.close();
-                        break;
-                    case sf::Keyboard::Left:
-                        s.translate(Math::Vector3D(-0.05, 0, 0));
-                        break;
-                    case sf::Keyboard::Right:
-                        s.translate(Math::Vector3D(0.05, 0, 0));
-                        break;
-                    case sf::Keyboard::Up:
-                        s.translate(Math::Vector3D(0, 0.05, 0));
-                        break;
-                    case sf::Keyboard::Down:
-                        s.translate(Math::Vector3D(0, -0.05, 0));
                         break;
                     case sf::Keyboard::Z:
                         cam.translate(Math::Vector3D(0, 0, 0.05));
@@ -87,7 +76,7 @@ int raytracer(std::string const &sceneFile)
                     double u = x;
                     double v = y;
                     RayTracer::Ray r = cam.ray(u, v);
-                    if (s.hits(r))
+                    if (cyl.hits(r))
                         points[index].setFillColor(sf::Color::Red);
                     else if (ground.hits(r))
                         points[index].setFillColor(sf::Color::Green);
@@ -98,7 +87,6 @@ int raytracer(std::string const &sceneFile)
             }
             shouldUpdatePoints = false;
         }
-
         window.clear();
         for (const auto &point : points) {
             window.draw(point);
