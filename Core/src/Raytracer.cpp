@@ -19,15 +19,15 @@
 int raytracer(std::string const &sceneFile)
 {
     RayTracer::Scene scene;
-    sf::RenderWindow window(sf::VideoMode(1650, 1650), "Raytracer", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Raytracer", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::Event event;
     bool shouldUpdatePoints = true;
 
     std::vector<sf::RectangleShape> points;
     const int pixelSize = 1;
-    const int screenWidth = 1500;
-    const int screenHeight = 1500;
+    const int screenWidth = 1000;
+    const int screenHeight = 1000;
     const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
 
     for (int i = 0; i < numPixels; i++) {

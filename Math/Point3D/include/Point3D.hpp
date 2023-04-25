@@ -32,6 +32,7 @@ namespace Math {
             void setX(double x);
             void setY(double y);
             void setZ(double z);
+            double distance(const Point3D &point);
 
         protected:
         private:

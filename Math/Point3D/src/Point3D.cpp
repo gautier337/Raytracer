@@ -6,6 +6,7 @@
 */
 
 #include "Point3D.hpp"
+#include <cmath>
 
 Math::Point3D::Point3D() : x(0), y(0), z(0)
 {
@@ -127,4 +128,13 @@ void Math::Point3D::setY(double y)
 void Math::Point3D::setZ(double z)
 {
     this->z = z;
+}
+
+double Math::Point3D::distance(const Math::Point3D &point)
+{
+    return sqrt(
+        pow(this->x - point.getX(), 2) +
+        pow(this->y - point.getY(), 2) +
+        pow(this->z - point.getZ(), 2)
+    );
 }
