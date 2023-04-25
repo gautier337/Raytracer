@@ -127,10 +127,9 @@ RayTracer::Color RayTracer::Rectangle3D::computeColor(Ray ray)
     double u = d.dot(this->bottom_side) / this->bottom_side.dot(this->bottom_side);
     double v = d.dot(this->left_side) / this->left_side.dot(this->left_side);
 
-    double distance = p.distance(ray.getOrigin()); // calculate distance between intersection point and ray origin
+    double distance = p.distance(ray.getOrigin());
 
-    // modify color based on distance
-    double colorModifier = std::max(0.0, distance / 3000); // adjust 50 to change the range of the effect
+    double colorModifier = std::max(0.0, distance / 3000);
     newColor.setRGBA(
         this->color.getR() * colorModifier,
         this->color.getG() * colorModifier,
