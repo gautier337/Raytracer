@@ -26,7 +26,7 @@ int raytracer(std::string const &sceneFile)
     bool shouldUpdatePoints = true;
 
     std::vector<sf::RectangleShape> points;
-    const int pixelSize = 5;
+    const int pixelSize = 1;
     const int screenSize = 1000;
     const int numPixels = screenSize / pixelSize;
 
