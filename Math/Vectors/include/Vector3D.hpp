@@ -38,7 +38,7 @@ namespace Math {
             double getX() const;
             double getY() const;
             double getZ() const;
-            void normalize();
+            Vector3D normalize();
 
         protected:
         private:

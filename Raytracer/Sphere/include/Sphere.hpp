@@ -9,6 +9,7 @@
 #include "Point3D.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
+#include "DirectionalLight.hpp"
 
 namespace RayTracer {
     class Sphere {
@@ -21,7 +22,7 @@ namespace RayTracer {
             Sphere &operator=(const Sphere &sphere);
             Sphere &operator=(Sphere &&sphere);
             bool hits(Ray ray);
-            Color computeColor(Ray ray);
+            Color computeColor(Ray ray, DirectionalLight light);
             void translate(Math::Vector3D translation);
             void rotateX(double angle);
             void rotateY(double angle);

@@ -55,35 +55,28 @@ bool RayTracer::Sphere::hits(Ray ray)
     return (discriminant > 0);
 }
 
-RayTracer::Color RayTracer::Sphere::computeColor(Ray ray)
+RayTracer::Color RayTracer::Sphere::computeColor(Ray ray, DirectionalLight light)
 {
-    RayTracer::Color newColor(0, 0, 0, 1);
-    Math::Point3D origin = ray.getOrigin();
+    Math::Vector3D oc((ray.getOrigin() - this->center).getX(), (ray.getOrigin() - this->center).getY(), (ray.getOrigin() - this->center).getZ());
 
-    if (!this->hits(ray))
-        return newColor;
-    Math::Vector3D oc(
-        (origin - this->center).getX(),
-        (origin - this->center).getY(),
-        (origin - this->center).getZ()
-    );
     double a = ray.getDirection().dot(ray.getDirection());
     double b = 2.0 * oc.dot(ray.getDirection());
     double c = oc.dot(oc) - this->radius * this->radius;
     double discriminant = b * b - 4 * a * c;
-
-    if (discriminant < 0)
-        return color;
     double t = (-b - sqrt(discriminant)) / (2.0 * a);
-    Math::Vector3D hitPoint(
-        origin.getX() + t * ray.getDirection().getX(),
-        origin.getY() + t * ray.getDirection().getY(),
-        origin.getZ() + t * ray.getDirection().getZ()
+    Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * t;
+    Math::Vector3D non_normal(
+        (this->center - hitPoint).getX() * 2,
+        (this->center - hitPoint).getY() * 2,
+        (this->center - hitPoint).getZ() * 2
     );
-    newColor.setRGBA(
-        this->color.getR() * (hitPoint.getX() * (this->radius / 2) + (this->radius / 2)),
-        this->color.getG() * (hitPoint.getY() * (this->radius / 2) + (this->radius / 2)),
-        this->color.getB() * (hitPoint.getZ() * (this->radius / 2) + (this->radius / 2)),
+    Math::Vector3D normal = non_normal.normalize();
+    double dot = std::max(0.0, normal.dot(light.getDirection()));
+    double brightness = light.getBrightness();
+    Color newColor(
+        this->color.getR() * dot * brightness,
+        this->color.getG() * dot * brightness,
+        this->color.getB() * dot * brightness,
         this->color.getA()
     );
     return newColor;

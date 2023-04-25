@@ -18,7 +18,7 @@ RayTracer::Scene::Scene()
         )
     )
 {
-    RayTracer::Sphere s(Math::Point3D(0, 0, 2), 0.5, RayTracer::Color(1, 1, 1, 1));
+    RayTracer::Sphere s(Math::Point3D(0, 0, 4), 1, RayTracer::Color(1, 0, 0, 1));
     this->addObject(s);
 
     RayTracer::Sphere s2(Math::Point3D(-1, 0, 4), 0.5, RayTracer::Color(0, 1, 0, 1));
@@ -32,12 +32,12 @@ RayTracer::Scene::Scene()
     );
     this->addObject(ground);
 
-    /* RayTracer::DirectionalLight light(
-        Math::Point3D(0.5, 0.5, 0),
-        Math::Vector3D(-0.5, -0.5, 2),
-        100
+    RayTracer::DirectionalLight light(
+        Math::Point3D(0.5, 0.5, 4),
+        Math::Vector3D(-0.5, -0.5, 0),
+        1
     );
-    this->addLight(light); */
+    this->addLight(light);
 }
 
 RayTracer::Scene::~Scene()
@@ -94,7 +94,7 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
 
             for (auto sphere : sortedSpheres) {
                 if (sphere.hits(ray)) {
-                    color = sphere.computeColor(ray);
+                    color = sphere.computeColor(ray, this->lights[0]);
                 }
             }
 
