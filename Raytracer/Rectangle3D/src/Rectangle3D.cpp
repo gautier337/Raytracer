@@ -133,7 +133,7 @@ RayTracer::Color RayTracer::Rectangle3D::computeColor(Ray ray)
     );
 
     newColor.setRGBA(
-        this->color.getR() * sdistance,
+        this->color.getR() * distance,
         this->color.getG() * distance,
         this->color.getB() * distance,
         this->color.getA() * 1
