@@ -38,6 +38,7 @@ namespace Math {
             double getX() const;
             double getY() const;
             double getZ() const;
+            void normalize();
 
         protected:
         private:

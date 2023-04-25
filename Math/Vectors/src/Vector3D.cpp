@@ -194,3 +194,11 @@ double Math::Vector3D::getZ() const
 {
     return this->z;
 }
+
+void Math::Vector3D::normalize()
+{
+    double length = this->length();
+    this->x /= length;
+    this->y /= length;
+    this->z /= length;
+}

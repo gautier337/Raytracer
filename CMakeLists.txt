@@ -14,10 +14,13 @@ include_directories(
         Math/include
         Math/Point3D/include
         Math/Vectors/include
-        Raytracer/Ray/include
-        Raytracer/Sphere/include
-        Raytracer/Rectangle3D/include
         Raytracer/Camera/include
+        Raytracer/Color/include
+        Raytracer/DirectionalLight/include
+        Raytracer/Ray/include
+        Raytracer/Rectangle3D/include
+        Raytracer/Scene/include
+        Raytracer/Sphere/include
 )
 
 set(EXECUTABLE_NAME "raytracer")
@@ -45,10 +48,13 @@ set(SRC_MATH
 # Raytracer Sources
 set(RAYTRACER_DIRECTORY Raytracer/)
 set(SRC_RAYTRACER
-        Ray/src/Ray.cpp
-        Sphere/src/Sphere.cpp
-        Rectangle3D/src/Rectangle3D.cpp
         Camera/src/Camera.cpp
+        Color/src/Color.cpp
+        DirectionalLight/src/DirectionalLight.cpp
+        Ray/src/Ray.cpp
+        Rectangle3D/src/Rectangle3D.cpp
+        Scene/src/Scene.cpp
+        Sphere/src/Sphere.cpp
 )
 
 set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")

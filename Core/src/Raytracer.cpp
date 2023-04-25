@@ -12,26 +12,27 @@
 #include "Camera.hpp"
 #include "Sphere.hpp"
 #include "Ray.hpp"
+#include "Scene.hpp"
+#include "Color.hpp"
 #include <memory>
 
 int raytracer(std::string const &sceneFile)
 {
-    RayTracer::Camera cam(Math::Point3D(0, 0, 0), RayTracer::Rectangle3D(Math::Point3D(-0.5, -0.5, 1), Math::Vector3D(1, 0, 0), Math::Vector3D(0, 1, 0)));
-    RayTracer::Sphere s(Math::Point3D(0, 0, 2), 0.5);
-    RayTracer::Rectangle3D ground(Math::Point3D(0, -500, 0), Math::Vector3D(0, 1000, 1000), Math::Vector3D(0, 0, 0));
-    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Raytracer", sf::Style::Close);
+    RayTracer::Scene scene;
+    sf::RenderWindow window(sf::VideoMode(1650, 1650), "Raytracer", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::Event event;
     bool shouldUpdatePoints = true;
 
     std::vector<sf::RectangleShape> points;
-    const int pixelSize = 25;
-    const int screenSize = 1000;
-    const int numPixels = screenSize / pixelSize;
+    const int pixelSize = 1;
+    const int screenWidth = 1500;
+    const int screenHeight = 1500;
+    const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
 
-    for (int i = 0; i < numPixels * numPixels; i++) {
+    for (int i = 0; i < numPixels; i++) {
         sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize));
-        point.setPosition((i % numPixels) * pixelSize, (i / numPixels) * pixelSize);
+        point.setPosition((i % screenHeight) * pixelSize, (i / screenHeight) * pixelSize);
         points.push_back(point);
     }
 
@@ -45,54 +46,25 @@ int raytracer(std::string const &sceneFile)
                     case sf::Keyboard::Escape:
                         window.close();
                         break;
-                    case sf::Keyboard::Left:
-                        s.translate(Math::Vector3D(-0.05, 0, 0));
-                        break;
-                    case sf::Keyboard::Right:
-                        s.translate(Math::Vector3D(0.05, 0, 0));
-                        break;
-                    case sf::Keyboard::Up:
-                        s.translate(Math::Vector3D(0, 0.05, 0));
-                        break;
-                    case sf::Keyboard::Down:
-                        s.translate(Math::Vector3D(0, -0.05, 0));
-                        break;
-                    case sf::Keyboard::Z:
-                        cam.translate(Math::Vector3D(0, 0, 0.05));
-                        break;
-                    case sf::Keyboard::S:
-                        cam.translate(Math::Vector3D(0, 0, -0.05));
-                        break;
-                    case sf::Keyboard::Q:
-                        cam.translate(Math::Vector3D(-0.05, 0, 0));
-                        break;
-                    case sf::Keyboard::D:
-                        cam.translate(Math::Vector3D(0.05, 0, 0));
-                        break;
-                    case sf::Keyboard::Space:
-                        cam.translate(Math::Vector3D(0, 0.05, 0));
-                        break;
-                    case sf::Keyboard::LControl:
-                        cam.translate(Math::Vector3D(0, -0.05, 0));
-                        break;
                     default:
                         break;
                 }
             }
         }
+        scene.render(pixelSize, screenWidth, screenHeight);
+        std::vector<std::vector<RayTracer::Color>> pixels = scene.getPixels();
+        int nb_rows = pixels.size();
         if (shouldUpdatePoints) {
             int index = 0;
-            for (double y = 1; y >= 0; y -= static_cast<double>(pixelSize) / screenSize) {
-                for (double x = 0; x < 1; x += static_cast<double>(pixelSize) / screenSize) {
-                    double u = x;
-                    double v = y;
-                    RayTracer::Ray r = cam.ray(u, v);
-                    if (s.hits(r))
-                        points[index].setFillColor(sf::Color::Red);
-                    else if (ground.hits(r))
-                        points[index].setFillColor(sf::Color::Green);
-                    else
-                        points[index].setFillColor(sf::Color::Black);
+            for (double y = 0; y < 1; y += static_cast<double>(pixelSize) / screenHeight) {
+                for (double x = 0; x < 1; x += static_cast<double>(pixelSize) / screenWidth) {
+                    sf::Color color(
+                        pixels[index / nb_rows][index % nb_rows].getR() * 255,
+                        pixels[index / nb_rows][index % nb_rows].getG() * 255,
+                        pixels[index / nb_rows][index % nb_rows].getB() * 255,
+                        255
+                    );
+                    points[index].setFillColor(color);
                     index += 1;
                 }
             }
@@ -100,9 +72,8 @@ int raytracer(std::string const &sceneFile)
         }
 
         window.clear();
-        for (const auto &point : points) {
+        for (const auto &point : points)
             window.draw(point);
-        }
         window.display();
     }
     return SUCCESS;
