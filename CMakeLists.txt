@@ -8,6 +8,12 @@ find_package(SFML 2.5
         system window graphics audio REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
+# libconfig++
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBCONFIG++ REQUIRED libconfig++)
+include_directories(${LIBCONFIG++_INCLUDE_DIRS})
+link_directories(${LIBCONFIG++_LIBRARY_DIRS})
+
 include_directories(
         Core/include
         Math/Factories/include
@@ -35,6 +41,7 @@ set(SRC_MAIN
 set(CORE_DIRECTORY Core/)
 set(SRC_CORE
         src/Raytracer.cpp
+        src/parse_config.cpp
 )
 
 # Math Sources
@@ -70,5 +77,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
 add_executable(${EXECUTABLE_NAME} ${SRC_MAIN} ${SRC_CORE} ${SRC_MATH} ${SRC_RAYTRACER})
 
-target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS})
+target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS} ${LIBCONFIG++_LIBRARIES})
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
