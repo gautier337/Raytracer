@@ -16,22 +16,17 @@ link_directories(${LIBCONFIG++_LIBRARY_DIRS})
 
 include_directories(
         Core/include
-        Math/Factories/include
-        Math/include
-        Math/Point3D/include
-        Math/Vectors/include
-        Raytracer/Camera/include
-        Raytracer/Color/include
-        Raytracer/DirectionalLight/include
-        Raytracer/Ray/include
-        Raytracer/Rectangle3D/include
         Raytracer/Scene/include
-        Raytracer/Sphere/include
+        RayTracer/include
+        RayTracer/Lights/include
+        RayTracer/Math/include
+        RayTracer/Primitives/include
+        RayTracer/Render/include
+        RayTracer/View/include
 )
 
 set(EXECUTABLE_NAME "raytracer")
-set(MATH_DIRECTORY Math/)
-set(RAYTRACER_DIRECTORY Raytracer/)
+set(RAYTRACER_DIRECTORY RayTracer/)
 
 set(SRC_MAIN
         src/main.cpp
@@ -40,28 +35,52 @@ set(SRC_MAIN
 # Core Sources
 set(CORE_DIRECTORY Core/)
 set(SRC_CORE
-        src/Raytracer.cpp
+        src/RayTracer.cpp
         src/parse_config.cpp
 )
 
+# Lights Sources
+set(LIGHTS_DIRECTORY RayTracer/Lights/src/)
+set(SRC_LIGHTS
+        DirectionalLight.cpp
+        LightsFactory.cpp
+)
+
 # Math Sources
-set(MATH_DIRECTORY Math/)
+set(MATH_DIRECTORY RayTracer/Math/src/)
 set(SRC_MATH
-        Factories/src/Factory.cpp
-        Point3D/src/Point3D.cpp
-        Vectors/src/Vector3D.cpp
+        MathFactory.cpp
+        Point3D.cpp
+        Vector3D.cpp
+)
+
+# Primitives Sources
+set(PRIMITIVES_DIRECTORY RayTracer/Primitives/src/)
+set(SRC_PRIMITIVES
+        PrimitivesFactory.cpp
+        Rectangle3D.cpp
+        Sphere.cpp
+)
+
+# Render Sources
+set(RENDER_DIRECTORY RayTracer/Render/src/)
+set(SRC_RENDER
+        Color.cpp
+        RenderFactory.cpp
+)
+
+# View Sources
+set(VIEW_DIRECTORY RayTracer/View/src/)
+set(SRC_VIEW
+        Camera.cpp
+        Ray.cpp
+        ViewFactory.cpp
 )
 
 # Raytracer Sources
-set(RAYTRACER_DIRECTORY Raytracer/)
+set(RAYTRACER_DIRECTORY RayTracer/src/)
 set(SRC_RAYTRACER
-        Camera/src/Camera.cpp
-        Color/src/Color.cpp
-        DirectionalLight/src/DirectionalLight.cpp
-        Ray/src/Ray.cpp
-        Rectangle3D/src/Rectangle3D.cpp
-        Scene/src/Scene.cpp
-        Sphere/src/Sphere.cpp
+        Scene.cpp
 )
 
 set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")
@@ -69,13 +88,27 @@ set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")
 # Transform all paths to absolute paths
 list(TRANSFORM SRC_MAIN PREPEND ${CORE_DIRECTORY})
 list(TRANSFORM SRC_CORE PREPEND ${CORE_DIRECTORY})
+list(TRANSFORM SRC_LIGHTS PREPEND ${LIGHTS_DIRECTORY})
 list(TRANSFORM SRC_MATH PREPEND ${MATH_DIRECTORY})
+list(TRANSFORM SRC_PRIMITIVES PREPEND ${PRIMITIVES_DIRECTORY})
+list(TRANSFORM SRC_RENDER PREPEND ${RENDER_DIRECTORY})
+list(TRANSFORM SRC_VIEW PREPEND ${VIEW_DIRECTORY})
 list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
 
-add_executable(${EXECUTABLE_NAME} ${SRC_MAIN} ${SRC_CORE} ${SRC_MATH} ${SRC_RAYTRACER})
+add_executable(
+        ${EXECUTABLE_NAME}
+        ${SRC_MAIN}
+        ${SRC_CORE}
+        ${SRC_MATH}
+        ${SRC_LIGHTS}
+        ${SRC_PRIMITIVES}
+        ${SRC_RENDER}
+        ${SRC_VIEW}
+        ${SRC_RAYTRACER}
+)
 
 target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS} ${LIBCONFIG++_LIBRARIES})
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
