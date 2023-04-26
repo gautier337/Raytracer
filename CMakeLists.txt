@@ -8,7 +8,6 @@ find_package(SFML 2.5
         system window graphics audio REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
-# libconfig++
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBCONFIG++ REQUIRED libconfig++)
 include_directories(${LIBCONFIG++_INCLUDE_DIRS})
@@ -16,6 +15,7 @@ link_directories(${LIBCONFIG++_LIBRARY_DIRS})
 
 include_directories(
         Core/include
+        Core/DLLoader/include
         Raytracer/Scene/include
         RayTracer/include
         RayTracer/Lights/include
@@ -35,6 +35,7 @@ set(SRC_MAIN
 # Core Sources
 set(CORE_DIRECTORY Core/)
 set(SRC_CORE
+        DLLoader/src/DLLoader.cpp
         src/RayTracer.cpp
         src/parse_config.cpp
 )
