@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "Raytracer.hpp"
+#include "RayTracer.hpp"
 #include <string>
 
 int check_env()
