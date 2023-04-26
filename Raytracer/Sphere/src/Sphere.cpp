@@ -55,9 +55,16 @@ bool RayTracer::Sphere::hits(Ray ray)
     return (discriminant > 0);
 }
 
-RayTracer::Color RayTracer::Sphere::computeColor(Ray ray, DirectionalLight light)
+RayTracer::Color RayTracer::Sphere::computeColor(
+    Ray ray,
+    std::vector<DirectionalLight> lights
+)
 {
-    Math::Vector3D oc((ray.getOrigin() - this->center).getX(), (ray.getOrigin() - this->center).getY(), (ray.getOrigin() - this->center).getZ());
+    Math::Vector3D oc(
+        (ray.getOrigin() - this->center).getX(),
+        (ray.getOrigin() - this->center).getY(),
+        (ray.getOrigin() - this->center).getZ()
+    );
 
     double a = ray.getDirection().dot(ray.getDirection());
     double b = 2.0 * oc.dot(ray.getDirection());
@@ -71,16 +78,26 @@ RayTracer::Color RayTracer::Sphere::computeColor(Ray ray, DirectionalLight light
         (this->center - hitPoint).getZ() * 2
     );
     Math::Vector3D normal = non_normal.normalize();
-    double dot = std::max(0.0, normal.dot(light.getDirection()));
-    double brightness = light.getBrightness();
-    Color newColor(
-        this->color.getR() * dot * brightness,
-        this->color.getG() * dot * brightness,
-        this->color.getB() * dot * brightness,
-        this->color.getA()
-    );
+
+    Color newColor(0, 0, 0, this->color.getA());
+
+    for (DirectionalLight light : lights) {
+        double dot = std::max(0.0, normal.dot(light.getDirection()));
+        double brightness = light.getBrightness();
+
+        Color lightColor(
+            this->color.getR() * dot * brightness,
+            this->color.getG() * dot * brightness,
+            this->color.getB() * dot * brightness,
+            0
+        );
+
+        newColor += lightColor;
+    }
+
     return newColor;
 }
+
 
 void RayTracer::Sphere::translate(Math::Vector3D vector)
 {

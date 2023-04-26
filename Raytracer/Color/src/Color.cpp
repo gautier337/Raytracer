@@ -45,11 +45,48 @@ RayTracer::Color &RayTracer::Color::operator=(const Color &color) {
     return *this;
 }
 
-RayTracer::Color &RayTracer::Color::operator=(Color &&color) {
+RayTracer::Color &RayTracer::Color::operator=(Color &&color)
+{
     r = color.r;
     g = color.g;
     b = color.b;
     a = color.a;
+    return *this;
+}
+
+RayTracer::Color &RayTracer::Color::operator+=(const Color &color)
+{
+    r += color.r;
+    g += color.g;
+    b += color.b;
+    a += color.a;
+    return *this;
+}
+
+RayTracer::Color &RayTracer::Color::operator-=(const Color &color)
+{
+    r -= color.r;
+    g -= color.g;
+    b -= color.b;
+    a -= color.a;
+    return *this;
+}
+
+RayTracer::Color &RayTracer::Color::operator*=(const Color &color)
+{
+    r *= color.r;
+    g *= color.g;
+    b *= color.b;
+    a *= color.a;
+    return *this;
+}
+
+RayTracer::Color &RayTracer::Color::operator/=(const Color &color)
+{
+    r /= color.r;
+    g /= color.g;
+    b /= color.b;
+    a /= color.a;
     return *this;
 }
 

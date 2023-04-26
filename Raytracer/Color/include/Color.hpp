@@ -17,6 +17,10 @@ namespace RayTracer {
             Color(Color &&color);
             Color &operator=(const Color &color);
             Color &operator=(Color &&color);
+            Color &operator+=(const Color &color);
+            Color &operator-=(const Color &color);
+            Color &operator*=(const Color &color);
+            Color &operator/=(const Color &color);
             double getR() const;
             double getG() const;
             double getB() const;
