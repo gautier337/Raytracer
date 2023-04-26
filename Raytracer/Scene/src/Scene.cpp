@@ -6,6 +6,7 @@
 */
 
 #include "Scene.hpp"
+#include <algorithm>
 
 RayTracer::Scene::Scene()
     : camera(
