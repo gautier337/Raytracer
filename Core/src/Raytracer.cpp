@@ -15,7 +15,7 @@
 #include "Ray.hpp"
 #include <memory>
 
-int raytracer(std::string const &sceneFile)
+int raytracer_cylinder(std::string const &sceneFile)
 {
     RayTracer::Camera cam(Math::Point3D(0, 0, 0), RayTracer::Rectangle3D(Math::Point3D(-0.5, -0.5, 1), Math::Vector3D(1, 0, 0), Math::Vector3D(0, 1, 0)));
     RayTracer::Cylinder cyl(Math::Point3D(0, 0, 2), Math::Vector3D(0, 1, 0), 0.25, 1);

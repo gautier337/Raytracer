@@ -20,4 +20,4 @@
 #define ERROR 84
 
 // Prototypes
-int raytracer(std::string const &sceneFile);
+int raytracer_cylinder(std::string const &sceneFile);
