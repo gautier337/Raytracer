@@ -7,6 +7,76 @@
 
 #include "Scene.hpp"
 #include <algorithm>
+#include <iostream>
+
+RayTracer::Scene::Scene(const ParseConfig &config)
+{
+    auto &camera_config = config.get_setting("camera");
+    if (camera_config.exists("position")) {
+        double x = config.getDoubleFromSetting(camera_config["position"]["x"]);
+        double y = config.getDoubleFromSetting(camera_config["position"]["y"]);
+        double z = config.getDoubleFromSetting(camera_config["position"]["z"]);
+        camera = View::Camera(
+            Math::Point3D(x, y, z),
+            Primitives::Rectangle3D(
+                Math::Point3D(-0.5, -0.5, 1),
+                Math::Vector3D(1, 0, 0),
+                Math::Vector3D(0, 1, 0),
+                Render::Color(0, 0, 0, 0)
+            )
+        );
+    }
+    auto &primitives = config.get_setting("primitives");
+    if (primitives.exists("spheres")) {
+        for (int i = 0; i < primitives["spheres"].getLength(); i++) {
+            double x = config.getDoubleFromSetting(primitives["spheres"][i]["x"]);
+            double y = config.getDoubleFromSetting(primitives["spheres"][i]["y"]);
+            double z = config.getDoubleFromSetting(primitives["spheres"][i]["z"]);
+            double radius = config.getDoubleFromSetting(primitives["spheres"][i]["r"]);
+
+            Primitives::Sphere s(
+                Math::Point3D(x, y, z),
+                radius,
+                Render::Color(
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["r"]),
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["g"]),
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["b"]),
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
+                )
+            );
+            this->addObject(s);
+        }
+    }
+
+    auto &lights_config = config.get_setting("lights");
+
+    if (lights_config.exists("directional")) {
+        for (int i = 0; i < lights_config["directional"].getLength(); i++) {
+            double brightness = config.getDoubleFromSetting(lights_config["directional"][i]["brightness"]);
+            double x_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["x"]);
+            double y_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["y"]);
+            double z_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["z"]);
+            double x_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["x"]);
+            double y_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["y"]);
+            double z_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["z"]);
+
+            Lights::DirectionalLight light(
+                Math::Point3D(x_point, y_point, z_point),
+                Math::Vector3D(-x_vector, -y_vector, -z_vector),
+                brightness
+            );
+            this->addLight(light);
+        }
+    }
+
+    Primitives::Rectangle3D ground(
+        Math::Point3D(0, -5000, 0),
+        Math::Vector3D(0, 10000, 10000),
+        Math::Vector3D(0, 0, 0),
+        Render::Color(1, 1, 0, 1)
+    );
+    this->addObject(ground);
+}
 
 RayTracer::Scene::Scene()
     : camera(

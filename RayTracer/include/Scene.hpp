@@ -11,11 +11,13 @@
 #include "Camera.hpp"
 #include "Color.hpp"
 #include <vector>
+#include "parse_config.hpp"
 
 namespace RayTracer {
     class Scene {
         public:
             Scene();
+            Scene(const ParseConfig &config);
             ~Scene();
             void addObject(Primitives::Rectangle3D object);
             void addObject(Primitives::Sphere object);

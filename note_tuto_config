@@ -10,7 +10,7 @@ camera:
 
 :
 
-libconfig::Setting &camera = config.get_config("camera");
+libconfig::Setting &camera = config.get_setting("camera");
 std::cout << static_cast<int>(camera["resolution"]["width"]) << std::endl;
 
 
@@ -31,5 +31,5 @@ primitives:
 
 :
 
-libconfig::Setting &camera = config.get_config("primitives");
+libconfig::Setting &camera = config.get_setting("primitives");
 std::cout << static_cast<int>(camera["spheres"][0]["x"]) << std::endl;

@@ -18,19 +18,21 @@
 
 int raytracer(std::string const &sceneFile)
 {
-    RayTracer::Scene scene;
     ParseConfig config(sceneFile);
-    libconfig::Setting &camera_config = config.get_config("camera");
+    std::vector<int> window_height_width;
+    int screenHeight = 0;
+    int screenWidth = 0;
 
-    if (!camera_config.exists("resolution") || !camera_config["resolution"].exists("width")
-        || !camera_config["resolution"].exists("height")) {
-        std::cerr << "Error: resolution width or height is not set in config" << std::endl;
+    try {
+        window_height_width = config.get_window_height_width_from_setting();
+    } catch (std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
         return ERROR;
     }
+    screenHeight = window_height_width[1];
+    screenWidth = window_height_width[0];
 
-    const int screenWidth = static_cast<int>(camera_config["resolution"]["width"]);
-    const int screenHeight = static_cast<int>(camera_config["resolution"]["height"]);
-
+    RayTracer::Scene scene(config);
     sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Raytracer", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::Event event;
