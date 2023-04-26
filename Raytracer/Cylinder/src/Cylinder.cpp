@@ -5,16 +5,21 @@
 ** Cylinder
 */
 
-#include "Cylinder.hpp"
+#include "../include/Cylinder.hpp"
 #include <cmath>
 
-RayTracer::Cylinder::Cylinder(Math::Point3D center, Math::Vector3D axis, double radius, double height) : center(center), axis(axis), radius(radius), height(height)
+RayTracer::Cylinder::Cylinder()
 {
 }
 
 RayTracer::Cylinder::~Cylinder()
 {
 }
+
+RayTracer::Cylinder::Cylinder(Math::Point3D center, Math::Vector3D axis, double radius, double height) : center(center), axis(axis), radius(radius), height(height)
+{
+}
+
 
 RayTracer::Cylinder::Cylinder(const Cylinder &cylinder) : center(cylinder.center), axis(cylinder.axis), radius(cylinder.radius), height(cylinder.height)
 {
@@ -65,9 +70,8 @@ bool RayTracer::Cylinder::hits(Ray ray)
 
     double discriminant = pow(b, 2) - 4 * a * c;
 
-    if (discriminant < 0) {
+    if (discriminant < 0)
         return false;
-    }
 
     double t0 = (-b - sqrt(discriminant)) / (2 * a);
     double t1 = (-b + sqrt(discriminant)) / (2 * a);

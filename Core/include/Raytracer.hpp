@@ -21,3 +21,4 @@
 
 // Prototypes
 int raytracer_cylinder(std::string const &sceneFile);
+int raytracer_cone(std::string const &sceneFile);
