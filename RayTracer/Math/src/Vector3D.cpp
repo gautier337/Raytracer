@@ -258,3 +258,27 @@ RayTracer::Math::Vector3D RayTracer::Math::Vector3D::normalize()
     );
     return normal;
 }
+
+void RayTracer::Math::Vector3D::rotate(Math::Vector3D axis, double angle)
+{
+    double sinAngle = sin(-angle);
+    double cosAngle = cos(-angle);
+
+    axis.normalize();
+
+    double x = this->x;
+    double y = this->y;
+    double z = this->z;
+
+    this->x = (cosAngle + (1 - cosAngle) * pow(axis.getX(), 2)) * x;
+    this->x += ((1 - cosAngle) * axis.getX() * axis.getY() - axis.getZ() * sinAngle) * y;
+    this->x += ((1 - cosAngle) * axis.getX() * axis.getZ() + axis.getY() * sinAngle) * z;
+
+    this->y = ((1 - cosAngle) * axis.getX() * axis.getY() + axis.getZ() * sinAngle) * x;
+    this->y += (cosAngle + (1 - cosAngle) * pow(axis.getY(), 2)) * y;
+    this->y += ((1 - cosAngle) * axis.getY() * axis.getZ() - axis.getX() * sinAngle) * z;
+
+    this->z = ((1 - cosAngle) * axis.getX() * axis.getZ() - axis.getY() * sinAngle) * x;
+    this->z += ((1 - cosAngle) * axis.getY() * axis.getZ() + axis.getX() * sinAngle) * y;
+    this->z += (cosAngle + (1 - cosAngle) * pow(axis.getZ(), 2)) * z;
+}

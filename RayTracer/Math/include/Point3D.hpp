@@ -34,6 +34,7 @@ namespace RayTracer {
                 void setY(double y);
                 void setZ(double z);
                 double distance(const Point3D &point);
+                void rotate(Vector3D axis, double angle);
 
             protected:
             private:

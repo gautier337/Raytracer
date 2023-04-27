@@ -25,6 +25,9 @@ namespace RayTracer {
             void setCamera(View::Camera camera);
             std::vector<std::vector<Render::Color>> getPixels() const;
             void render(int pixelSize, int width, int height);
+            View::Camera getCamera() const;
+            void translateCamera(Math::Vector3D translation);
+            void rotateCamera(Math::Vector3D rotation, double angle);
 
         private:
             View::Camera camera;
