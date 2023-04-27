@@ -9,42 +9,55 @@
 #include <algorithm>
 #include <iostream>
 
-RayTracer::Scene::Scene(const ParseConfig &config)
+RayTracer::Scene::Scene(const ParseConfig &config) :
+    lightsLoader("plugins/raytracer_lights.so"),
+    primitivesLoader("plugins/raytracer_primitives.so"),
+    mathLoader("plugins/raytracer_math.so"),
+    renderLoader("plugins/raytracer_render.so"),
+    viewLoader("plugins/raytracer_view.so")
 {
+    this->initFactories();
+
     auto &camera_config = config.get_setting("camera");
     if (camera_config.exists("position")) {
         double x = config.getDoubleFromSetting(camera_config["position"]["x"]);
         double y = config.getDoubleFromSetting(camera_config["position"]["y"]);
         double z = config.getDoubleFromSetting(camera_config["position"]["z"]);
-        camera = View::Camera(
-            Math::Point3D(x, y, z),
-            Primitives::Rectangle3D(
-                Math::Point3D(-0.5, -0.5, 1),
-                Math::Vector3D(1, 0, 0),
-                Math::Vector3D(0, 1, 0),
-                Render::Color(0, 0, 0, 0)
-            )
+        std::unique_ptr<Math::Point3D> position = this->mathFactory->createPoint3D(x, y, z);
+        std::unique_ptr<Math::Point3D> origin = this->mathFactory->createPoint3D(-0.5, -0.5, 1);
+        std::unique_ptr<Math::Vector3D> bottom_side = this->mathFactory->createVector3D(1, 0, 0);
+        std::unique_ptr<Math::Vector3D> left_side = this->mathFactory->createVector3D(0, 1, 0);
+        std::unique_ptr<Render::Color> color = this->renderFactory->createColor(0, 0, 0, 0);
+        std::unique_ptr<Primitives::Rectangle3D> screen = this->primitivesFactory->createRectangle3D(
+            *origin,
+            *bottom_side,
+            *left_side,
+            *color
         );
+        this->camera = this->viewFactory->createCamera(*position, *screen);
     }
+
     auto &primitives = config.get_setting("primitives");
     if (primitives.exists("spheres")) {
         for (int i = 0; i < primitives["spheres"].getLength(); i++) {
             double x = config.getDoubleFromSetting(primitives["spheres"][i]["x"]);
             double y = config.getDoubleFromSetting(primitives["spheres"][i]["y"]);
             double z = config.getDoubleFromSetting(primitives["spheres"][i]["z"]);
+            std::unique_ptr<Math::Point3D> position = this->mathFactory->createPoint3D(x, y, z);
             double radius = config.getDoubleFromSetting(primitives["spheres"][i]["r"]);
-            Render::Color primitiveColor(
+            std::unique_ptr<Render::Color> primitiveColor = this->renderFactory->createColor(
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["r"]),
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["g"]),
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["b"]),
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
             );
 
-            this->addPrimitive(std::make_shared<Primitives::Sphere>(
-                Math::Point3D(x, y, z),
+            std::unique_ptr<Primitives::Sphere> sphere = this->primitivesFactory->createSphere(
+                *position,
                 radius,
-                primitiveColor
-            ));
+                *primitiveColor
+            );
+            this->addPrimitive(std::make_shared<Primitives::Sphere>(*sphere));
         }
     }
 
@@ -59,77 +72,81 @@ RayTracer::Scene::Scene(const ParseConfig &config)
             double x_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["x"]);
             double y_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["y"]);
             double z_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["z"]);
-            Render::Color lightColor(
+            std::unique_ptr<Math::Point3D> origin = this->mathFactory->createPoint3D(x_point, y_point, z_point);
+            std::unique_ptr<Math::Vector3D> direction = this->mathFactory->createVector3D(-x_vector, y_vector, z_vector);
+            std::unique_ptr<Render::Color> lightColor = this->renderFactory->createColor(
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["r"]),
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["g"]),
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["b"]),
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["a"])
             );
 
-            this->addLight(std::make_shared<Lights::DirectionalLight>(
-                Math::Point3D(x_point, y_point, z_point),
-                Math::Vector3D(-x_vector, -y_vector, -z_vector),
+            std::unique_ptr<Lights::DirectionalLight> light = this->lightsFactory->createDirectionalLight(
+                *origin,
+                *direction,
                 brightness,
-                lightColor)
+                *lightColor
             );
+            this->addLight(std::make_shared<Lights::DirectionalLight>(*light));
         }
     }
 
-    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(
-        Math::Point3D(0, -5000, 0),
-        Math::Vector3D(0, 10000, 10000),
-        Math::Vector3D(0, 0, 0),
-        Render::Color(1, 1, 0, 1)
-    ));
+    std::unique_ptr<Math::Point3D> origin = this->mathFactory->createPoint3D(0, -5000, 0);
+    std::unique_ptr<Math::Vector3D> bottom_side = this->mathFactory->createVector3D(0, 10000, 10000);
+    std::unique_ptr<Math::Vector3D> left_side = this->mathFactory->createVector3D(0, 0, 0);
+    std::unique_ptr<Render::Color> color = this->renderFactory->createColor(1, 1, 0, 1);
+    std::unique_ptr<Primitives::Rectangle3D> ground = this->primitivesFactory->createRectangle3D(
+        *origin,
+        *bottom_side,
+        *left_side,
+        *color
+    );
+    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(*ground));
 }
 
-RayTracer::Scene::Scene()
-    : camera(
-        Math::Point3D(0, 0, 0),
-        Primitives::Rectangle3D(
-            Math::Point3D(-0.5, -0.5, 1),
-            Math::Vector3D(1, 0, 0),
-            Math::Vector3D(0, 1, 0),
-            Render::Color(0, 0, 0, 0)
-        )
-    )
+RayTracer::Scene::Scene() :
+    lightsLoader("plugins/raytracer_lights.so"),
+    primitivesLoader("plugins/raytracer_primitives.so"),
+    mathLoader("plugins/raytracer_math.so"),
+    renderLoader("plugins/raytracer_render.so"),
+    viewLoader("plugins/raytracer_view.so")
 {
-    this->addPrimitive(std::make_shared<Primitives::Sphere>(
-        Math::Point3D(0, 0, 4),
-        1,
-        Render::Color(1, 0, 0, 1)
-    ));
-
-    this->addPrimitive(std::make_shared<Primitives::Sphere>(
-        Math::Point3D(-1, 0, 4),
-        0.5,
-        Render::Color(0, 1, 0, 1)
-    ));
-
-    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(
-        Math::Point3D(0, -5000, 0),
-        Math::Vector3D(0, 10000, 10000),
-        Math::Vector3D(0, 0, 0),
-        Render::Color(1, 1, 0, 1)
-    ));
-
-    this->addLight(std::make_shared<Lights::DirectionalLight>(
-        Math::Point3D(0.5, 0.5, 4),
-        Math::Vector3D(-0.5, -0.5, 0),
-        0.25,
-        Render::Color(1, 1, 1, 1)
-    ));
-
-    this->addLight(std::make_shared<Lights::DirectionalLight>(
-        Math::Point3D(-0.5, 0.5, 4),
-        Math::Vector3D(0.5, -0.5, 0),
-        1,
-        Render::Color(1, 1, 1, 1)
-    ));
+    this->initFactories();
 }
 
 RayTracer::Scene::~Scene()
 {
+}
+
+void RayTracer::Scene::initFactories()
+{
+    std::string const &createLightsFn = "createLightsFactory";
+    std::string const &createMathFn = "createMathFactory";
+    std::string const &createPrimitivesFn = "createPrimitivesFactory";
+    std::string const &createRenderFn = "createRenderFactory";
+    std::string const &createViewFn = "createViewFactory";
+
+    using lightsFnPtr = std::unique_ptr<Lights::LightsFactory> (*)();
+    using mathFnPtr = std::unique_ptr<Math::MathFactory> (*)();
+    using primitivesFnPtr = std::unique_ptr<Primitives::PrimitivesFactory> (*)();
+    using renderFnPtr = std::unique_ptr<Render::RenderFactory> (*)();
+    using viewFnPtr = std::unique_ptr<View::ViewFactory> (*)();
+
+    lightsFnPtr createLightsPtr = this->lightsLoader.template getInstance<lightsFnPtr>(createLightsFn);
+    mathFnPtr createMathPtr = this->mathLoader.template getInstance<mathFnPtr>(createMathFn);
+    primitivesFnPtr createPrimitivesPtr = this->primitivesLoader.template getInstance<primitivesFnPtr>(createPrimitivesFn);
+    renderFnPtr createRenderPtr = this->renderLoader.template getInstance<renderFnPtr>(createRenderFn);
+    viewFnPtr createViewPtr = this->viewLoader.template getInstance<viewFnPtr>(createViewFn);
+
+    try {
+        this->lightsFactory = createLightsPtr();
+        this->mathFactory = createMathPtr();
+        this->primitivesFactory = createPrimitivesPtr();
+        this->renderFactory = createRenderPtr();
+        this->viewFactory = createViewPtr();
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void RayTracer::Scene::addPrimitive(std::shared_ptr<IPrimitives> primitive)
@@ -142,9 +159,9 @@ void RayTracer::Scene::addLight(std::shared_ptr<ILights> light)
     this->lights.push_back(std::move(light));
 }
 
-void RayTracer::Scene::setCamera(View::Camera camera)
+void RayTracer::Scene::setCamera(std::unique_ptr<View::Camera> camera)
 {
-    this->camera = camera;
+    this->camera = std::move(camera);
 }
 
 std::vector<std::vector<RayTracer::Render::Color>> RayTracer::Scene::getPixels() const
@@ -165,7 +182,7 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
     for (double y = 1; y >= 0; y -= static_cast<double>(pixelSize) / height) {
         for (double x = 0; x < 1; x += static_cast<double>(pixelSize) / width) {
             Render::Color color(0, 0, 0, 1);
-            View::Ray ray = camera.ray(x, y);
+            View::Ray ray = camera->ray(x, y);
             auto sortedPrimitives = primitives;
 
             std::sort(sortedPrimitives.begin(), sortedPrimitives.end(), [&ray](
@@ -188,19 +205,24 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
 
 RayTracer::View::Camera RayTracer::Scene::getCamera() const
 {
-    return this->camera;
+    return *this->camera;
 }
 
 void RayTracer::Scene::translateCamera(Math::Vector3D vector)
 {
     View::Camera newCamera = this->getCamera();
     newCamera.translate(vector);
-    this->setCamera(newCamera);
+    this->setCamera(std::make_unique<View::Camera>(newCamera));
 }
 
 void RayTracer::Scene::rotateCamera(Math::Vector3D vector, double angle)
 {
     View::Camera newCamera = this->getCamera();
     newCamera.rotate(vector, angle);
-    this->setCamera(newCamera);
+    this->setCamera(std::make_unique<View::Camera>(newCamera));
+}
+
+std::unique_ptr<RayTracer::Math::MathFactory> RayTracer::Scene::getMathFactory()
+{
+    return std::move(this->mathFactory);
 }

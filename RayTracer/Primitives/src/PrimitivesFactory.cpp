@@ -11,7 +11,7 @@ RayTracer::Primitives::PrimitivesFactory::~PrimitivesFactory()
 {
 }
 
-std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
+std::unique_ptr<RayTracer::Primitives::Sphere> RayTracer::Primitives::PrimitivesFactory::createSphere(
     RayTracer::Math::Point3D origin,
     double radius,
     RayTracer::Render::Color color
@@ -24,7 +24,7 @@ std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
     );
 }
 
-std::unique_ptr<RayTracer::Primitives::Rectangle3D> createRectangle3D(
+std::unique_ptr<RayTracer::Primitives::Rectangle3D> RayTracer::Primitives::PrimitivesFactory::createRectangle3D(
     RayTracer::Math::Point3D origin,
     RayTracer::Math::Vector3D bottom_side,
     RayTracer::Math::Vector3D left_side,

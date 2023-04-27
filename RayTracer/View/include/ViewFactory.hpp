@@ -20,11 +20,8 @@ namespace RayTracer {
                 ViewFactory() = default;
                 ~ViewFactory() override;
                 std::unique_ptr<RayTracer::View::Camera> createCamera(
-                    RayTracer::Math::Point3D position,
-                    int width,
-                    int height,
-                    RayTracer::Math::Vector3D rotation,
-                    double fov
+                    Math::Point3D origin,
+                    Primitives::Rectangle3D screen
                 );
                 std::unique_ptr<RayTracer::View::Ray> createRay(
                     RayTracer::Math::Point3D origin,

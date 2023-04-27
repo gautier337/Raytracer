@@ -11,7 +11,7 @@ RayTracer::Lights::LightsFactory::~LightsFactory()
 {
 }
 
-std::unique_ptr<RayTracer::Lights::DirectionalLight> createDirectionalLight(
+std::unique_ptr<RayTracer::Lights::DirectionalLight> RayTracer::Lights::LightsFactory::createDirectionalLight(
     RayTracer::Math::Point3D origin,
     RayTracer::Math::Vector3D direction,
     double brightness,
@@ -26,7 +26,7 @@ std::unique_ptr<RayTracer::Lights::DirectionalLight> createDirectionalLight(
     );
 }
 
-extern "C" std::unique_ptr<RayTracer::Lights::LightsFactory> LightsFactory()
+extern "C" std::unique_ptr<RayTracer::Lights::LightsFactory> createLightsFactory()
 {
     return std::make_unique<RayTracer::Lights::LightsFactory>();
 }

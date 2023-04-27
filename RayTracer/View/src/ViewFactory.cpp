@@ -11,18 +11,27 @@ RayTracer::View::ViewFactory::~ViewFactory()
 {
 }
 
-std::unique_ptr<RayTracer::View::Camera> createCamera(
-    RayTracer::Math::Point3D position,
-    int width,
-    int height,
-    RayTracer::Math::Vector3D rotation,
-    double fov
-);
+std::unique_ptr<RayTracer::View::Camera> RayTracer::View::ViewFactory::createCamera(
+    RayTracer::Math::Point3D origin,
+    RayTracer::Primitives::Rectangle3D screen
+)
+{
+    return std::make_unique<RayTracer::View::Camera>(
+        origin,
+        screen
+    );
+}
 
-std::unique_ptr<RayTracer::View::Ray> createRay(
+std::unique_ptr<RayTracer::View::Ray> RayTracer::View::ViewFactory::createRay(
     RayTracer::Math::Point3D origin,
     RayTracer::Math::Vector3D direction
-);
+)
+{
+    return std::make_unique<RayTracer::View::Ray>(
+        origin,
+        direction
+    );
+}
 
 extern "C" std::unique_ptr<RayTracer::View::ViewFactory> createViewFactory()
 {

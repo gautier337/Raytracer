@@ -11,15 +11,14 @@ RayTracer::Render::RenderFactory::~RenderFactory()
 {
 }
 
-std::unique_ptr<RayTracer::View::Camera> createView(
-    RayTracer::Math::Point3D origin,
-    RayTracer::Primitives::Rectangle3D screen
+std::unique_ptr<RayTracer::Render::Color> RayTracer::Render::RenderFactory::createColor(
+    double r,
+    double g,
+    double b,
+    double a
 )
 {
-    return std::make_unique<RayTracer::View::Camera>(
-        origin,
-        screen
-    );
+    return std::make_unique<RayTracer::Render::Color>(r, g, b, a);
 }
 
 extern "C" std::unique_ptr<RayTracer::Render::RenderFactory> createRenderFactory()

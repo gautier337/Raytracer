@@ -20,7 +20,7 @@ std::unique_ptr<RayTracer::Math::Vector3D> RayTracer::Math::MathFactory::createV
     return std::make_unique<RayTracer::Math::Vector3D>(x, y, z);
 }
 
-std::unique_ptr<RayTracer::Math::Point3D> createPoint3D(
+std::unique_ptr<RayTracer::Math::Point3D> RayTracer::Math::MathFactory::createPoint3D(
     double x,
     double y,
     double z

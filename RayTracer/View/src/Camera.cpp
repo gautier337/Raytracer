@@ -8,17 +8,6 @@
 #include "Camera.hpp"
 #include <cmath>
 
-RayTracer::View::Camera::Camera() :
-    origin(0.5, 0.5, 0),
-    screen(
-        RayTracer::Math::Point3D(0, 0, -1),
-        RayTracer::Math::Vector3D(1, 0, 0),
-        RayTracer::Math::Vector3D(0, 1, 0),
-        RayTracer::Render::Color(0, 0, 0, 0)
-    )
-{
-}
-
 RayTracer::View::Camera::~Camera()
 {
 }

@@ -16,9 +16,11 @@ namespace RayTracer {
             public:
                 RenderFactory() = default;
                 ~RenderFactory() override;
-                std::unique_ptr<RayTracer::View::Camera> createView(
-                    Math::Point3D origin,
-                    Primitives::Rectangle3D screen
+                std::unique_ptr<RayTracer::Render::Color> createColor(
+                    double r,
+                    double g,
+                    double b,
+                    double a
                 );
         };
     }
