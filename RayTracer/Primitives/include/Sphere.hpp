@@ -6,15 +6,16 @@
 */
 
 #pragma once
+#include "IPrimitives.hpp"
 #include "Point3D.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
-#include "DirectionalLight.hpp"
+#include "ILights.hpp"
 #include <vector>
 
 namespace RayTracer {
     namespace Primitives {
-        class Sphere {
+        class Sphere : public IPrimitives {
             public:
                 Sphere();
                 ~Sphere();
@@ -27,19 +28,14 @@ namespace RayTracer {
                 Sphere(Sphere &&sphere);
                 Sphere &operator=(const Sphere &sphere);
                 Sphere &operator=(Sphere &&sphere);
-                bool hits(View::Ray ray);
+                double getIntersectionPoint(View::Ray ray) override;
+                bool hits(View::Ray ray) override;
                 Render::Color computeColor(
                     View::Ray ray,
-                    std::vector<Lights::DirectionalLight> lights
-                );
-                void translate(Math::Vector3D translation);
-                void rotateX(double angle);
-                void rotateY(double angle);
-                void rotateZ(double angle);
-                double getCenterX() const;
-                double getCenterY() const;
-                double getCenterZ() const;
-                double getIntersectionPoint(View::Ray ray);
+                    std::vector<std::shared_ptr<ILights>> lights
+                ) override;
+                void translate(Math::Vector3D translation) override;
+                void rotate(Math::Vector3D axis, double angle) override;
 
             protected:
             private:

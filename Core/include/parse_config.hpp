@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "Color.hpp"
 
 class ParseConfig {
     public:
@@ -22,6 +23,9 @@ class ParseConfig {
         libconfig::Setting &get_setting(std::string name) const;
         std::vector<int> get_window_height_width_from_setting();
         double getDoubleFromSetting(const libconfig::Setting &setting) const;
+        RayTracer::Render::Color getColorFromSetting(
+            const libconfig::Setting &colorSetting
+        ) const;
 
     private:
         libconfig::Config config;

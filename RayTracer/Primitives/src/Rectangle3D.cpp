@@ -76,6 +76,38 @@ RayTracer::Primitives::Rectangle3D &RayTracer::Primitives::Rectangle3D::operator
     return *this;
 }
 
+double RayTracer::Primitives::Rectangle3D::getIntersectionPoint(View::Ray ray)
+{
+    RayTracer::Math::Vector3D w(
+        this->origin.getX() - ray.getOrigin().getX(),
+        this->origin.getY() - ray.getOrigin().getY(),
+        this->origin.getZ() - ray.getOrigin().getZ()
+    );
+    double a = w.dot(ray.getDirection());
+    double b = ray.getDirection().dot(ray.getDirection());
+    double r = a / b;
+
+    if (r < 0)
+        return -1;
+
+    RayTracer::Math::Point3D p = ray.getOrigin() + (ray.getDirection() * r);
+    RayTracer::Math::Vector3D d(
+        p.getX() - this->origin.getX(),
+        p.getY() - this->origin.getY(),
+        p.getZ() - this->origin.getZ()
+    );
+
+    double ddota = d.dot(this->bottom_side);
+    if (ddota < 0 || ddota > this->bottom_side.dot(this->bottom_side))
+        return -1;
+
+    double ddotb = d.dot(this->left_side);
+    if (ddotb < 0 || ddotb > this->left_side.dot(this->left_side))
+        return -1;
+
+    return r;
+}
+
 bool RayTracer::Primitives::Rectangle3D::hits(const RayTracer::View::Ray ray)
 {
     RayTracer::Math::Vector3D w(
@@ -109,7 +141,8 @@ bool RayTracer::Primitives::Rectangle3D::hits(const RayTracer::View::Ray ray)
 }
 
 RayTracer::Render::Color RayTracer::Primitives::Rectangle3D::computeColor(
-    RayTracer::View::Ray ray
+    RayTracer::View::Ray ray,
+    std::vector<std::shared_ptr<ILights>> lights
 )
 {
     RayTracer::Render::Color newColor(0, 0, 0, 1);

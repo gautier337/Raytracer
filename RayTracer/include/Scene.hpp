@@ -10,8 +10,9 @@
 #include "DirectionalLight.hpp"
 #include "Camera.hpp"
 #include "Color.hpp"
-#include <vector>
 #include "parse_config.hpp"
+#include <vector>
+#include <memory>
 
 namespace RayTracer {
     class Scene {
@@ -19,9 +20,8 @@ namespace RayTracer {
             Scene();
             Scene(const ParseConfig &config);
             ~Scene();
-            void addObject(Primitives::Rectangle3D object);
-            void addObject(Primitives::Sphere object);
-            void addLight(Lights::DirectionalLight light);
+            void addPrimitive(std::shared_ptr<IPrimitives> primitive);
+            void addLight(std::shared_ptr<ILights> light);
             void setCamera(View::Camera camera);
             std::vector<std::vector<Render::Color>> getPixels() const;
             void render(int pixelSize, int width, int height);
@@ -31,9 +31,8 @@ namespace RayTracer {
 
         private:
             View::Camera camera;
-            std::vector<Primitives::Rectangle3D> rectangles;
-            std::vector<Primitives::Sphere> spheres;
-            std::vector<Lights::DirectionalLight> lights;
+            std::vector<std::shared_ptr<IPrimitives>> primitives;
+            std::vector<std::shared_ptr<ILights>> lights;
             std::vector<std::vector<Render::Color>> pixels;
     };
 };

@@ -7,33 +7,37 @@
 
 
 #pragma once
-#include "Point3D.hpp"
-#include "Vector3D.hpp"
+#include "ILights.hpp"
 
 namespace RayTracer {
     namespace Lights {
-        class DirectionalLight {
+        class DirectionalLight : public ILights {
             public:
                 DirectionalLight();
                 ~DirectionalLight();
                 DirectionalLight(
                     Math::Point3D origin,
                     Math::Vector3D direction,
-                    double brightness
+                    double brightness,
+                    Render::Color color
                 );
                 DirectionalLight(const DirectionalLight &light);
                 DirectionalLight(DirectionalLight &&light);
-                DirectionalLight &operator=(const DirectionalLight &light);
-                DirectionalLight &operator=(DirectionalLight &&light);
-                Math::Point3D getOrigin() const;
-                Math::Vector3D getDirection() const;
-                double getBrightness() const;
+                Math::Point3D getOrigin() const override;
+                Math::Vector3D getDirection() const override;
+                double getBrightness() const override;
+                Render::Color getColor() const override;
+                void setOrigin(Math::Point3D origin) override;
+                void setDirection(Math::Vector3D direction) override;
+                void setBrightness(double brightness) override;
+                void setColor(Render::Color color) override;
 
             protected:
             private:
                 Math::Point3D origin;
                 Math::Vector3D direction;
                 double brightness;
+                Render::Color color;
         };
     };
 };
