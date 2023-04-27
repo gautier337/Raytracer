@@ -37,7 +37,7 @@ namespace RayTracer {
                 ) override;
                 Math::Point3D pointAt(double u, double v);
                 void translate(Math::Vector3D translation) override;
-                void rotate(Math::Vector3D axis, double angle) override;
+                void rotate(Math::Vector3D rotation, double angle) override;
 
             protected:
             private:

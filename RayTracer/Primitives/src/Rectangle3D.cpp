@@ -201,6 +201,9 @@ void RayTracer::Primitives::Rectangle3D::translate(
     this->origin = this->origin + translation;
 }
 
-void RayTracer::Primitives::Rectangle3D::rotate(Math::Vector3D axis, double angle)
+void RayTracer::Primitives::Rectangle3D::rotate(RayTracer::Math::Vector3D rotation, double angle)
 {
+    this->origin.rotate(rotation, angle);
+    this->bottom_side.rotate(rotation, angle);
+    this->left_side.rotate(rotation, angle);
 }
