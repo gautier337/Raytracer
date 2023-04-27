@@ -9,6 +9,7 @@
 #include "IFactory.hpp"
 #include "Camera.hpp"
 #include "DirectionalLight.hpp"
+#include "Color.hpp"
 #include <memory>
 
 namespace RayTracer {
@@ -20,7 +21,8 @@ namespace RayTracer {
                 std::unique_ptr<RayTracer::Lights::DirectionalLight> createDirectionalLight(
                     Math::Point3D origin,
                     Math::Vector3D direction,
-                    double brightness
+                    double brightness,
+                    Render::Color color
                 );
         };
     }

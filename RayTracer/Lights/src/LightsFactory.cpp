@@ -14,13 +14,15 @@ RayTracer::Lights::LightsFactory::~LightsFactory()
 std::unique_ptr<RayTracer::Lights::DirectionalLight> createDirectionalLight(
     RayTracer::Math::Point3D origin,
     RayTracer::Math::Vector3D direction,
-    double brightness
+    double brightness,
+    RayTracer::Render::Color color
 )
 {
     return std::make_unique<RayTracer::Lights::DirectionalLight>(
         origin,
         direction,
-        brightness
+        brightness,
+        color
     );
 }
 

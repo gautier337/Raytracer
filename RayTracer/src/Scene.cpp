@@ -33,16 +33,17 @@ RayTracer::Scene::Scene(const ParseConfig &config)
             double y = config.getDoubleFromSetting(primitives["spheres"][i]["y"]);
             double z = config.getDoubleFromSetting(primitives["spheres"][i]["z"]);
             double radius = config.getDoubleFromSetting(primitives["spheres"][i]["r"]);
+            Render::Color primitiveColor(
+                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["r"]),
+                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["g"]),
+                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["b"]),
+                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
+            );
 
             Primitives::Sphere s(
                 Math::Point3D(x, y, z),
                 radius,
-                Render::Color(
-                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["r"]),
-                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["g"]),
-                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["b"]),
-                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
-                )
+                primitiveColor
             );
             this->addObject(s);
         }
@@ -59,13 +60,20 @@ RayTracer::Scene::Scene(const ParseConfig &config)
             double x_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["x"]);
             double y_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["y"]);
             double z_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["z"]);
+            Render::Color lightColor(
+                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["r"]),
+                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["g"]),
+                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["b"]),
+                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["a"])
+            );
 
             Lights::DirectionalLight light(
                 Math::Point3D(x_point, y_point, z_point),
                 Math::Vector3D(-x_vector, -y_vector, -z_vector),
-                brightness
+                brightness,
+                lightColor
             );
-            this->addLight(light);
+            this->addLight(std::make_shared<Lights::DirectionalLight>(light));
         }
     }
 
@@ -114,16 +122,18 @@ RayTracer::Scene::Scene()
     Lights::DirectionalLight lightRight(
         Math::Point3D(0.5, 0.5, 4),
         Math::Vector3D(-0.5, -0.5, 0),
-        0.25
+        0.25,
+        Render::Color(1, 1, 1, 1)
     );
-    this->addLight(lightRight);
+    this->addLight(std::make_shared<Lights::DirectionalLight>(lightRight));
 
     Lights::DirectionalLight lightLeft(
         Math::Point3D(-0.5, 0.5, 4),
         Math::Vector3D(0.5, -0.5, 0),
-        1
+        1,
+        Render::Color(1, 1, 1, 1)
     );
-    this->addLight(lightLeft);
+    this->addLight(std::make_shared<Lights::DirectionalLight>(lightLeft));
 }
 
 RayTracer::Scene::~Scene()
@@ -140,9 +150,9 @@ void RayTracer::Scene::addObject(Primitives::Sphere object)
     spheres.push_back(object);
 }
 
-void RayTracer::Scene::addLight(Lights::DirectionalLight light)
+void RayTracer::Scene::addLight(std::shared_ptr<ILights> light)
 {
-    lights.push_back(light);
+    lights.push_back(std::move(light));
 }
 
 void RayTracer::Scene::setCamera(View::Camera camera)
@@ -185,7 +195,7 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
 
             for (auto sphere : sortedSpheres) {
                 if (sphere.hits(ray)) {
-                    color = sphere.computeColor(ray, this->lights);
+                    color = sphere.computeColor(ray, lights);
                     break;
                 }
             }

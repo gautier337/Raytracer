@@ -7,7 +7,9 @@
 
 #include "DirectionalLight.hpp"
 
-RayTracer::Lights::DirectionalLight::DirectionalLight() : origin(), direction()
+RayTracer::Lights::DirectionalLight::DirectionalLight() :
+    origin(),
+    direction()
 {
 }
 
@@ -19,7 +21,8 @@ RayTracer::Lights::DirectionalLight::~DirectionalLight()
 RayTracer::Lights::DirectionalLight::DirectionalLight(
     Math::Point3D origin,
     Math::Vector3D direction,
-    double brightness
+    double brightness,
+    Render::Color color
 ) :
     origin(origin),
     direction(direction),
@@ -27,51 +30,68 @@ RayTracer::Lights::DirectionalLight::DirectionalLight(
 {
 }
 
-RayTracer::Lights::DirectionalLight::DirectionalLight(const DirectionalLight &light) :
-    origin(light.origin),
-    direction(light.direction),
-    brightness(light.brightness)
-{
-}
-
-RayTracer::Lights::DirectionalLight::DirectionalLight(DirectionalLight &&light) :
-    origin(light.origin),
-    direction(light.direction),
-    brightness(light.brightness)
-{
-}
-
-RayTracer::Lights::DirectionalLight &RayTracer::Lights::DirectionalLight::operator=(
+RayTracer::Lights::DirectionalLight::DirectionalLight(
     const DirectionalLight &light
-)
+) :
+    origin(light.origin),
+    direction(light.direction),
+    brightness(light.brightness)
 {
-    this->origin = light.origin;
-    this->direction = light.direction;
-    this->brightness = light.brightness;
-    return *this;
 }
 
-RayTracer::Lights::DirectionalLight &RayTracer::Lights::DirectionalLight::operator=(
+RayTracer::Lights::DirectionalLight::DirectionalLight(
     DirectionalLight &&light
-)
+) :
+    origin(light.origin),
+    direction(light.direction),
+    brightness(light.brightness)
 {
-    this->origin = light.origin;
-    this->direction = light.direction;
-    this->brightness = light.brightness;
-    return *this;
 }
 
 RayTracer::Math::Point3D RayTracer::Lights::DirectionalLight::getOrigin() const
 {
-    return origin;
+    return this->origin;
 }
 
 RayTracer::Math::Vector3D RayTracer::Lights::DirectionalLight::getDirection() const
 {
-    return direction;
+    return this->direction;
 }
 
 double RayTracer::Lights::DirectionalLight::getBrightness() const
 {
-    return brightness;
+    return this->brightness;
+}
+
+RayTracer::Render::Color RayTracer::Lights::DirectionalLight::getColor() const
+{
+    return this->color;
+}
+
+void RayTracer::Lights::DirectionalLight::setOrigin(
+    Math::Point3D origin
+)
+{
+    this->origin = origin;
+}
+
+void RayTracer::Lights::DirectionalLight::setDirection(
+    Math::Vector3D direction
+)
+{
+    this->direction = direction;
+}
+
+void RayTracer::Lights::DirectionalLight::setBrightness(
+    double brightness
+)
+{
+    this->brightness = brightness;
+}
+
+void RayTracer::Lights::DirectionalLight::setColor(
+    Render::Color color
+)
+{
+    this->color = color;
 }
