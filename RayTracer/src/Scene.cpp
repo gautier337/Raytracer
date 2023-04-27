@@ -173,18 +173,20 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
             auto sortedSpheres = spheres;
 
             std::sort(sortedSpheres.begin(), sortedSpheres.end(), [&ray](Primitives::Sphere &a, Primitives::Sphere &b) {
-                return a.getCenterZ() > b.getCenterZ();
+                return a.getIntersectionPoint(ray) < b.getIntersectionPoint(ray);
             });
 
             for (auto rectangle : sortedRectangles) {
                 if (rectangle.hits(ray)) {
                     color = rectangle.computeColor(ray);
+                    break;
                 }
             }
 
             for (auto sphere : sortedSpheres) {
                 if (sphere.hits(ray)) {
                     color = sphere.computeColor(ray, this->lights);
+                    break;
                 }
             }
 

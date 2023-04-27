@@ -39,12 +39,14 @@ namespace RayTracer {
                 double getCenterX() const;
                 double getCenterY() const;
                 double getCenterZ() const;
+                double getIntersectionPoint(View::Ray ray);
 
             protected:
             private:
                 Math::Point3D center;
                 double radius;
                 Render::Color color;
+                double closestT;
         };
     };
 };

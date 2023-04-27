@@ -8,7 +8,11 @@
 #include "Sphere.hpp"
 #include <cmath>
 
-RayTracer::Primitives::Sphere::Sphere() : center(), radius(0), color(0, 0, 0, 1)
+RayTracer::Primitives::Sphere::Sphere() :
+    center(),
+    radius(0),
+    color(0, 0, 0, 1),
+    closestT(__FLT_MAX__)
 {
 }
 
@@ -23,21 +27,24 @@ RayTracer::Primitives::Sphere::Sphere(
 ) :
     center(center),
     radius(radius),
-    color(color)
+    color(color),
+    closestT(__FLT_MAX__)
 {
 }
 
 RayTracer::Primitives::Sphere::Sphere(const Sphere &sphere) :
     center(sphere.center),
     radius(sphere.radius),
-    color(sphere.color)
+    color(sphere.color),
+    closestT(sphere.closestT)
 {
 }
 
 RayTracer::Primitives::Sphere::Sphere(Sphere &&sphere) :
     center(sphere.center),
     radius(sphere.radius),
-    color(sphere.color)
+    color(sphere.color),
+    closestT(sphere.closestT)
 {
 }
 
@@ -48,6 +55,7 @@ RayTracer::Primitives::Sphere &RayTracer::Primitives::Sphere::operator=(
     this->center = sphere.center;
     this->radius = sphere.radius;
     this->color = sphere.color;
+    this->closestT = sphere.closestT;
     return *this;
 }
 
@@ -58,6 +66,7 @@ RayTracer::Primitives::Sphere &RayTracer::Primitives::Sphere::operator=(
     this->center = sphere.center;
     this->radius = sphere.radius;
     this->color = sphere.color;
+    this->closestT = sphere.closestT;
     return *this;
 }
 
@@ -81,18 +90,7 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     std::vector<RayTracer::Lights::DirectionalLight> lights
 )
 {
-    RayTracer::Math::Vector3D oc(
-        (ray.getOrigin() - this->center).getX(),
-        (ray.getOrigin() - this->center).getY(),
-        (ray.getOrigin() - this->center).getZ()
-    );
-
-    double a = ray.getDirection().dot(ray.getDirection());
-    double b = 2.0 * oc.dot(ray.getDirection());
-    double c = oc.dot(oc) - this->radius * this->radius;
-    double discriminant = b * b - 4 * a * c;
-    double t = (-b - sqrt(discriminant)) / (2.0 * a);
-    RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * t;
+    RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * this->closestT;
     RayTracer::Math::Vector3D non_normal(
         (this->center - hitPoint).getX() * 2,
         (this->center - hitPoint).getY() * 2,
@@ -171,4 +169,23 @@ double RayTracer::Primitives::Sphere::getCenterY() const
 double RayTracer::Primitives::Sphere::getCenterZ() const
 {
     return this->center.getZ();
+}
+
+double RayTracer::Primitives::Sphere::getIntersectionPoint(View::Ray ray)
+{
+    RayTracer::Math::Vector3D oc(
+        (ray.getOrigin() - this->center).getX(),
+        (ray.getOrigin() - this->center).getY(),
+        (ray.getOrigin() - this->center).getZ()
+    );
+
+    double a = ray.getDirection().dot(ray.getDirection());
+    double b = 2.0 * oc.dot(ray.getDirection());
+    double c = oc.dot(oc) - this->radius * this->radius;
+    double discriminant = b * b - 4 * a * c;
+    double closestT = (-b - sqrt(discriminant)) / (2.0 * a);
+    if (closestT < 0)
+        closestT = (-b + sqrt(discriminant)) / (2.0 * a);
+    this->closestT = closestT;
+    return closestT;
 }
