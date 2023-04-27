@@ -58,6 +58,37 @@ int raytracer(std::string const &sceneFile)
                     case sf::Keyboard::Escape:
                         window.close();
                         break;
+                    case sf::Keyboard::Z:
+                        scene.translateCamera(RayTracer::Math::Vector3D(0, 0, 0.5));
+                        break;
+                    case sf::Keyboard::S:
+                        scene.translateCamera(RayTracer::Math::Vector3D(0, 0, -0.5));
+                        break;
+                    case sf::Keyboard::Q:
+                        scene.translateCamera(RayTracer::Math::Vector3D(-0.5, 0, 0));
+                        break;
+                    case sf::Keyboard::D:
+                        scene.translateCamera(RayTracer::Math::Vector3D(0.5, 0, 0));
+                        break;
+                    case sf::Keyboard::Space:
+                        scene.translateCamera(RayTracer::Math::Vector3D(0, 0.5, 0));
+                        break;
+                    case sf::Keyboard::LShift:
+                        scene.translateCamera(RayTracer::Math::Vector3D(0, -0.5, 0));
+                        break;
+                shouldUpdatePoints = true;
+                    case sf::Keyboard::Up:
+                        scene.rotateCamera(RayTracer::Math::Vector3D(-1, 0, 0), 0.1);
+                        break;
+                    case sf::Keyboard::Down:
+                        scene.rotateCamera(RayTracer::Math::Vector3D(1, 0, 0), 0.1);
+                        break;
+                    case sf::Keyboard::Left:
+                        scene.rotateCamera(RayTracer::Math::Vector3D(0, 1, 0), -0.1);
+                        break;
+                    case sf::Keyboard::Right:
+                        scene.rotateCamera(RayTracer::Math::Vector3D(0, 1, 0), 0.1);
+                        break;
                     default:
                         break;
                 }

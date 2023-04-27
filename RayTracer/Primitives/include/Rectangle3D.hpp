@@ -31,6 +31,7 @@ namespace RayTracer {
                 Render::Color computeColor(View::Ray ray);
                 Math::Point3D pointAt(double u, double v);
                 void translate(Math::Vector3D translation);
+                void rotate(Math::Vector3D rotation, double angle);
 
             protected:
             private:

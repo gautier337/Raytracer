@@ -190,3 +190,26 @@ double RayTracer::Math::Point3D::distance(const RayTracer::Math::Point3D &point)
         pow(this->z - point.getZ(), 2)
     );
 }
+
+void RayTracer::Math::Point3D::rotate(Math::Vector3D axis, double angle)
+{
+    double x = this->x;
+    double y = this->y;
+    double z = this->z;
+    double u = axis.getX();
+    double v = axis.getY();
+    double w = axis.getZ();
+    double cosT = cos(angle);
+    double sinT = sin(angle);
+    double msinT = 1 - cosT;
+    double l = sqrt(u * u + v * v + w * w);
+    u /= l;
+    v /= l;
+    w /= l;
+    this->x = (u * u * msinT + cosT) * x + (u * v * msinT - w * sinT) * y +
+        (u * w * msinT + v * sinT) * z;
+    this->y = (u * v * msinT + w * sinT) * x + (v * v * msinT + cosT) * y +
+        (v * w * msinT - u * sinT) * z;
+    this->z = (u * w * msinT - v * sinT) * x + (v * w * msinT + u * sinT) * y +
+        (w * w * msinT + cosT) * z;
+}

@@ -74,3 +74,8 @@ void RayTracer::View::Camera::translate(RayTracer::Math::Vector3D vector)
     this->origin = this->origin + vector;
     this->screen.translate(vector);
 }
+
+void RayTracer::View::Camera::rotate(RayTracer::Math::Vector3D rotation, double angle)
+{
+    this->screen.rotate(rotation, angle);
+}

@@ -195,3 +195,22 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
         }
     }
 }
+
+RayTracer::View::Camera RayTracer::Scene::getCamera() const
+{
+    return this->camera;
+}
+
+void RayTracer::Scene::translateCamera(Math::Vector3D vector)
+{
+    View::Camera newCamera = this->getCamera();
+    newCamera.translate(vector);
+    this->setCamera(newCamera);
+}
+
+void RayTracer::Scene::rotateCamera(Math::Vector3D vector, double angle)
+{
+    View::Camera newCamera = this->getCamera();
+    newCamera.rotate(vector, angle);
+    this->setCamera(newCamera);
+}
