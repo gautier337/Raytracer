@@ -40,12 +40,11 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
             );
 
-            Primitives::Sphere s(
+            this->addPrimitive(std::make_shared<Primitives::Sphere>(
                 Math::Point3D(x, y, z),
                 radius,
                 primitiveColor
-            );
-            this->addObject(s);
+            ));
         }
     }
 
@@ -67,23 +66,21 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["a"])
             );
 
-            Lights::DirectionalLight light(
+            this->addLight(std::make_shared<Lights::DirectionalLight>(
                 Math::Point3D(x_point, y_point, z_point),
                 Math::Vector3D(-x_vector, -y_vector, -z_vector),
                 brightness,
-                lightColor
+                lightColor)
             );
-            this->addLight(std::make_shared<Lights::DirectionalLight>(light));
         }
     }
 
-    Primitives::Rectangle3D ground(
+    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(
         Math::Point3D(0, -5000, 0),
         Math::Vector3D(0, 10000, 10000),
         Math::Vector3D(0, 0, 0),
         Render::Color(1, 1, 0, 1)
-    );
-    this->addObject(ground);
+    ));
 }
 
 RayTracer::Scene::Scene()
@@ -97,62 +94,52 @@ RayTracer::Scene::Scene()
         )
     )
 {
-    Primitives::Sphere s(
+    this->addPrimitive(std::make_shared<Primitives::Sphere>(
         Math::Point3D(0, 0, 4),
         1,
         Render::Color(1, 0, 0, 1)
-    );
-    this->addObject(s);
+    ));
 
-    Primitives::Sphere s2(
+    this->addPrimitive(std::make_shared<Primitives::Sphere>(
         Math::Point3D(-1, 0, 4),
         0.5,
         Render::Color(0, 1, 0, 1)
-    );
-    this->addObject(s2);
+    ));
 
-    Primitives::Rectangle3D ground(
+    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(
         Math::Point3D(0, -5000, 0),
         Math::Vector3D(0, 10000, 10000),
         Math::Vector3D(0, 0, 0),
         Render::Color(1, 1, 0, 1)
-    );
-    this->addObject(ground);
+    ));
 
-    Lights::DirectionalLight lightRight(
+    this->addLight(std::make_shared<Lights::DirectionalLight>(
         Math::Point3D(0.5, 0.5, 4),
         Math::Vector3D(-0.5, -0.5, 0),
         0.25,
         Render::Color(1, 1, 1, 1)
-    );
-    this->addLight(std::make_shared<Lights::DirectionalLight>(lightRight));
+    ));
 
-    Lights::DirectionalLight lightLeft(
+    this->addLight(std::make_shared<Lights::DirectionalLight>(
         Math::Point3D(-0.5, 0.5, 4),
         Math::Vector3D(0.5, -0.5, 0),
         1,
         Render::Color(1, 1, 1, 1)
-    );
-    this->addLight(std::make_shared<Lights::DirectionalLight>(lightLeft));
+    ));
 }
 
 RayTracer::Scene::~Scene()
 {
 }
 
-void RayTracer::Scene::addObject(Primitives::Rectangle3D object)
+void RayTracer::Scene::addPrimitive(std::shared_ptr<IPrimitives> primitive)
 {
-    rectangles.push_back(object);
-}
-
-void RayTracer::Scene::addObject(Primitives::Sphere object)
-{
-    spheres.push_back(object);
+    this->primitives.push_back(primitive);
 }
 
 void RayTracer::Scene::addLight(std::shared_ptr<ILights> light)
 {
-    lights.push_back(std::move(light));
+    this->lights.push_back(std::move(light));
 }
 
 void RayTracer::Scene::setCamera(View::Camera camera)
@@ -179,23 +166,16 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
         for (double x = 0; x < 1; x += static_cast<double>(pixelSize) / width) {
             Render::Color color(0, 0, 0, 1);
             View::Ray ray = camera.ray(x, y);
-            auto sortedRectangles = rectangles;
-            auto sortedSpheres = spheres;
+            auto sortedPrimitives = primitives;
 
-            std::sort(sortedSpheres.begin(), sortedSpheres.end(), [&ray](Primitives::Sphere &a, Primitives::Sphere &b) {
-                return a.getIntersectionPoint(ray) < b.getIntersectionPoint(ray);
+            std::sort(sortedPrimitives.begin(), sortedPrimitives.end(), [&ray](
+                std::shared_ptr<IPrimitives> a, std::shared_ptr<IPrimitives> b) {
+                return a->getIntersectionPoint(ray) < b->getIntersectionPoint(ray);
             });
 
-            for (auto rectangle : sortedRectangles) {
-                if (rectangle.hits(ray)) {
-                    color = rectangle.computeColor(ray);
-                    break;
-                }
-            }
-
-            for (auto sphere : sortedSpheres) {
-                if (sphere.hits(ray)) {
-                    color = sphere.computeColor(ray, lights);
+            for (std::shared_ptr<IPrimitives> primitive : sortedPrimitives) {
+                if (primitive->hits(ray)) {
+                    color = primitive->computeColor(ray, lights);
                     break;
                 }
             }

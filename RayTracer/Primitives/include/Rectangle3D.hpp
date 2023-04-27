@@ -10,10 +10,12 @@
 #include "Vector3D.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
+#include "IPrimitives.hpp"
+#include "ILights.hpp"
 
 namespace RayTracer {
     namespace Primitives {
-        class Rectangle3D {
+        class Rectangle3D : public IPrimitives {
             public:
                 Rectangle3D();
                 ~Rectangle3D();
@@ -27,10 +29,15 @@ namespace RayTracer {
                 Rectangle3D(Rectangle3D &&rectangle);
                 Rectangle3D &operator=(const Rectangle3D &rectangle);
                 Rectangle3D &operator=(Rectangle3D &&rectangle);
-                bool hits(View::Ray ray);
-                Render::Color computeColor(View::Ray ray);
+                double getIntersectionPoint(View::Ray ray) override;
+                bool hits(View::Ray ray) override;
+                Render::Color computeColor(
+                    View::Ray ray,
+                    std::vector<std::shared_ptr<ILights>> lights
+                ) override;
                 Math::Point3D pointAt(double u, double v);
-                void translate(Math::Vector3D translation);
+                void translate(Math::Vector3D translation) override;
+                void rotate(Math::Vector3D axis, double angle) override;
 
             protected:
             private:
