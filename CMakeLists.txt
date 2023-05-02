@@ -130,3 +130,8 @@ add_executable(
 
 target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS} ${LIBCONFIG++_LIBRARIES})
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
+target_link_libraries(${EXECUTABLE_NAME} ${LIGHTS_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${MATH_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${PRIMITIVES_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${RENDER_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${VIEW_LIB})
