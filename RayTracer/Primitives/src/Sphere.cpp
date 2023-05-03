@@ -153,3 +153,16 @@ void RayTracer::Primitives::Sphere::rotate(Math::Vector3D axis, double angle)
     this->center.setY(yPrime);
     this->center.setZ(zPrime);
 }
+
+extern "C" std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
+    RayTracer::Math::Point3D center,
+    double radius,
+    RayTracer::Render::Color color
+)
+{
+    return std::make_unique<RayTracer::Primitives::Sphere>(
+        center,
+        radius,
+        color
+    );
+}

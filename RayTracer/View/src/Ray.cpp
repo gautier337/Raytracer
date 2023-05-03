@@ -6,6 +6,7 @@
 */
 
 #include "Ray.hpp"
+#include <memory>
 
 RayTracer::View::Ray::Ray() :
     origin(),
@@ -61,4 +62,12 @@ RayTracer::Math::Point3D RayTracer::View::Ray::getOrigin() const
 RayTracer::Math::Vector3D RayTracer::View::Ray::getDirection() const
 {
     return this->direction;
+}
+
+extern "C" std::unique_ptr<RayTracer::View::Ray> createRay(
+    RayTracer::Math::Point3D origin,
+    RayTracer::Math::Vector3D direction
+)
+{
+    return std::make_unique<RayTracer::View::Ray>(origin, direction);
 }

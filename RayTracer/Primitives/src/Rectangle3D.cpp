@@ -207,3 +207,18 @@ void RayTracer::Primitives::Rectangle3D::rotate(RayTracer::Math::Vector3D rotati
     this->bottom_side.rotate(rotation, angle);
     this->left_side.rotate(rotation, angle);
 }
+
+extern "C" std::unique_ptr<RayTracer::Primitives::Rectangle3D> createRectangle3D(
+    RayTracer::Math::Point3D origin,
+    RayTracer::Math::Vector3D bottom_side,
+    RayTracer::Math::Vector3D left_side,
+    RayTracer::Render::Color color
+)
+{
+    return std::make_unique<RayTracer::Primitives::Rectangle3D>(
+        origin,
+        bottom_side,
+        left_side,
+        color
+    );
+}

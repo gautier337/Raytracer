@@ -6,6 +6,7 @@
 */
 
 #include "Color.hpp"
+#include <memory>
 
 RayTracer::Render::Color::Color() :
     r(0),
@@ -146,4 +147,14 @@ void RayTracer::Render::Color::setRGBA(
     this->g = g;
     this->b = b;
     this->a = a;
+}
+
+extern "C" std::unique_ptr<RayTracer::Render::Color> createColor(
+    double r,
+    double g,
+    double b,
+    double a
+)
+{
+    return std::make_unique<RayTracer::Render::Color>(r, g, b, a);
 }

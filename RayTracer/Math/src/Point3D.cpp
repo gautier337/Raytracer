@@ -7,6 +7,7 @@
 
 #include "Point3D.hpp"
 #include <cmath>
+#include <memory>
 
 RayTracer::Math::Point3D::Point3D() :
     x(0),
@@ -212,4 +213,13 @@ void RayTracer::Math::Point3D::rotate(Math::Vector3D axis, double angle)
         (v * w * msinT - u * sinT) * z;
     this->z = (u * w * msinT - v * sinT) * x + (v * w * msinT + u * sinT) * y +
         (w * w * msinT + cosT) * z;
+}
+
+extern "C" std::unique_ptr<RayTracer::Math::Point3D> createPoint3D(
+    double x,
+    double y,
+    double z
+)
+{
+    return std::make_unique<RayTracer::Math::Point3D>(x, y, z);
 }

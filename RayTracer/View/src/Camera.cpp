@@ -68,3 +68,11 @@ void RayTracer::View::Camera::rotate(RayTracer::Math::Vector3D rotation, double 
 {
     this->screen.rotate(rotation, angle);
 }
+
+extern "C" std::unique_ptr<RayTracer::View::Camera> createCamera(
+    RayTracer::Math::Point3D origin,
+    RayTracer::Primitives::Rectangle3D screen
+)
+{
+    return std::make_unique<RayTracer::View::Camera>(origin, screen);
+}

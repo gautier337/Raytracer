@@ -5,12 +5,7 @@
 ** Scene
 */
 
-#include "DLLoader.hpp"
-#include "LightsFactory.hpp"
-#include "MathFactory.hpp"
-#include "PrimitivesFactory.hpp"
-#include "RenderFactory.hpp"
-#include "ViewFactory.hpp"
+#include "Factory.hpp"
 #include "Camera.hpp"
 #include "Color.hpp"
 #include "parse_config.hpp"
@@ -23,7 +18,6 @@ namespace RayTracer {
             Scene();
             Scene(const ParseConfig &config);
             ~Scene();
-            void initFactories();
             void addPrimitive(std::shared_ptr<IPrimitives> primitive);
             void addLight(std::shared_ptr<ILights> light);
             void setCamera(std::unique_ptr<View::Camera> camera);
@@ -32,19 +26,10 @@ namespace RayTracer {
             View::Camera getCamera() const;
             void translateCamera(Math::Vector3D translation);
             void rotateCamera(Math::Vector3D rotation, double angle);
-            std::unique_ptr<Math::MathFactory> getMathFactory();
+            Factory getFactory() const;
 
         private:
-            Core::DLLoader lightsLoader;
-            Core::DLLoader mathLoader;
-            Core::DLLoader primitivesLoader;
-            Core::DLLoader renderLoader;
-            Core::DLLoader viewLoader;
-            std::unique_ptr<Lights::LightsFactory> lightsFactory;
-            std::unique_ptr<Math::MathFactory> mathFactory;
-            std::unique_ptr<Primitives::PrimitivesFactory> primitivesFactory;
-            std::unique_ptr<Render::RenderFactory> renderFactory;
-            std::unique_ptr<View::ViewFactory> viewFactory;
+            Factory factory;
             std::unique_ptr<View::Camera> camera;
             std::vector<std::shared_ptr<IPrimitives>> primitives;
             std::vector<std::shared_ptr<ILights>> lights;

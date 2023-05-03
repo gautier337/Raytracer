@@ -10,6 +10,7 @@
 #include <cmath>
 #include <array>
 #include <exception>
+#include <memory>
 
 RayTracer::Math::Vector3D::Vector3D() : x(0), y(0), z(0)
 {
@@ -281,4 +282,13 @@ void RayTracer::Math::Vector3D::rotate(Math::Vector3D axis, double angle)
     this->z = ((1 - cosAngle) * axis.getX() * axis.getZ() - axis.getY() * sinAngle) * x;
     this->z += ((1 - cosAngle) * axis.getY() * axis.getZ() + axis.getX() * sinAngle) * y;
     this->z += (cosAngle + (1 - cosAngle) * pow(axis.getZ(), 2)) * z;
+}
+
+extern "C" std::unique_ptr<RayTracer::Math::Vector3D> createVector3D(
+    double x,
+    double y,
+    double z
+)
+{
+    return std::make_unique<RayTracer::Math::Vector3D>(x, y, z);
 }
