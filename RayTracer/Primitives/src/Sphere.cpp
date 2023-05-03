@@ -106,7 +106,7 @@ bool RayTracer::Primitives::Sphere::hits(View::Ray ray)
 
 RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::View::Ray ray,
-    std::vector<std::shared_ptr<ILights>> lights
+    std::vector<std::unique_ptr<ILights>> &lights
 )
 {
     RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * this->closestT;
