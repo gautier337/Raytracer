@@ -15,8 +15,7 @@ RayTracer::View::Camera::Camera() :
         RayTracer::Math::Vector3D(1, 0, 0),
         RayTracer::Math::Vector3D(0, 1, 0),
         RayTracer::Render::Color(0, 0, 0, 0)
-    ),
-    direction("north")
+    )
 {
 }
 
@@ -26,26 +25,22 @@ RayTracer::View::Camera::~Camera()
 
 RayTracer::View::Camera::Camera(
     RayTracer::Math::Point3D origin,
-    RayTracer::Primitives::Rectangle3D screen,
-    std::string direction
+    RayTracer::Primitives::Rectangle3D screen
 ) :
     origin(origin),
-    screen(screen),
-    direction(direction)
+    screen(screen)
 {
 }
 
 RayTracer::View::Camera::Camera(const Camera &camera) :
     origin(camera.origin),
-    screen(camera.screen),
-    direction(camera.direction)
+    screen(camera.screen)
 {
 }
 
 RayTracer::View::Camera::Camera(Camera &&camera) :
     origin(camera.origin),
-    screen(camera.screen),
-    direction(camera.direction)
+    screen(camera.screen)
 {
 }
 
@@ -53,7 +48,6 @@ RayTracer::View::Camera &RayTracer::View::Camera::operator=(const Camera &camera
 {
     this->origin = camera.origin;
     this->screen = camera.screen;
-    this->direction = camera.direction;
     return *this;
 }
 
@@ -61,7 +55,6 @@ RayTracer::View::Camera &RayTracer::View::Camera::operator=(Camera &&camera)
 {
     this->origin = camera.origin;
     this->screen = camera.screen;
-    this->direction = camera.direction;
     return *this;
 }
 
@@ -81,8 +74,6 @@ void RayTracer::View::Camera::translate(RayTracer::Math::Vector3D vector)
     this->origin = this->origin + vector;
     this->screen.translate(vector);
 }
-
-#include <iostream>
 
 void RayTracer::View::Camera::rotate(RayTracer::Math::Vector3D rotation, double angle)
 {

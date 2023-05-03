@@ -13,14 +13,12 @@ RayTracer::Render::RenderFactory::~RenderFactory()
 
 std::unique_ptr<RayTracer::View::Camera> createView(
     RayTracer::Math::Point3D origin,
-    RayTracer::Primitives::Rectangle3D screen,
-    std::string direction
+    RayTracer::Primitives::Rectangle3D screen
 )
 {
     return std::make_unique<RayTracer::View::Camera>(
         origin,
-        screen,
-        direction
+        screen
     );
 }
 

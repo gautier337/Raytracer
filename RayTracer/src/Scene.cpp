@@ -23,8 +23,7 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                 Math::Vector3D(1, 0, 0),
                 Math::Vector3D(0, 1, 0),
                 Render::Color(0, 0, 0, 0)
-            ),
-            "north"
+            )
         );
     }
     auto &primitives = config.get_setting("primitives");
@@ -90,8 +89,7 @@ RayTracer::Scene::Scene()
             Math::Vector3D(1, 0, 0),
             Math::Vector3D(0, 1, 0),
             Render::Color(0, 0, 0, 0)
-        ),
-        "north"
+        )
     )
 {
     this->addPrimitive(std::make_shared<Primitives::Sphere>(
