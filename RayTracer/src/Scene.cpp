@@ -79,6 +79,11 @@ RayTracer::Scene::Scene(const ParseConfig &config)
         -5000,
         Render::Color(1, 1, 0, 1)
     ));
+
+    this->addLight(std::make_unique<Lights::AmbientLight>(
+        0.2,
+        Render::Color(1, 1, 1, 1)
+    ));
 }
 
 RayTracer::Scene::Scene()
@@ -122,6 +127,11 @@ RayTracer::Scene::Scene()
         Math::Point3D(-0.5, 0.5, 4),
         Math::Vector3D(0.5, -0.5, 0),
         1,
+        Render::Color(1, 1, 1, 1)
+    ));
+
+    this->addLight(std::make_unique<Lights::AmbientLight>(
+        0.1,
         Render::Color(1, 1, 1, 1)
     ));
 }
@@ -173,7 +183,7 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
 
             for (std::unique_ptr<IPrimitives> &primitive : sortedPrimitives) {
                 if (primitive->hits(ray)) {
-                    color = primitive->computeColor(ray, lights);
+                    color = primitive->computeColor(ray, this->lights);
                     break;
                 }
             }

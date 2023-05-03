@@ -120,6 +120,15 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::Render::Color newColor(0, 0, 0, this->color.getA());
 
     for (const auto &light : lights) {
+        if (light->getDirection() == RayTracer::Math::Vector3D(0, 0, 0)) {
+            RayTracer::Render::Color lightColor(
+                this->color.getR() * light->getBrightness(),
+                this->color.getG() * light->getBrightness(),
+                this->color.getB() * light->getBrightness(),
+                0
+            );
+            newColor += lightColor;
+        }
         double dot = std::max(0.0, normal.dot(light->getDirection()));
         double brightness = light->getBrightness();
 

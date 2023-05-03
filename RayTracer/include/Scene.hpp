@@ -9,6 +9,7 @@
 #include "Plane.hpp"
 #include "Sphere.hpp"
 #include "DirectionalLight.hpp"
+#include "AmbientLight.hpp"
 #include "Camera.hpp"
 #include "Color.hpp"
 #include "parse_config.hpp"
