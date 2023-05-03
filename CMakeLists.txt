@@ -61,6 +61,7 @@ set(SRC_PRIMITIVES
         PrimitivesFactory.cpp
         Rectangle3D.cpp
         Sphere.cpp
+        Plane.cpp
 )
 
 # Render Sources

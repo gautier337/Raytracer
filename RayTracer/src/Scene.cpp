@@ -47,7 +47,6 @@ RayTracer::Scene::Scene(const ParseConfig &config)
             ));
         }
     }
-
     auto &lights_config = config.get_setting("lights");
 
     if (lights_config.exists("directional")) {
@@ -75,10 +74,9 @@ RayTracer::Scene::Scene(const ParseConfig &config)
         }
     }
 
-    this->addPrimitive(std::make_unique<Primitives::Rectangle3D>(
-        Math::Point3D(0, -5000, 0),
-        Math::Vector3D(0, 10000, 10000),
-        Math::Vector3D(0, 0, 0),
+    this->addPrimitive(std::make_shared<Primitives::Plane>(
+        "Z",
+        -5000,
         Render::Color(1, 1, 0, 1)
     ));
 }
