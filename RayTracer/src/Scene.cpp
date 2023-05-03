@@ -23,7 +23,8 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                 Math::Vector3D(1, 0, 0),
                 Math::Vector3D(0, 1, 0),
                 Render::Color(0, 0, 0, 0)
-            )
+            ),
+            "north"
         );
     }
     auto &primitives = config.get_setting("primitives");
@@ -47,7 +48,6 @@ RayTracer::Scene::Scene(const ParseConfig &config)
             ));
         }
     }
-
     auto &lights_config = config.get_setting("lights");
 
     if (lights_config.exists("directional")) {
@@ -75,10 +75,9 @@ RayTracer::Scene::Scene(const ParseConfig &config)
         }
     }
 
-    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(
-        Math::Point3D(0, -5000, 0),
-        Math::Vector3D(0, 10000, 10000),
-        Math::Vector3D(0, 0, 0),
+    this->addPrimitive(std::make_shared<Primitives::Plane>(
+        "Z",
+        -5000,
         Render::Color(1, 1, 0, 1)
     ));
 }
@@ -91,7 +90,8 @@ RayTracer::Scene::Scene()
             Math::Vector3D(1, 0, 0),
             Math::Vector3D(0, 1, 0),
             Render::Color(0, 0, 0, 0)
-        )
+        ),
+        "north"
     )
 {
     this->addPrimitive(std::make_shared<Primitives::Sphere>(

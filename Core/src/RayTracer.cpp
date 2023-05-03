@@ -84,7 +84,7 @@ int raytracer(std::string const &sceneFile)
                         scene.rotateCamera(RayTracer::Math::Vector3D(1, 0, 0), 0.1);
                         break;
                     case sf::Keyboard::Left:
-                        scene.rotateCamera(RayTracer::Math::Vector3D(0, 1, 0), -0.1);
+                        scene.rotateCamera(RayTracer::Math::Vector3D(0, -1, 0), 0.1);
                         break;
                     case sf::Keyboard::Right:
                         scene.rotateCamera(RayTracer::Math::Vector3D(0, 1, 0), 0.1);

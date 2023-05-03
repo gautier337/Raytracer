@@ -6,6 +6,7 @@
 */
 
 #include "Rectangle3D.hpp"
+#include "Plane.hpp"
 #include "Sphere.hpp"
 #include "DirectionalLight.hpp"
 #include "Camera.hpp"
