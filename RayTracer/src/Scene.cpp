@@ -74,7 +74,7 @@ RayTracer::Scene::Scene(const ParseConfig &config)
         }
     }
 
-    this->addPrimitive(std::make_shared<Primitives::Plane>(
+    this->addPrimitive(std::make_unique<Primitives::Plane>(
         "Z",
         -5000,
         Render::Color(1, 1, 0, 1)

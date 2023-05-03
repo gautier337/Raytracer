@@ -163,7 +163,7 @@ bool RayTracer::Primitives::Plane::hits(const RayTracer::View::Ray ray)
 
 RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
     RayTracer::View::Ray ray,
-    std::vector<std::shared_ptr<ILights>> lights
+    std::vector<std::unique_ptr<ILights>> &lights
 )
 {
     RayTracer::Render::Color newColor(0, 0, 0, 1);

@@ -32,7 +32,7 @@ namespace RayTracer {
                 bool hits(View::Ray ray) override;
                 Render::Color computeColor(
                     View::Ray ray,
-                    std::vector<std::shared_ptr<ILights>> lights
+                    std::vector<std::unique_ptr<ILights>> &lights
                 ) override;
                 Math::Point3D pointAt(double u, double v);
                 void translate(Math::Vector3D translation) override;
