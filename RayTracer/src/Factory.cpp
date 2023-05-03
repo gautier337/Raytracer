@@ -76,19 +76,3 @@ void RayTracer::Factory::unloadAllPlugins()
     pluginHandles.clear();
     pluginConstructors.clear();
 }
-
-template<typename T, typename... Args>
-std::unique_ptr<T> RayTracer::Factory::createPlugin(
-    std::string const &name,
-    Args... args
-)
-{
-    auto it = pluginConstructors.find(name);
-    if (it == pluginConstructors.end())
-        throw std::runtime_error("Plugin not found: " + name);
-
-    using ConstructorFunction = T*(*)(Args...);
-    ConstructorFunction constructorFunc = reinterpret_cast<ConstructorFunction>(it->second);
-    return std::unique_ptr<T>(constructorFunc(args...));
-    return nullptr;
-}

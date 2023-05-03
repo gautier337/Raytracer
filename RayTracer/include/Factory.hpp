@@ -28,7 +28,17 @@ namespace RayTracer {
             std::unique_ptr<T> createPlugin(
                 std::string const &name,
                 Args... args
-            );
+            )
+            {
+                auto it = pluginConstructors.find(name);
+                if (it == pluginConstructors.end())
+                    throw std::runtime_error("Plugin not found: " + name);
+
+                using ConstructorFunction = T*(*)(Args...);
+                ConstructorFunction constructorFunc = reinterpret_cast<ConstructorFunction>(it->second);
+                return std::unique_ptr<T>(constructorFunc(args...));
+                return nullptr;
+            }
 
         private:
             std::map<std::string, void*> pluginHandles;
