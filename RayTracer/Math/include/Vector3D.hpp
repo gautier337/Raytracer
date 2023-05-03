@@ -41,6 +41,7 @@ namespace RayTracer {
                 double getY() const;
                 double getZ() const;
                 Vector3D normalize();
+                Vector3D cross(const Vector3D &v);
                 void rotate(Vector3D axis, double angle);
 
             protected:
