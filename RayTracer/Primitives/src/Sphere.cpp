@@ -103,6 +103,7 @@ bool RayTracer::Primitives::Sphere::hits(View::Ray ray)
     double discriminant = b * b - 4 * a * c;
     return (discriminant > 0);
 }
+#include <iostream>
 
 RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::View::Ray ray,
@@ -125,7 +126,7 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
                 this->color.getR() * light->getBrightness(),
                 this->color.getG() * light->getBrightness(),
                 this->color.getB() * light->getBrightness(),
-                0
+                this->color.getA()
             );
             newColor += lightColor;
         }
@@ -136,7 +137,7 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
             this->color.getR() * dot * brightness,
             this->color.getG() * dot * brightness,
             this->color.getB() * dot * brightness,
-            0
+            this->color.getA()
         );
 
         newColor += lightColor;

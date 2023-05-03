@@ -172,37 +172,32 @@ RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
     if (!this->hits(ray))
         return newColor;
 
-    RayTracer::Math::Vector3D w(
-        this->origin.getX() - ray.getOrigin().getX(),
-        this->origin.getY() - ray.getOrigin().getY(),
-        this->origin.getZ() - ray.getOrigin().getZ()
-    );
-    double a = w.dot(ray.getDirection());
-    double b = ray.getDirection().dot(ray.getDirection());
-    double r = a / b;
+    RayTracer::Math::Vector3D normal = this->bottom_side.cross(this->left_side);
+    normal.normalize();
 
-    RayTracer::Math::Point3D p = ray.getOrigin() + (ray.getDirection() * r);
-    RayTracer::Math::Vector3D d(
-        p.getX() - this->origin.getX(),
-        p.getY() - this->origin.getY(),
-        p.getZ() - this->origin.getZ()
-    );
-
-    double u = d.dot(this->bottom_side) / this->bottom_side.dot(this->bottom_side);
-    double v = d.dot(this->left_side) / this->left_side.dot(this->left_side);
-
-    double distance = p.distance(ray.getOrigin());
-
-    double colorModifier = std::max(0.0, distance / 3000.0);
-    newColor.setRGBA(
-        this->color.getR() * colorModifier,
-        this->color.getG() * colorModifier,
-        this->color.getB() * colorModifier,
-        this->color.getA()
-    );
-
+    for (const auto &light : lights) {
+        if (light->getDirection() == RayTracer::Math::Vector3D(0, 0, 0)) {
+            RayTracer::Render::Color lightColor(
+                this->color.getR() * light->getBrightness(),
+                this->color.getG() * light->getBrightness(),
+                this->color.getB() * light->getBrightness(),
+                this->color.getA()
+            );
+            newColor += lightColor;
+        }
+        double dot = std::max(0.0, normal.dot(light->getDirection()));
+        double brightness = light->getBrightness();
+        RayTracer::Render::Color lightColor(
+            this->color.getR() * dot * brightness,
+            this->color.getG() * dot * brightness,
+            this->color.getB() * dot * brightness,
+            this->color.getA()
+        );
+        newColor += lightColor;
+    }
     return newColor;
 }
+
 
 RayTracer::Math::Point3D RayTracer::Primitives::Plane::pointAt(
     double u,

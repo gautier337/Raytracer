@@ -267,6 +267,15 @@ RayTracer::Math::Vector3D RayTracer::Math::Vector3D::normalize()
     return normal;
 }
 
+RayTracer::Math::Vector3D RayTracer::Math::Vector3D::cross(
+    const RayTracer::Math::Vector3D &v)
+{
+    double x = this->y * v.z - this->z * v.y;
+    double y = this->z * v.x - this->x * v.z;
+    double z = this->x * v.y - this->y * v.x;
+    return RayTracer::Math::Vector3D(x, y, z);
+}
+
 void RayTracer::Math::Vector3D::rotate(Math::Vector3D axis, double angle)
 {
     double sinAngle = sin(-angle);
