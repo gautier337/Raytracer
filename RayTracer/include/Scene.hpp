@@ -20,8 +20,8 @@ namespace RayTracer {
             Scene();
             Scene(const ParseConfig &config);
             ~Scene();
-            void addPrimitive(std::shared_ptr<IPrimitives> primitive);
-            void addLight(std::shared_ptr<ILights> light);
+            void addPrimitive(std::unique_ptr<IPrimitives> primitive);
+            void addLight(std::unique_ptr<ILights> light);
             void setCamera(View::Camera camera);
             std::vector<std::vector<Render::Color>> getPixels() const;
             void render(int pixelSize, int width, int height);
@@ -31,8 +31,8 @@ namespace RayTracer {
 
         private:
             View::Camera camera;
-            std::vector<std::shared_ptr<IPrimitives>> primitives;
-            std::vector<std::shared_ptr<ILights>> lights;
+            std::vector<std::unique_ptr<IPrimitives>> primitives;
+            std::vector<std::unique_ptr<ILights>> lights;
             std::vector<std::vector<Render::Color>> pixels;
     };
 };

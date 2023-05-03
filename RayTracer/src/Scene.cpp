@@ -40,7 +40,7 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
             );
 
-            this->addPrimitive(std::make_shared<Primitives::Sphere>(
+            this->addPrimitive(std::make_unique<Primitives::Sphere>(
                 Math::Point3D(x, y, z),
                 radius,
                 primitiveColor
@@ -66,7 +66,7 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["a"])
             );
 
-            this->addLight(std::make_shared<Lights::DirectionalLight>(
+            this->addLight(std::make_unique<Lights::DirectionalLight>(
                 Math::Point3D(x_point, y_point, z_point),
                 Math::Vector3D(-x_vector, -y_vector, -z_vector),
                 brightness,
@@ -75,7 +75,7 @@ RayTracer::Scene::Scene(const ParseConfig &config)
         }
     }
 
-    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(
+    this->addPrimitive(std::make_unique<Primitives::Rectangle3D>(
         Math::Point3D(0, -5000, 0),
         Math::Vector3D(0, 10000, 10000),
         Math::Vector3D(0, 0, 0),
@@ -94,33 +94,33 @@ RayTracer::Scene::Scene()
         )
     )
 {
-    this->addPrimitive(std::make_shared<Primitives::Sphere>(
+    this->addPrimitive(std::make_unique<Primitives::Sphere>(
         Math::Point3D(0, 0, 4),
         1,
         Render::Color(1, 0, 0, 1)
     ));
 
-    this->addPrimitive(std::make_shared<Primitives::Sphere>(
+    this->addPrimitive(std::make_unique<Primitives::Sphere>(
         Math::Point3D(-1, 0, 4),
         0.5,
         Render::Color(0, 1, 0, 1)
     ));
 
-    this->addPrimitive(std::make_shared<Primitives::Rectangle3D>(
+    this->addPrimitive(std::make_unique<Primitives::Rectangle3D>(
         Math::Point3D(0, -5000, 0),
         Math::Vector3D(0, 10000, 10000),
         Math::Vector3D(0, 0, 0),
         Render::Color(1, 1, 0, 1)
     ));
 
-    this->addLight(std::make_shared<Lights::DirectionalLight>(
+    this->addLight(std::make_unique<Lights::DirectionalLight>(
         Math::Point3D(0.5, 0.5, 4),
         Math::Vector3D(-0.5, -0.5, 0),
         0.25,
         Render::Color(1, 1, 1, 1)
     ));
 
-    this->addLight(std::make_shared<Lights::DirectionalLight>(
+    this->addLight(std::make_unique<Lights::DirectionalLight>(
         Math::Point3D(-0.5, 0.5, 4),
         Math::Vector3D(0.5, -0.5, 0),
         1,
@@ -132,12 +132,12 @@ RayTracer::Scene::~Scene()
 {
 }
 
-void RayTracer::Scene::addPrimitive(std::shared_ptr<IPrimitives> primitive)
+void RayTracer::Scene::addPrimitive(std::unique_ptr<IPrimitives> primitive)
 {
-    this->primitives.push_back(primitive);
+    this->primitives.push_back(std::move(primitive));
 }
 
-void RayTracer::Scene::addLight(std::shared_ptr<ILights> light)
+void RayTracer::Scene::addLight(std::unique_ptr<ILights> light)
 {
     this->lights.push_back(std::move(light));
 }
@@ -166,14 +166,14 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
         for (double x = 0; x < 1; x += static_cast<double>(pixelSize) / width) {
             Render::Color color(0, 0, 0, 1);
             View::Ray ray = camera.ray(x, y);
-            auto sortedPrimitives = primitives;
+            auto &sortedPrimitives = primitives;
 
             std::sort(sortedPrimitives.begin(), sortedPrimitives.end(), [&ray](
-                std::shared_ptr<IPrimitives> a, std::shared_ptr<IPrimitives> b) {
+                std::unique_ptr<IPrimitives> const &a, std::unique_ptr<IPrimitives> const &b) {
                 return a->getIntersectionPoint(ray) < b->getIntersectionPoint(ray);
             });
 
-            for (std::shared_ptr<IPrimitives> primitive : sortedPrimitives) {
+            for (std::unique_ptr<IPrimitives> &primitive : sortedPrimitives) {
                 if (primitive->hits(ray)) {
                     color = primitive->computeColor(ray, lights);
                     break;
