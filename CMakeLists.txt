@@ -44,6 +44,7 @@ set(SRC_CORE
 set(LIGHTS_DIRECTORY RayTracer/Lights/src/)
 set(SRC_LIGHTS
         DirectionalLight.cpp
+        AmbientLight.cpp
         LightsFactory.cpp
 )
 
