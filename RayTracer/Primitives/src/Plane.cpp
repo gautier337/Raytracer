@@ -226,3 +226,8 @@ void RayTracer::Primitives::Plane::rotate(RayTracer::Math::Vector3D rotation, do
 {
     return;
 }
+
+void RayTracer::Primitives::Plane::scale(double factor)
+{
+    return;
+}

@@ -207,3 +207,9 @@ void RayTracer::Primitives::Rectangle3D::rotate(RayTracer::Math::Vector3D rotati
     this->bottom_side.rotate(rotation, angle);
     this->left_side.rotate(rotation, angle);
 }
+
+void RayTracer::Primitives::Rectangle3D::scale(double factor)
+{
+    this->bottom_side = this->bottom_side * factor;
+    this->left_side = this->left_side * factor;
+}

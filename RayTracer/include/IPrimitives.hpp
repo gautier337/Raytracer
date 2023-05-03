@@ -25,5 +25,6 @@ namespace RayTracer {
             ) = 0;
             virtual void translate(Math::Vector3D translation) = 0;
             virtual void rotate(Math::Vector3D axis, double angle) = 0;
+            virtual void scale(double factor) = 0;
     };
 }

@@ -153,3 +153,8 @@ void RayTracer::Primitives::Sphere::rotate(Math::Vector3D axis, double angle)
     this->center.setY(yPrime);
     this->center.setZ(zPrime);
 }
+
+void RayTracer::Primitives::Sphere::scale(double factor)
+{
+    this->radius *= factor;
+}
