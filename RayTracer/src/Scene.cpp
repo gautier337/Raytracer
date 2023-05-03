@@ -53,7 +53,6 @@ RayTracer::Scene::Scene(const ParseConfig &config)
             for (int i = 0; i < primitives["planes"].getLength(); i++) {
                 std::string axis = config.getStringFromSetting(primitives["planes"][i]["axis"]);
                 double position = config.getDoubleFromSetting(primitives["planes"][i]["position"]);
-                std::cout << axis << std::endl;
 
                     Render::Color primitiveColor(
                     config.getDoubleFromSetting(primitives["planes"][i]["color"]["r"]),
