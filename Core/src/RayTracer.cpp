@@ -76,7 +76,6 @@ int raytracer(std::string const &sceneFile)
                     case sf::Keyboard::LShift:
                         scene.translateCamera(RayTracer::Math::Vector3D(0, -0.5, 0));
                         break;
-                shouldUpdatePoints = true;
                     case sf::Keyboard::Up:
                         scene.rotateCamera(RayTracer::Math::Vector3D(-1, 0, 0), 0.1);
                         break;
@@ -88,6 +87,9 @@ int raytracer(std::string const &sceneFile)
                         break;
                     case sf::Keyboard::Right:
                         scene.rotateCamera(RayTracer::Math::Vector3D(0, 1, 0), 0.1);
+                        break;
+                    case sf::Keyboard::R:
+                        scene.resetCamera();
                         break;
                     default:
                         break;

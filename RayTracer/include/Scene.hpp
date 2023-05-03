@@ -30,9 +30,11 @@ namespace RayTracer {
             View::Camera getCamera() const;
             void translateCamera(Math::Vector3D translation);
             void rotateCamera(Math::Vector3D rotation, double angle);
+            void resetCamera();
 
         private:
             View::Camera camera;
+            View::Camera original_camera;
             std::vector<std::unique_ptr<IPrimitives>> primitives;
             std::vector<std::unique_ptr<ILights>> lights;
             std::vector<std::vector<Render::Color>> pixels;

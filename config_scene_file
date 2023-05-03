@@ -1,8 +1,8 @@
 #Window settings
 window:
 {
-    width = 500;
-    height = 500;
+    width = 100;
+    height = 100;
 };
 
 # Configuration of the camera
@@ -30,7 +30,7 @@ primitives:
 lights :
 {
     directional = (
-        { brightness = 1; color = {  r = 0; g = 0; b = 1; a = 1;}; point = { x = 0.5; y = 0.5; z = 4;}; vector = { x = 0.5; y = 0.5; z = 0; }; }
+        { brightness = 1; color = {  r = 0; g = 0; b = 1; a = 1;}; point = { x = 0; y = 0; z = 0;}; vector = { x = 0; y = 1; z = 0; }; }
     );
     ambient = (
         { brightness = 0.2; color = { r = 1; g = 1; b = 1; a = 1;}; }

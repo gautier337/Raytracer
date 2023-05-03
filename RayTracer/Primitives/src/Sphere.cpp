@@ -129,7 +129,8 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
             );
             newColor += lightColor;
         }
-        double dot = std::max(0.0, normal.dot(light->getDirection()));
+        RayTracer::Math::Vector3D lightDir = light->getDirection().normalize();
+        double dot = std::max(0.0, normal.dot(lightDir));
         double brightness = light->getBrightness();
 
         RayTracer::Render::Color lightColor(

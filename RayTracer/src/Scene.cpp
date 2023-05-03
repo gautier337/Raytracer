@@ -26,6 +26,7 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                     Render::Color(0, 0, 0, 0)
                 )
             );
+            original_camera = camera;
         }
         auto &primitives = config.get_setting("primitives");
         if (primitives.exists("spheres")) {
@@ -191,6 +192,8 @@ std::vector<std::vector<RayTracer::Render::Color>> RayTracer::Scene::getPixels()
     return this->pixels;
 }
 
+#include <limits>
+
 void RayTracer::Scene::render(int pixelSize, int width, int height)
 {
     int index = 0;
@@ -209,7 +212,9 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
 
             std::sort(sortedPrimitives.begin(), sortedPrimitives.end(), [&ray](
                 std::unique_ptr<IPrimitives> const &a, std::unique_ptr<IPrimitives> const &b) {
-                return a->getIntersectionPoint(ray) < b->getIntersectionPoint(ray);
+                double distA = a->getIntersectionPoint(ray);
+                double distB = b->getIntersectionPoint(ray);
+                return std::abs(distA - distB) < std::numeric_limits<double>::epsilon() ? false : distA < distB;
             });
 
             for (std::unique_ptr<IPrimitives> &primitive : sortedPrimitives) {
@@ -242,4 +247,9 @@ void RayTracer::Scene::rotateCamera(Math::Vector3D vector, double angle)
     View::Camera newCamera = this->getCamera();
     newCamera.rotate(vector, angle);
     this->setCamera(newCamera);
+}
+
+void RayTracer::Scene::resetCamera()
+{
+    this->setCamera(this->original_camera);
 }
