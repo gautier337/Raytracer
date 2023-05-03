@@ -1,1 +1,1 @@
-<h1 align="center"> 🎮 Raytracer 🎮 </h1>
+<h1 align="center"> 📐 Raytracer 📐 </h1>
