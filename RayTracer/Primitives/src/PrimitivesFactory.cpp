@@ -27,15 +27,13 @@ std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
 std::unique_ptr<RayTracer::Primitives::Rectangle3D> createRectangle3D(
     RayTracer::Math::Point3D origin,
     RayTracer::Math::Vector3D bottom_side,
-    RayTracer::Math::Vector3D left_side,
-    RayTracer::Render::Color color
+    RayTracer::Math::Vector3D left_side
 )
 {
     return std::make_unique<RayTracer::Primitives::Rectangle3D>(
         origin,
         bottom_side,
-        left_side,
-        color
+        left_side
     );
 }
 

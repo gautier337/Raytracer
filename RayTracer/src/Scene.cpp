@@ -22,8 +22,7 @@ RayTracer::Scene::Scene(const ParseConfig &config)
                 Primitives::Rectangle3D(
                     Math::Point3D(-0.5, -0.5, 1),
                     Math::Vector3D(1, 0, 0),
-                    Math::Vector3D(0, 1, 0),
-                    Render::Color(0, 0, 0, 0)
+                    Math::Vector3D(0, 1, 0)
                 )
             );
             original_camera = camera;
@@ -124,8 +123,7 @@ RayTracer::Scene::Scene()
         Primitives::Rectangle3D(
             Math::Point3D(-0.5, -0.5, 1),
             Math::Vector3D(1, 0, 0),
-            Math::Vector3D(0, 1, 0),
-            Render::Color(0, 0, 0, 0)
+            Math::Vector3D(0, 1, 0)
         )
     )
 {
@@ -139,13 +137,6 @@ RayTracer::Scene::Scene()
         Math::Point3D(-1, 0, 4),
         0.5,
         Render::Color(0, 1, 0, 1)
-    ));
-
-    this->addPrimitive(std::make_unique<Primitives::Rectangle3D>(
-        Math::Point3D(0, -5000, 0),
-        Math::Vector3D(0, 10000, 10000),
-        Math::Vector3D(0, 0, 0),
-        Render::Color(1, 1, 0, 1)
     ));
 
     this->addLight(std::make_unique<Lights::DirectionalLight>(
