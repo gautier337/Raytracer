@@ -103,7 +103,6 @@ bool RayTracer::Primitives::Sphere::hits(View::Ray ray)
     double discriminant = b * b - 4 * a * c;
     return (discriminant > 0);
 }
-#include <iostream>
 
 RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::View::Ray ray,

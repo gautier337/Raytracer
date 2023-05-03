@@ -198,7 +198,6 @@ RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
     return newColor;
 }
 
-
 RayTracer::Math::Point3D RayTracer::Primitives::Plane::pointAt(
     double u,
     double v
