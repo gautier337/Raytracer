@@ -11,79 +11,111 @@
 
 RayTracer::Scene::Scene(const ParseConfig &config)
 {
-    auto &camera_config = config.get_setting("camera");
-    if (camera_config.exists("position")) {
-        double x = config.getDoubleFromSetting(camera_config["position"]["x"]);
-        double y = config.getDoubleFromSetting(camera_config["position"]["y"]);
-        double z = config.getDoubleFromSetting(camera_config["position"]["z"]);
-        camera = View::Camera(
-            Math::Point3D(x, y, z),
-            Primitives::Rectangle3D(
-                Math::Point3D(-0.5, -0.5, 1),
-                Math::Vector3D(1, 0, 0),
-                Math::Vector3D(0, 1, 0),
-                Render::Color(0, 0, 0, 0)
-            )
-        );
-    }
-    auto &primitives = config.get_setting("primitives");
-    if (primitives.exists("spheres")) {
-        for (int i = 0; i < primitives["spheres"].getLength(); i++) {
-            double x = config.getDoubleFromSetting(primitives["spheres"][i]["x"]);
-            double y = config.getDoubleFromSetting(primitives["spheres"][i]["y"]);
-            double z = config.getDoubleFromSetting(primitives["spheres"][i]["z"]);
-            double radius = config.getDoubleFromSetting(primitives["spheres"][i]["r"]);
-            Render::Color primitiveColor(
-                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["r"]),
-                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["g"]),
-                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["b"]),
-                config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
-            );
-
-            this->addPrimitive(std::make_unique<Primitives::Sphere>(
+    try {
+        auto &camera_config = config.get_setting("camera");
+        if (camera_config.exists("position")) {
+            double x = config.getDoubleFromSetting(camera_config["position"]["x"]);
+            double y = config.getDoubleFromSetting(camera_config["position"]["y"]);
+            double z = config.getDoubleFromSetting(camera_config["position"]["z"]);
+            camera = View::Camera(
                 Math::Point3D(x, y, z),
-                radius,
-                primitiveColor
-            ));
-        }
-    }
-    auto &lights_config = config.get_setting("lights");
-
-    if (lights_config.exists("directional")) {
-        for (int i = 0; i < lights_config["directional"].getLength(); i++) {
-            double brightness = config.getDoubleFromSetting(lights_config["directional"][i]["brightness"]);
-            double x_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["x"]);
-            double y_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["y"]);
-            double z_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["z"]);
-            double x_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["x"]);
-            double y_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["y"]);
-            double z_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["z"]);
-            Render::Color lightColor(
-                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["r"]),
-                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["g"]),
-                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["b"]),
-                config.getDoubleFromSetting(lights_config["directional"][i]["color"]["a"])
-            );
-
-            this->addLight(std::make_unique<Lights::DirectionalLight>(
-                Math::Point3D(x_point, y_point, z_point),
-                Math::Vector3D(-x_vector, -y_vector, -z_vector),
-                brightness,
-                lightColor)
+                Primitives::Rectangle3D(
+                    Math::Point3D(-0.5, -0.5, 1),
+                    Math::Vector3D(1, 0, 0),
+                    Math::Vector3D(0, 1, 0),
+                    Render::Color(0, 0, 0, 0)
+                )
             );
         }
+        auto &primitives = config.get_setting("primitives");
+        if (primitives.exists("spheres")) {
+            for (int i = 0; i < primitives["spheres"].getLength(); i++) {
+                double x = config.getDoubleFromSetting(primitives["spheres"][i]["x"]);
+                double y = config.getDoubleFromSetting(primitives["spheres"][i]["y"]);
+                double z = config.getDoubleFromSetting(primitives["spheres"][i]["z"]);
+                double radius = config.getDoubleFromSetting(primitives["spheres"][i]["r"]);
+                Render::Color primitiveColor(
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["r"]),
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["g"]),
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["b"]),
+                    config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
+                );
+
+                    this->addPrimitive(std::make_unique<Primitives::Sphere>(
+                    Math::Point3D(x, y, z),
+                    radius,
+                    primitiveColor
+                ));
+            }
+        }
+
+        if (primitives.exists("planes")) {
+            for (int i = 0; i < primitives["planes"].getLength(); i++) {
+                std::string axis = config.getStringFromSetting(primitives["planes"][i]["axis"]);
+                double position = config.getDoubleFromSetting(primitives["planes"][i]["position"]);
+                std::cout << axis << std::endl;
+
+                    Render::Color primitiveColor(
+                    config.getDoubleFromSetting(primitives["planes"][i]["color"]["r"]),
+                    config.getDoubleFromSetting(primitives["planes"][i]["color"]["g"]),
+                    config.getDoubleFromSetting(primitives["planes"][i]["color"]["b"]),
+                    config.getDoubleFromSetting(primitives["planes"][i]["color"]["a"])
+                );
+
+                    this->addPrimitive(std::make_unique<Primitives::Plane>(
+                    axis,
+                    position,
+                    primitiveColor
+                ));
+            }
+        }
+
+        auto &lights_config = config.get_setting("lights");
+        if (lights_config.exists("directional")) {
+            for (int i = 0; i < lights_config["directional"].getLength(); i++) {
+                double brightness = config.getDoubleFromSetting(lights_config["directional"][i]["brightness"]);
+                double x_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["x"]);
+                double y_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["y"]);
+                double z_point = config.getDoubleFromSetting(lights_config["directional"][i]["point"]["z"]);
+                double x_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["x"]);
+                double y_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["y"]);
+                double z_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["z"]);
+                Render::Color lightColor(
+                    config.getDoubleFromSetting(lights_config["directional"][i]["color"]["r"]),
+                    config.getDoubleFromSetting(lights_config["directional"][i]["color"]["g"]),
+                    config.getDoubleFromSetting(lights_config["directional"][i]["color"]["b"]),
+                    config.getDoubleFromSetting(lights_config["directional"][i]["color"]["a"])
+                );
+
+                    this->addLight(std::make_unique<Lights::DirectionalLight>(
+                    Math::Point3D(x_point, y_point, z_point),
+                    Math::Vector3D(-x_vector, -y_vector, -z_vector),
+                    brightness,
+                    lightColor)
+                );
+            }
+        }
+
+        if (lights_config.exists("ambient")) {
+            for (int i = 0; i < lights_config["ambient"].getLength() && i < 1; i++) {
+                double brightness = config.getDoubleFromSetting(lights_config["ambient"][i]["brightness"]);
+                Render::Color lightColor(
+                    config.getDoubleFromSetting(lights_config["ambient"][i]["color"]["r"]),
+                    config.getDoubleFromSetting(lights_config["ambient"][i]["color"]["g"]),
+                    config.getDoubleFromSetting(lights_config["ambient"][i]["color"]["b"]),
+                    config.getDoubleFromSetting(lights_config["ambient"][i]["color"]["a"])
+                );
+
+                    this->addLight(std::make_unique<Lights::AmbientLight>(
+                    brightness,
+                    lightColor)
+                );
+            }
+        }
+    } catch (const std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        exit(84);
     }
-
-    this->addPrimitive(std::make_unique<Primitives::Plane>(
-        "Z",
-        -5000,
-        Render::Color(1, 1, 0, 1)
-    ));
-
-    this->addLight(std::make_unique<Lights::AmbientLight>(
-        0.2,
-        Render::Color(1, 1, 1, 1)
-    ));
 }
 
 RayTracer::Scene::Scene()

@@ -57,6 +57,17 @@ double ParseConfig::getDoubleFromSetting(const libconfig::Setting &setting) cons
     } else if (setting.getType() == libconfig::Setting::TypeFloat) {
         return setting.operator double();
     } else {
+        exit(ERROR);
         throw std::runtime_error("Invalid setting type for conversion to double.");
+    }
+}
+
+std::string ParseConfig::getStringFromSetting(const libconfig::Setting &setting) const
+{
+    if (setting.getType() == libconfig::Setting::TypeString) {
+        return setting.operator std::string();
+    } else {
+        exit(ERROR);
+        throw std::runtime_error("Invalid setting type for conversion to string.");
     }
 }

@@ -1,8 +1,8 @@
 #Window settings
 window:
 {
-    width = 200;
-    height = 200;
+    width = 500;
+    height = 500;
 };
 
 # Configuration of the camera
@@ -22,7 +22,7 @@ primitives:
     ) ;
     # List of planes
     planes = (
-        { axis = "Z"; position = -20; color = { r = 64; g = 64; b = 255; }; }
+        { axis = "Z"; position = -5000; color = { r = 1; g = 1; b = 0; a=1 }; }
     );
 };
 
@@ -32,7 +32,7 @@ lights :
     directional = (
         { brightness = 1; color = {  r = 0; g = 0; b = 1; a = 1;}; point = { x = 0.5; y = 0.5; z = 4;}; vector = { x = 0.5; y = 0.5; z = 0; }; }
     );
-    # ambient = (
-    #     { brightness = 0.2; color = { r = 1; g = 1; b = 1; a = 1;}; }
-    # )
+    ambient = (
+        { brightness = 0.2; color = { r = 1; g = 1; b = 1; a = 1;}; }
+    )
 };
