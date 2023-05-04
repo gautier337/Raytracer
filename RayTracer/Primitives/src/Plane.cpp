@@ -9,16 +9,6 @@
 #include <iostream>
 #include <cmath>
 
-RayTracer::Primitives::Plane::Plane() :
-    axis("Z"),
-    position(0),
-    color(0, 0, 0, 1),
-    bottom_side(1, 0, 0),
-    left_side(0, 1, 0),
-    origin(0, 0, 0)
-{
-}
-
 RayTracer::Primitives::Plane::~Plane()
 {
 }
@@ -225,4 +215,17 @@ void RayTracer::Primitives::Plane::rotate(RayTracer::Math::Vector3D rotation, do
 void RayTracer::Primitives::Plane::scale(double factor)
 {
     return;
+}
+
+extern "C" std::unique_ptr<RayTracer::Primitives::Plane> createPlane(
+    std::string axis,
+    double position,
+    RayTracer::Render::Color color
+)
+{
+    return std::make_unique<RayTracer::Primitives::Plane>(
+        axis,
+        position,
+        color
+    );
 }

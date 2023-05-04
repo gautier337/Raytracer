@@ -17,7 +17,6 @@ namespace RayTracer {
     namespace Primitives {
         class Plane : public IPrimitives {
             public:
-                Plane();
                 ~Plane();
                 Plane(
                     std::string axis,

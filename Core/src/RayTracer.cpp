@@ -6,7 +6,6 @@
 */
 
 #include "RayTracer.hpp"
-#include "IFactory.hpp"
 #include "Vector3D.hpp"
 #include "Camera.hpp"
 #include "Sphere.hpp"

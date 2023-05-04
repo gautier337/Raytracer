@@ -7,6 +7,7 @@
 
 #include "Camera.hpp"
 #include <cmath>
+#include <memory>
 
 RayTracer::View::Camera::~Camera()
 {

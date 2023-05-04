@@ -16,7 +16,6 @@ namespace RayTracer {
     namespace Primitives {
         class Rectangle3D {
             public:
-                Rectangle3D();
                 ~Rectangle3D();
                 Rectangle3D(
                     Math::Point3D origin,

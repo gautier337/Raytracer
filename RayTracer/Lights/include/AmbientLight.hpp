@@ -13,7 +13,6 @@ namespace RayTracer {
     namespace Lights {
         class AmbientLight : public ILights {
             public:
-                AmbientLight();
                 ~AmbientLight();
                 AmbientLight(double brightness, Render::Color color);
                 AmbientLight(const AmbientLight &light);

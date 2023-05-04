@@ -23,6 +23,7 @@ void RayTracer::Factory::loadAllPlugins()
 {
     try {
         // Lights
+        this->loadPlugin("AmbientLight", "./plugins/lights/AmbientLight.so");
         this->loadPlugin("DirectionalLight", "./plugins/lights/DirectionalLight.so");
 
         // Math
@@ -30,6 +31,7 @@ void RayTracer::Factory::loadAllPlugins()
         this->loadPlugin("Vector3D", "./plugins/math/Vector3D.so");
 
         // Primitives
+        this->loadPlugin("Plane", "./plugins/primitives/Plane.so");
         this->loadPlugin("Rectangle3D", "./plugins/primitives/Rectangle3D.so");
         this->loadPlugin("Sphere", "./plugins/primitives/Sphere.so");
 

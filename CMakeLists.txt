@@ -17,7 +17,6 @@ link_directories(${LIBCONFIG++_LIBRARY_DIRS})
 
 include_directories(
         Core/include
-        Raytracer/Scene/include
         RayTracer/include
         RayTracer/Lights/include
         RayTracer/Math/include
@@ -42,8 +41,8 @@ set(SRC_CORE
 
 # Lights Plugins
 set(LIGHTS_DIRECTORY Lights/src/)
-set(SRC_DIRECTIONAL_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}DirectionalLight.cpp)
 set(SRC_AMBIENT_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}AmbientLight.cpp)
+set(SRC_DIRECTIONAL_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}DirectionalLight.cpp)
 
 # Math Plugins
 set(MATH_DIRECTORY Math/src/)
@@ -52,6 +51,7 @@ set(SRC_VECTOR3D ${RAYTRACER_DIRECTORY}${MATH_DIRECTORY}Vector3D.cpp)
 
 # Primitives Plugins
 set(PRIMITIVES_DIRECTORY Primitives/src/)
+set(SRC_PLANE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Plane.cpp)
 set(SRC_RECTANGLE3D ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Rectangle3D.cpp)
 set(SRC_SPHERE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Sphere.cpp)
 
@@ -79,35 +79,52 @@ list(TRANSFORM SRC_MAIN PREPEND ${CORE_DIRECTORY})
 list(TRANSFORM SRC_CORE PREPEND ${CORE_DIRECTORY})
 list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY}/${SOURCES_DIRECTORY})
 
-# Plugins
-set(DIRECTIONAL_LIGHT_LIB DirectionalLight)
+# Set plugins names
 set(AMBIENT_LIGHT_LIB AmbientLight)
+set(DIRECTIONAL_LIGHT_LIB DirectionalLight)
+
 set(POINT3D_LIB Point3D)
 set(VECTOR3D_LIB Vector3D)
+
+set(PLANE_LIB Plane)
 set(RECTANGLE3D_LIB Rectangle3D)
 set(SPHERE_LIB Sphere)
+
 set(COLOR_LIB Color)
+
 set(CAMERA_LIB Camera)
 set(RAY_LIB Ray)
-set(LIGHTS_LIB Lights)
 
-add_library(${DIRECTIONAL_LIGHT_LIB} SHARED ${SRC_DIRECTIONAL_LIGHT})
+
+# Add plugins
 add_library(${AMBIENT_LIGHT_LIB} SHARED ${SRC_AMBIENT_LIGHT})
+add_library(${DIRECTIONAL_LIGHT_LIB} SHARED ${SRC_DIRECTIONAL_LIGHT})
+
 add_library(${POINT3D_LIB} SHARED ${SRC_POINT3D})
 add_library(${VECTOR3D_LIB} SHARED ${SRC_VECTOR3D})
+
+add_library(${PLANE_LIB} SHARED ${SRC_PLANE})
 add_library(${RECTANGLE3D_LIB} SHARED ${SRC_RECTANGLE3D})
 add_library(${SPHERE_LIB} SHARED ${SRC_SPHERE})
+
 add_library(${COLOR_LIB} SHARED ${SRC_COLOR})
+
 add_library(${CAMERA_LIB} SHARED ${SRC_CAMERA})
 add_library(${RAY_LIB} SHARED ${SRC_RAY})
 
-set_target_properties(${DIRECTIONAL_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
+# Set plugins output directory
 set_target_properties(${AMBIENT_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
+set_target_properties(${DIRECTIONAL_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
+
 set_target_properties(${POINT3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
 set_target_properties(${VECTOR3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
+
+set_target_properties(${PLANE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
 set_target_properties(${RECTANGLE3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
 set_target_properties(${SPHERE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+
 set_target_properties(${COLOR_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/render/)
+
 set_target_properties(${CAMERA_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/view/)
 set_target_properties(${RAY_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/view/)
 
@@ -124,12 +141,17 @@ target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS} ${LIBCONFIG++_LIBRARIE
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
 
 # Link plugins
-target_link_libraries(${EXECUTABLE_NAME} ${DIRECTIONAL_LIGHT_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${AMBIENT_LIGHT_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${DIRECTIONAL_LIGHT_LIB})
+
 target_link_libraries(${EXECUTABLE_NAME} ${POINT3D_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${VECTOR3D_LIB})
+
+target_link_libraries(${EXECUTABLE_NAME} ${PLANE_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${RECTANGLE3D_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${SPHERE_LIB})
+
 target_link_libraries(${EXECUTABLE_NAME} ${COLOR_LIB})
+
 target_link_libraries(${EXECUTABLE_NAME} ${CAMERA_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${RAY_LIB})

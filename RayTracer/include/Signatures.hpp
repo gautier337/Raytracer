@@ -23,6 +23,10 @@ using DirectionalLightSignature = std::unique_ptr<RayTracer::Lights::Directional
     double,
     RayTracer::Render::Color
 );
+using AmbientLightSignature = std::unique_ptr<RayTracer::Lights::AmbientLight>(
+    double brightness,
+    RayTracer::Render::Color color
+);
 
 // Math
 using Point3DSignature = std::unique_ptr<RayTracer::Math::Point3D>(
@@ -37,6 +41,11 @@ using Vector3DSignature = std::unique_ptr<RayTracer::Math::Vector3D>(
 );
 
 // Primitives
+using PlaneSignature = std::unique_ptr<RayTracer::Primitives::Plane>(
+    std::string axis,
+    double position,
+    RayTracer::Render::Color color
+);
 using Rectangle3DSignature = std::unique_ptr<RayTracer::Primitives::Rectangle3D>(
     RayTracer::Math::Point3D,
     RayTracer::Math::Vector3D,

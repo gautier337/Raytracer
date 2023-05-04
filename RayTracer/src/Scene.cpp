@@ -35,7 +35,7 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                 *color
             );
             this->camera = this->factory.createPlugin<CameraSignature>("Camera", *position, *screen);
-            this->original_camera = camera;
+            this->original_camera = this->factory.createPlugin<CameraSignature>("Camera", *position, *screen);
         }
 
         auto &primitives = config.get_setting("primitives");
@@ -82,7 +82,7 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                     position,
                     *primitiveColor
                 );
-                this->addPrimitive(std::make_shared<Primitives::Plane>(*plane));
+                this->addPrimitive(std::make_unique<Primitives::Plane>(*plane));
             }
         }
 
@@ -255,12 +255,13 @@ void RayTracer::Scene::rotateCamera(Math::Vector3D vector, double angle)
     this->setCamera(std::make_unique<View::Camera>(newCamera));
 }
 
+void RayTracer::Scene::resetCamera()
+{
+    View::Camera newCamera = *this->original_camera;
+    this->setCamera(std::make_unique<View::Camera>(newCamera));
+}
+
 RayTracer::Factory RayTracer::Scene::getFactory() const
 {
     return this->factory;
-}
-
-void RayTracer::Scene::resetCamera()
-{
-    this->setCamera(this->original_camera);
 }

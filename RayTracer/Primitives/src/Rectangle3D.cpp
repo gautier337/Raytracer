@@ -8,13 +8,7 @@
 #include "Rectangle3D.hpp"
 #include <iostream>
 #include <cmath>
-
-RayTracer::Primitives::Rectangle3D::Rectangle3D() :
-    origin(0, 0, 0),
-    bottom_side(1, 0, 0),
-    left_side(0, 1, 0)
-{
-}
+#include <memory>
 
 RayTracer::Primitives::Rectangle3D::~Rectangle3D()
 {
