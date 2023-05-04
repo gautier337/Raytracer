@@ -6,10 +6,10 @@
 */
 
 #pragma once
+#include "Library.hpp"
 #include <string>
 #include <memory>
 #include <map>
-#include <functional>
 #include <dlfcn.h>
 
 namespace RayTracer {
@@ -24,24 +24,18 @@ namespace RayTracer {
             );
             void unloadPlugin(std::string const &name);
             void unloadAllPlugins();
-            template<typename T, typename... Args>
-            std::unique_ptr<T> createPlugin(
-                std::string const &name,
-                Args... args
-            )
+            template <typename Signature, typename... Args>
+            auto createPlugin(std::string const& name, Args&&... args)
             {
-                auto it = pluginConstructors.find(name);
-                if (it == pluginConstructors.end())
-                    throw std::runtime_error("Plugin not found: " + name);
+                auto it = libraries.find(name);
+                if (it == libraries.end())
+                    throw std::runtime_error("Failed to create plugin: " + name + " library not loaded");
 
-                using ConstructorFunction = T*(*)(Args...);
-                ConstructorFunction constructorFunc = reinterpret_cast<ConstructorFunction>(it->second);
-                return std::unique_ptr<T>(constructorFunc(args...));
-                return nullptr;
+                auto& lib = it->second;
+                return lib.call<Signature, Args...>("create" + name, std::forward<Args>(args)...);
             }
 
         private:
-            std::map<std::string, void*> pluginHandles;
-            std::map<std::string, void*> pluginConstructors;
+            std::map<std::string, Library> libraries;
     };
 }

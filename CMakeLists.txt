@@ -67,6 +67,7 @@ set(SRC_RAY ${RAYTRACER_DIRECTORY}${VIEW_DIRECTORY}Ray.cpp)
 set(SOURCES_DIRECTORY src/)
 set(SRC_RAYTRACER
         Factory.cpp
+        Library.cpp
         Scene.cpp
 )
 

@@ -7,6 +7,7 @@
 
 #include "Factory.hpp"
 #include <stdexcept>
+#include <iostream>
 
 RayTracer::Factory::Factory()
 {
@@ -15,28 +16,32 @@ RayTracer::Factory::Factory()
 
 RayTracer::Factory::~Factory()
 {
-    unloadAllPlugins();
+    this->unloadAllPlugins();
 }
 
 void RayTracer::Factory::loadAllPlugins()
 {
-    // Lights
-    this->loadPlugin("DirectionalLight", "./lights/DirectionalLight.so");
+    try {
+        // Lights
+        this->loadPlugin("DirectionalLight", "./plugins/lights/DirectionalLight.so");
 
-    // Math
-    this->loadPlugin("Point3D", "./math/Point3D.so");
-    this->loadPlugin("Vector3D", "./math/Vector3D.so");
+        // Math
+        this->loadPlugin("Point3D", "./plugins/math/Point3D.so");
+        this->loadPlugin("Vector3D", "./plugins/math/Vector3D.so");
 
-    // Primitives
-    this->loadPlugin("Rectangle3D", "./primitives/Rectangle3D.so");
-    this->loadPlugin("Sphere", "./primitives/Sphere.so");
+        // Primitives
+        this->loadPlugin("Rectangle3D", "./plugins/primitives/Rectangle3D.so");
+        this->loadPlugin("Sphere", "./plugins/primitives/Sphere.so");
 
-    // Render
-    this->loadPlugin("Color", "./render/Color.so");
+        // Render
+        this->loadPlugin("Color", "./plugins/render/Color.so");
 
-    // View
-    this->loadPlugin("Camera", "./view/Camera.so");
-    this->loadPlugin("Ray", "./view/Ray.so");
+        // View
+        this->loadPlugin("Camera", "./plugins/view/Camera.so");
+        this->loadPlugin("Ray", "./plugins/view/Ray.so");
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void RayTracer::Factory::loadPlugin(
@@ -44,35 +49,19 @@ void RayTracer::Factory::loadPlugin(
     std::string const &path
 )
 {
-    void *pluginHandle = dlopen(path.c_str(), RTLD_NOW);
-    if (!pluginHandle)
-        throw std::runtime_error("Failed to load plugin: " + name + " at path: " + path);
+    if (this->libraries.find(name) != this->libraries.end())
+        throw std::runtime_error("Library already loaded: " + name);
+    Library lib(path);
 
-    void *constructorPtr = dlsym(pluginHandle, ("create" + name).c_str());
-    if (!constructorPtr) {
-        dlclose(pluginHandle);
-        throw std::runtime_error("Failed to find constructor for plugin: " + name);
-    }
-
-    pluginHandles[name] = pluginHandle;
-    pluginConstructors[name] = constructorPtr;
+    this->libraries.emplace(name, std::move(lib));
 }
 
 void RayTracer::Factory::unloadPlugin(std::string const &name)
 {
-    auto it = pluginHandles.find(name);
-    if (it != pluginHandles.end()) {
-        dlclose(it->second);
-        pluginHandles.erase(it);
-        pluginConstructors.erase(name);
-    }
+    this->libraries.erase(name);
 }
 
 void RayTracer::Factory::unloadAllPlugins()
 {
-    for (auto &pair : pluginHandles)
-        dlclose(pair.second);
-
-    pluginHandles.clear();
-    pluginConstructors.clear();
+    this->libraries.clear();
 }

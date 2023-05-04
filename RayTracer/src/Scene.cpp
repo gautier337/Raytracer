@@ -8,6 +8,7 @@
 #include "Scene.hpp"
 #include "Camera.hpp"
 #include "Sphere.hpp"
+#include "Signatures.hpp"
 #include <algorithm>
 #include <iostream>
 
@@ -19,19 +20,19 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
         double x = config.getDoubleFromSetting(camera_config["position"]["x"]);
         double y = config.getDoubleFromSetting(camera_config["position"]["y"]);
         double z = config.getDoubleFromSetting(camera_config["position"]["z"]);
-        std::unique_ptr<Math::Point3D> position = this->factory.createPlugin<Math::Point3D>("Point3D", x, y, z);
-        std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Math::Point3D>("Point3D", -0.5, -0.5, 1);
-        std::unique_ptr<Math::Vector3D> bottom_side = this->factory.createPlugin<Math::Vector3D>("Vector3D", 1, 0, 0);
-        std::unique_ptr<Math::Vector3D> left_side = this->factory.createPlugin<Math::Vector3D>("Vector3D", 0, 1, 0);
-        std::unique_ptr<Render::Color> color = this->factory.createPlugin<Render::Color>("Color", 0, 0, 0, 0);
-        std::unique_ptr<Primitives::Rectangle3D> screen = this->factory.createPlugin<Primitives::Rectangle3D>(
+        std::unique_ptr<Math::Point3D> position = this->factory.createPlugin<Point3DSignature>("Point3D", x, y, z);
+        std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", -0.5, -0.5, 1);
+        std::unique_ptr<Math::Vector3D> bottom_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 1, 0, 0);
+        std::unique_ptr<Math::Vector3D> left_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 0, 1, 0);
+        std::unique_ptr<Render::Color> color = this->factory.createPlugin<ColorSignature>("Color", 0, 0, 0, 0);
+        std::unique_ptr<Primitives::Rectangle3D> screen = this->factory.createPlugin<Rectangle3DSignature>(
             "Rectangle3D",
             *origin,
             *bottom_side,
             *left_side,
             *color
         );
-        this->camera = this->factory.createPlugin<View::Camera>("Camera", *position, *screen);
+        this->camera = this->factory.createPlugin<CameraSignature>("Camera", *position, *screen);
     }
 
     auto &primitives = config.get_setting("primitives");
@@ -40,9 +41,9 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
             double x = config.getDoubleFromSetting(primitives["spheres"][i]["x"]);
             double y = config.getDoubleFromSetting(primitives["spheres"][i]["y"]);
             double z = config.getDoubleFromSetting(primitives["spheres"][i]["z"]);
-            std::unique_ptr<Math::Point3D> position = this->factory.createPlugin<Math::Point3D>("Point3D", x, y, z);
+            std::unique_ptr<Math::Point3D> position = this->factory.createPlugin<Point3DSignature>("Point3D", x, y, z);
             double radius = config.getDoubleFromSetting(primitives["spheres"][i]["r"]);
-            std::unique_ptr<Render::Color> primitiveColor = this->factory.createPlugin<Render::Color>(
+            std::unique_ptr<Render::Color> primitiveColor = this->factory.createPlugin<ColorSignature>(
                 "Color",
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["r"]),
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["g"]),
@@ -50,7 +51,7 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                 config.getDoubleFromSetting(primitives["spheres"][i]["color"]["a"])
             );
 
-            std::unique_ptr<Primitives::Sphere> sphere = this->factory.createPlugin<Primitives::Sphere>(
+            std::unique_ptr<Primitives::Sphere> sphere = this->factory.createPlugin<SphereSignature>(
                 "Sphere",
                 *position,
                 radius,
@@ -61,7 +62,6 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
     }
 
     auto &lights_config = config.get_setting("lights");
-
     if (lights_config.exists("directional")) {
         for (int i = 0; i < lights_config["directional"].getLength(); i++) {
             double brightness = config.getDoubleFromSetting(lights_config["directional"][i]["brightness"]);
@@ -71,9 +71,9 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
             double x_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["x"]);
             double y_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["y"]);
             double z_vector = config.getDoubleFromSetting(lights_config["directional"][i]["vector"]["z"]);
-            std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Math::Point3D>("Point3D", x_point, y_point, z_point);
-            std::unique_ptr<Math::Vector3D> direction = this->factory.createPlugin<Math::Vector3D>("Vector3D", -x_vector, y_vector, z_vector);
-            std::unique_ptr<Render::Color> lightColor = this->factory.createPlugin<Render::Color>(
+            std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", x_point, y_point, z_point);
+            std::unique_ptr<Math::Vector3D> direction = this->factory.createPlugin<Vector3DSignature>("Vector3D", -x_vector, y_vector, z_vector);
+            std::unique_ptr<Render::Color> lightColor = this->factory.createPlugin<ColorSignature>(
                 "Color",
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["r"]),
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["g"]),
@@ -81,7 +81,7 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                 config.getDoubleFromSetting(lights_config["directional"][i]["color"]["a"])
             );
 
-            std::unique_ptr<Lights::DirectionalLight> light = this->factory.createPlugin<Lights::DirectionalLight>(
+            std::unique_ptr<Lights::DirectionalLight> light = this->factory.createPlugin<DirectionalLightSignature>(
                 "DirectionalLight",
                 *origin,
                 *direction,
@@ -92,11 +92,11 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
         }
     }
 
-    std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Math::Point3D>("Point3D", 0, -5000, 0);
-    std::unique_ptr<Math::Vector3D> bottom_side = this->factory.createPlugin<Math::Vector3D>("Vector3D", 0, 10000, 10000);
-    std::unique_ptr<Math::Vector3D> left_side = this->factory.createPlugin<Math::Vector3D>("Vector3D", 0, 0, 0);
-    std::unique_ptr<Render::Color> color = this->factory.createPlugin<Render::Color>("Color", 1, 1, 0, 1);
-    std::unique_ptr<Primitives::Rectangle3D> ground = this->factory.createPlugin<Primitives::Rectangle3D>(
+    std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", 0, -5000, 0);
+    std::unique_ptr<Math::Vector3D> bottom_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 0, 10000, 10000);
+    std::unique_ptr<Math::Vector3D> left_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 0, 0, 0);
+    std::unique_ptr<Render::Color> color = this->factory.createPlugin<ColorSignature>("Color", 1, 1, 0, 1);
+    std::unique_ptr<Primitives::Rectangle3D> ground = this->factory.createPlugin<Rectangle3DSignature>(
         "Rectangle3D",
         *origin,
         *bottom_side,

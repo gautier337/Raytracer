@@ -12,6 +12,7 @@
 #include "Ray.hpp"
 #include "Scene.hpp"
 #include "Color.hpp"
+#include "Signatures.hpp"
 #include "parse_config.hpp"
 #include <memory>
 
@@ -59,35 +60,35 @@ int raytracer(std::string const &sceneFile)
                         window.close();
                         break;
                     case sf::Keyboard::Z:
-                        scene.translateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 0, 0, 0.5));
+                        scene.translateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 0, 0, 0.5));
                         break;
                     case sf::Keyboard::S:
-                        scene.translateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 0, 0, -0.5));
+                        scene.translateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 0, 0, -0.5));
                         break;
                     case sf::Keyboard::Q:
-                        scene.translateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", -0.5, 0, 0));
+                        scene.translateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", -0.5, 0, 0));
                         break;
                     case sf::Keyboard::D:
-                        scene.translateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 0.5, 0, 0));
+                        scene.translateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 0.5, 0, 0));
                         break;
                     case sf::Keyboard::Space:
-                        scene.translateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 0, 0.5, 0));
+                        scene.translateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 0, 0.5, 0));
                         break;
                     case sf::Keyboard::LShift:
-                        scene.translateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 0, -0.5, 0));
+                        scene.translateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 0, -0.5, 0));
                         break;
                 shouldUpdatePoints = true;
                     case sf::Keyboard::Up:
-                        scene.rotateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", -1, 0, 0), 0.1);
+                        scene.rotateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", -1, 0, 0), 0.1);
                         break;
                     case sf::Keyboard::Down:
-                        scene.rotateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 1, 0, 0), 0.1);
+                        scene.rotateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 1, 0, 0), 0.1);
                         break;
                     case sf::Keyboard::Left:
-                        scene.rotateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 0, 1, 0), -0.1);
+                        scene.rotateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 0, 1, 0), -0.1);
                         break;
                     case sf::Keyboard::Right:
-                        scene.rotateCamera(*factory.createPlugin<RayTracer::Math::Vector3D>("Vector3D", 0, 1, 0), 0.1);
+                        scene.rotateCamera(*factory.createPlugin<Vector3DSignature>("Vector3D", 0, 1, 0), 0.1);
                         break;
                     default:
                         break;
