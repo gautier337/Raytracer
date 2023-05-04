@@ -3,11 +3,13 @@ project(raytracer)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
+# SFML Library
 find_package(SFML 2.5
         COMPONENTS
         system window graphics audio REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
+# libConfig library
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBCONFIG++ REQUIRED libconfig++)
 include_directories(${LIBCONFIG++_INCLUDE_DIRS})
@@ -15,8 +17,6 @@ link_directories(${LIBCONFIG++_LIBRARY_DIRS})
 
 include_directories(
         Core/include
-        Core/DLLoader/include
-        Raytracer/Scene/include
         RayTracer/include
         RayTracer/Lights/include
         RayTracer/Math/include
@@ -35,54 +35,40 @@ set(SRC_MAIN
 # Core Sources
 set(CORE_DIRECTORY Core/)
 set(SRC_CORE
-        DLLoader/src/DLLoader.cpp
         src/RayTracer.cpp
         src/parse_config.cpp
 )
 
-# Lights Sources
-set(LIGHTS_DIRECTORY RayTracer/Lights/src/)
-set(SRC_LIGHTS
-        DirectionalLight.cpp
-        AmbientLight.cpp
-        LightsFactory.cpp
-)
+# Lights Plugins
+set(LIGHTS_DIRECTORY Lights/src/)
+set(SRC_AMBIENT_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}AmbientLight.cpp)
+set(SRC_DIRECTIONAL_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}DirectionalLight.cpp)
 
-# Math Sources
-set(MATH_DIRECTORY RayTracer/Math/src/)
-set(SRC_MATH
-        MathFactory.cpp
-        Point3D.cpp
-        Vector3D.cpp
-)
+# Math Plugins
+set(MATH_DIRECTORY Math/src/)
+set(SRC_POINT3D ${RAYTRACER_DIRECTORY}${MATH_DIRECTORY}Point3D.cpp)
+set(SRC_VECTOR3D ${RAYTRACER_DIRECTORY}${MATH_DIRECTORY}Vector3D.cpp)
 
-# Primitives Sources
-set(PRIMITIVES_DIRECTORY RayTracer/Primitives/src/)
-set(SRC_PRIMITIVES
-        PrimitivesFactory.cpp
-        Rectangle3D.cpp
-        Sphere.cpp
-        Plane.cpp
-)
+# Primitives Plugins
+set(PRIMITIVES_DIRECTORY Primitives/src/)
+set(SRC_PLANE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Plane.cpp)
+set(SRC_RECTANGLE3D ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Rectangle3D.cpp)
+set(SRC_SPHERE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Sphere.cpp)
 
-# Render Sources
-set(RENDER_DIRECTORY RayTracer/Render/src/)
-set(SRC_RENDER
-        Color.cpp
-        RenderFactory.cpp
-)
+# Render Plugins
+set(RENDER_DIRECTORY Render/src/)
+set(SRC_COLOR ${RAYTRACER_DIRECTORY}${RENDER_DIRECTORY}Color.cpp)
 
-# View Sources
-set(VIEW_DIRECTORY RayTracer/View/src/)
-set(SRC_VIEW
-        Camera.cpp
-        Ray.cpp
-        ViewFactory.cpp
-)
+# View Plugins
+set(VIEW_DIRECTORY View/src/)
+set(SRC_CAMERA ${RAYTRACER_DIRECTORY}${VIEW_DIRECTORY}Camera.cpp)
+set(SRC_RAY ${RAYTRACER_DIRECTORY}${VIEW_DIRECTORY}Ray.cpp)
 
 # Raytracer Sources
-set(RAYTRACER_DIRECTORY RayTracer/src/)
+set(SOURCES_DIRECTORY src/)
 set(SRC_RAYTRACER
+        Factory.cpp
+        Library.cpp
         Scene.cpp
 )
 
@@ -91,27 +77,81 @@ set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")
 # Transform all paths to absolute paths
 list(TRANSFORM SRC_MAIN PREPEND ${CORE_DIRECTORY})
 list(TRANSFORM SRC_CORE PREPEND ${CORE_DIRECTORY})
-list(TRANSFORM SRC_LIGHTS PREPEND ${LIGHTS_DIRECTORY})
-list(TRANSFORM SRC_MATH PREPEND ${MATH_DIRECTORY})
-list(TRANSFORM SRC_PRIMITIVES PREPEND ${PRIMITIVES_DIRECTORY})
-list(TRANSFORM SRC_RENDER PREPEND ${RENDER_DIRECTORY})
-list(TRANSFORM SRC_VIEW PREPEND ${VIEW_DIRECTORY})
-list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY})
+list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY}/${SOURCES_DIRECTORY})
+
+# Set plugins names
+set(AMBIENT_LIGHT_LIB AmbientLight)
+set(DIRECTIONAL_LIGHT_LIB DirectionalLight)
+
+set(POINT3D_LIB Point3D)
+set(VECTOR3D_LIB Vector3D)
+
+set(PLANE_LIB Plane)
+set(RECTANGLE3D_LIB Rectangle3D)
+set(SPHERE_LIB Sphere)
+
+set(COLOR_LIB Color)
+
+set(CAMERA_LIB Camera)
+set(RAY_LIB Ray)
+
+
+# Add plugins
+add_library(${AMBIENT_LIGHT_LIB} SHARED ${SRC_AMBIENT_LIGHT})
+add_library(${DIRECTIONAL_LIGHT_LIB} SHARED ${SRC_DIRECTIONAL_LIGHT})
+
+add_library(${POINT3D_LIB} SHARED ${SRC_POINT3D})
+add_library(${VECTOR3D_LIB} SHARED ${SRC_VECTOR3D})
+
+add_library(${PLANE_LIB} SHARED ${SRC_PLANE})
+add_library(${RECTANGLE3D_LIB} SHARED ${SRC_RECTANGLE3D})
+add_library(${SPHERE_LIB} SHARED ${SRC_SPHERE})
+
+add_library(${COLOR_LIB} SHARED ${SRC_COLOR})
+
+add_library(${CAMERA_LIB} SHARED ${SRC_CAMERA})
+add_library(${RAY_LIB} SHARED ${SRC_RAY})
+
+# Set plugins output directory
+set_target_properties(${AMBIENT_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
+set_target_properties(${DIRECTIONAL_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
+
+set_target_properties(${POINT3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
+set_target_properties(${VECTOR3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
+
+set_target_properties(${PLANE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+set_target_properties(${RECTANGLE3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+set_target_properties(${SPHERE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+
+set_target_properties(${COLOR_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/render/)
+
+set_target_properties(${CAMERA_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/view/)
+set_target_properties(${RAY_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/view/)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
-
 
 add_executable(
         ${EXECUTABLE_NAME}
         ${SRC_MAIN}
         ${SRC_CORE}
-        ${SRC_MATH}
-        ${SRC_LIGHTS}
-        ${SRC_PRIMITIVES}
-        ${SRC_RENDER}
-        ${SRC_VIEW}
         ${SRC_RAYTRACER}
 )
 
 target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS} ${LIBCONFIG++_LIBRARIES})
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
+
+# Link plugins
+target_link_libraries(${EXECUTABLE_NAME} ${AMBIENT_LIGHT_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${DIRECTIONAL_LIGHT_LIB})
+
+target_link_libraries(${EXECUTABLE_NAME} ${POINT3D_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${VECTOR3D_LIB})
+
+target_link_libraries(${EXECUTABLE_NAME} ${PLANE_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${RECTANGLE3D_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${SPHERE_LIB})
+
+target_link_libraries(${EXECUTABLE_NAME} ${COLOR_LIB})
+
+target_link_libraries(${EXECUTABLE_NAME} ${CAMERA_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${RAY_LIB})

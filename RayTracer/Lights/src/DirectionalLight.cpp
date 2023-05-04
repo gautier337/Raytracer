@@ -6,6 +6,7 @@
 */
 
 #include "DirectionalLight.hpp"
+#include <memory>
 
 RayTracer::Lights::DirectionalLight::DirectionalLight() :
     origin(),
@@ -94,4 +95,19 @@ void RayTracer::Lights::DirectionalLight::setColor(
 )
 {
     this->color = color;
+}
+
+extern "C" std::unique_ptr<RayTracer::Lights::DirectionalLight> createDirectionalLight(
+    RayTracer::Math::Point3D origin,
+    RayTracer::Math::Vector3D direction,
+    double brightness,
+    RayTracer::Render::Color color
+)
+{
+    return std::make_unique<RayTracer::Lights::DirectionalLight>(
+        origin,
+        direction,
+        brightness,
+        color
+    );
 }

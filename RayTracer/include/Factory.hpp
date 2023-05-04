@@ -6,11 +6,11 @@
 */
 
 #pragma once
-#include "IFactory.hpp"
-#include <functional>
+#include "Library.hpp"
+#include <string>
 #include <memory>
-#include <vector>
 #include <map>
+#include <dlfcn.h>
 
 namespace RayTracer {
     class Factory {
@@ -24,13 +24,18 @@ namespace RayTracer {
             );
             void unloadPlugin(std::string const &name);
             void unloadAllPlugins();
-            template<typename T, typename... Args>
-            std::unique_ptr<T> createPlugin(
-                std::string const &name,
-                Args... args
-            );
+            template <typename Signature, typename... Args>
+            auto createPlugin(std::string const& name, Args&&... args)
+            {
+                auto it = libraries.find(name);
+                if (it == libraries.end())
+                    throw std::runtime_error("Failed to create plugin: " + name + " library not loaded");
+
+                auto& lib = it->second;
+                return lib.call<Signature, Args...>("create" + name, std::forward<Args>(args)...);
+            }
 
         private:
-            std::map<std::string, std::function<std::unique_ptr<IFactory>(void)>> plugins;
+            std::map<std::string, Library> libraries;
     };
 }

@@ -6,12 +6,7 @@
 */
 
 #include "AmbientLight.hpp"
-
-RayTracer::Lights::AmbientLight::AmbientLight() :
-    brightness(0),
-    color(0, 0, 0, 1)
-{
-}
+#include <memory>
 
 RayTracer::Lights::AmbientLight::~AmbientLight()
 {
@@ -89,4 +84,15 @@ void RayTracer::Lights::AmbientLight::setColor(
 )
 {
     this->color = color;
+}
+
+extern "C" std::unique_ptr<RayTracer::Lights::AmbientLight> createAmbientLight(
+    double brightness,
+    RayTracer::Render::Color color
+)
+{
+    return std::make_unique<RayTracer::Lights::AmbientLight>(
+        brightness,
+        color
+    );
 }

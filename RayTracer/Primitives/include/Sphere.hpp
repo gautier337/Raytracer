@@ -17,7 +17,6 @@ namespace RayTracer {
     namespace Primitives {
         class Sphere : public IPrimitives {
             public:
-                Sphere();
                 ~Sphere();
                 Sphere(
                     Math::Point3D center,

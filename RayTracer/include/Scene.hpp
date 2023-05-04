@@ -5,6 +5,7 @@
 ** Scene
 */
 
+#include "Factory.hpp"
 #include "Rectangle3D.hpp"
 #include "Plane.hpp"
 #include "Sphere.hpp"
@@ -24,17 +25,19 @@ namespace RayTracer {
             ~Scene();
             void addPrimitive(std::unique_ptr<IPrimitives> primitive);
             void addLight(std::unique_ptr<ILights> light);
-            void setCamera(View::Camera camera);
+            void setCamera(std::unique_ptr<View::Camera> camera);
             std::vector<std::vector<Render::Color>> getPixels() const;
             void render(int pixelSize, int width, int height);
             View::Camera getCamera() const;
             void translateCamera(Math::Vector3D translation);
             void rotateCamera(Math::Vector3D rotation, double angle);
             void resetCamera();
+            Factory getFactory() const;
 
         private:
-            View::Camera camera;
-            View::Camera original_camera;
+            Factory factory;
+            std::unique_ptr<View::Camera> camera;
+            std::unique_ptr<View::Camera> original_camera;
             std::vector<std::unique_ptr<IPrimitives>> primitives;
             std::vector<std::unique_ptr<ILights>> lights;
             std::vector<std::vector<Render::Color>> pixels;

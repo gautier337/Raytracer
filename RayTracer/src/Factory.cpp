@@ -6,35 +6,44 @@
 */
 
 #include "Factory.hpp"
-#include "DLLoader.hpp"
+#include <stdexcept>
+#include <iostream>
 
 RayTracer::Factory::Factory()
 {
+    this->loadAllPlugins();
 }
 
 RayTracer::Factory::~Factory()
 {
+    this->unloadAllPlugins();
 }
 
 void RayTracer::Factory::loadAllPlugins()
 {
-    // Lights
-    this->loadPlugin("DirectionalLight", "./lights/DirectionalLight.so");
+    try {
+        // Lights
+        this->loadPlugin("AmbientLight", "./plugins/lights/AmbientLight.so");
+        this->loadPlugin("DirectionalLight", "./plugins/lights/DirectionalLight.so");
 
-    // Math
-    this->loadPlugin("Vector3D", "./math/Vector3D.so");
-    this->loadPlugin("Point3D", "./math/Point3D.so");
+        // Math
+        this->loadPlugin("Point3D", "./plugins/math/Point3D.so");
+        this->loadPlugin("Vector3D", "./plugins/math/Vector3D.so");
 
-    // Primitives
-    this->loadPlugin("Rectangle3D", "./primitives/Rectangle3D.so");
-    this->loadPlugin("Sphere", "./primitives/Sphere.so");
+        // Primitives
+        this->loadPlugin("Plane", "./plugins/primitives/Plane.so");
+        this->loadPlugin("Rectangle3D", "./plugins/primitives/Rectangle3D.so");
+        this->loadPlugin("Sphere", "./plugins/primitives/Sphere.so");
 
-    // Render
-    this->loadPlugin("Color", "./render/Color.so");
+        // Render
+        this->loadPlugin("Color", "./plugins/render/Color.so");
 
-    // View
-    this->loadPlugin("Camera", "./view/Camera.so");
-    this->loadPlugin("Ray", "./view/Ray.so");
+        // View
+        this->loadPlugin("Camera", "./plugins/view/Camera.so");
+        this->loadPlugin("Ray", "./plugins/view/Ray.so");
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void RayTracer::Factory::loadPlugin(
@@ -42,30 +51,19 @@ void RayTracer::Factory::loadPlugin(
     std::string const &path
 )
 {
+    if (this->libraries.find(name) != this->libraries.end())
+        throw std::runtime_error("Library already loaded: " + name);
+    Library lib(path);
+
+    this->libraries.emplace(name, std::move(lib));
 }
 
 void RayTracer::Factory::unloadPlugin(std::string const &name)
 {
+    this->libraries.erase(name);
 }
 
 void RayTracer::Factory::unloadAllPlugins()
 {
-    // .. complete the code
-}
-
-template<typename T, typename... Args>
-std::unique_ptr<T> RayTracer::Factory::createPlugin(
-    std::string const &name,
-    Args... args
-)
-{
-    auto it = this->plugins.find(name);
-    if (it == this->plugins.end())
-        throw std::runtime_error("Plugin not found");
-    auto factory = it->second;
-    auto ptr = factory();
-    auto casted = dynamic_cast<T*>(ptr.get());
-    if (casted == nullptr)
-        throw std::runtime_error("Plugin does not implement requested interface");
-    return std::unique_ptr<T>(casted);
+    this->libraries.clear();
 }

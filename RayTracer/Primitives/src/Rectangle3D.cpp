@@ -8,13 +8,7 @@
 #include "Rectangle3D.hpp"
 #include <iostream>
 #include <cmath>
-
-RayTracer::Primitives::Rectangle3D::Rectangle3D() :
-    origin(0, 0, 0),
-    bottom_side(1, 0, 0),
-    left_side(0, 1, 0)
-{
-}
+#include <memory>
 
 RayTracer::Primitives::Rectangle3D::~Rectangle3D()
 {
@@ -98,4 +92,17 @@ void RayTracer::Primitives::Rectangle3D::scale(double factor)
 {
     this->bottom_side = this->bottom_side * factor;
     this->left_side = this->left_side * factor;
+}
+
+extern "C" std::unique_ptr<RayTracer::Primitives::Rectangle3D> createRectangle3D(
+    RayTracer::Math::Point3D origin,
+    RayTracer::Math::Vector3D bottom_side,
+    RayTracer::Math::Vector3D left_side
+)
+{
+    return std::make_unique<RayTracer::Primitives::Rectangle3D>(
+        origin,
+        bottom_side,
+        left_side
+    );
 }

@@ -8,14 +8,6 @@
 #include "Sphere.hpp"
 #include <cmath>
 
-RayTracer::Primitives::Sphere::Sphere() :
-    center(),
-    radius(0),
-    color(0, 0, 0, 1),
-    closestT(__FLT_MAX__)
-{
-}
-
 RayTracer::Primitives::Sphere::~Sphere()
 {
 }
@@ -167,4 +159,17 @@ void RayTracer::Primitives::Sphere::rotate(Math::Vector3D axis, double angle)
 void RayTracer::Primitives::Sphere::scale(double factor)
 {
     this->radius *= factor;
+}
+
+extern "C" std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
+    RayTracer::Math::Point3D center,
+    double radius,
+    RayTracer::Render::Color color
+)
+{
+    return std::make_unique<RayTracer::Primitives::Sphere>(
+        center,
+        radius,
+        color
+    );
 }

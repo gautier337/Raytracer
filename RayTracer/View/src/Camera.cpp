@@ -7,16 +7,7 @@
 
 #include "Camera.hpp"
 #include <cmath>
-
-RayTracer::View::Camera::Camera() :
-    origin(0.5, 0.5, 0),
-    screen(
-        RayTracer::Math::Point3D(0, 0, -1),
-        RayTracer::Math::Vector3D(1, 0, 0),
-        RayTracer::Math::Vector3D(0, 1, 0)
-    )
-{
-}
+#include <memory>
 
 RayTracer::View::Camera::~Camera()
 {
@@ -77,4 +68,12 @@ void RayTracer::View::Camera::translate(RayTracer::Math::Vector3D vector)
 void RayTracer::View::Camera::rotate(RayTracer::Math::Vector3D rotation, double angle)
 {
     this->screen.rotate(rotation, angle);
+}
+
+extern "C" std::unique_ptr<RayTracer::View::Camera> createCamera(
+    RayTracer::Math::Point3D origin,
+    RayTracer::Primitives::Rectangle3D screen
+)
+{
+    return std::make_unique<RayTracer::View::Camera>(origin, screen);
 }
