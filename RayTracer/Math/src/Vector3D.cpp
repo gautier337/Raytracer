@@ -141,6 +141,14 @@ RayTracer::Math::Vector3D &RayTracer::Math::Vector3D::operator/(
     return *this;
 }
 
+bool &RayTracer::Math::Vector3D::operator==(const Vector3D &vector)
+{
+    bool *result = new bool;
+    *result = this->x == vector.getX() && this->y == vector.getY() &&
+        this->z == vector.getZ();
+    return *result;
+}
+
 RayTracer::Math::Vector3D &RayTracer::Math::Vector3D::operator+=(double value)
 {
     this->x += value;
@@ -258,6 +266,15 @@ RayTracer::Math::Vector3D RayTracer::Math::Vector3D::normalize()
         this->z /= length
     );
     return normal;
+}
+
+RayTracer::Math::Vector3D RayTracer::Math::Vector3D::cross(
+    const RayTracer::Math::Vector3D &v)
+{
+    double x = this->y * v.z - this->z * v.y;
+    double y = this->z * v.x - this->x * v.z;
+    double z = this->x * v.y - this->y * v.x;
+    return RayTracer::Math::Vector3D(x, y, z);
 }
 
 void RayTracer::Math::Vector3D::rotate(Math::Vector3D axis, double angle)

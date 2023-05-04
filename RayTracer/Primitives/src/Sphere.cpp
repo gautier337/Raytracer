@@ -106,7 +106,7 @@ bool RayTracer::Primitives::Sphere::hits(View::Ray ray)
 
 RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::View::Ray ray,
-    std::vector<std::shared_ptr<ILights>> lights
+    std::vector<std::unique_ptr<ILights>> &lights
 )
 {
     RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * this->closestT;
@@ -120,14 +120,24 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::Render::Color newColor(0, 0, 0, this->color.getA());
 
     for (const auto &light : lights) {
-        double dot = std::max(0.0, normal.dot(light->getDirection()));
+        if (light->getDirection() == RayTracer::Math::Vector3D(0, 0, 0)) {
+            RayTracer::Render::Color lightColor(
+                this->color.getR() * light->getBrightness(),
+                this->color.getG() * light->getBrightness(),
+                this->color.getB() * light->getBrightness(),
+                this->color.getA()
+            );
+            newColor += lightColor;
+        }
+        RayTracer::Math::Vector3D lightDir = light->getDirection().normalize();
+        double dot = std::max(0.0, normal.dot(lightDir));
         double brightness = light->getBrightness();
 
         RayTracer::Render::Color lightColor(
             this->color.getR() * dot * brightness,
             this->color.getG() * dot * brightness,
             this->color.getB() * dot * brightness,
-            0
+            this->color.getA()
         );
 
         newColor += lightColor;
@@ -152,6 +162,11 @@ void RayTracer::Primitives::Sphere::rotate(Math::Vector3D axis, double angle)
     this->center.setX(xPrime);
     this->center.setY(yPrime);
     this->center.setZ(zPrime);
+}
+
+void RayTracer::Primitives::Sphere::scale(double factor)
+{
+    this->radius *= factor;
 }
 
 extern "C" std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(

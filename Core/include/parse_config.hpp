@@ -26,6 +26,7 @@ class ParseConfig {
         RayTracer::Render::Color getColorFromSetting(
             const libconfig::Setting &colorSetting
         ) const;
+        std::string getStringFromSetting(const libconfig::Setting &setting) const;
 
     private:
         libconfig::Config config;

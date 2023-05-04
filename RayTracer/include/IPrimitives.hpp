@@ -21,9 +21,10 @@ namespace RayTracer {
             virtual bool hits(View::Ray ray) = 0;
             virtual Render::Color computeColor(
                 View::Ray ray,
-                std::vector<std::shared_ptr<ILights>> lights
+                std::vector<std::unique_ptr<ILights>> &lights
             ) = 0;
             virtual void translate(Math::Vector3D translation) = 0;
             virtual void rotate(Math::Vector3D axis, double angle) = 0;
+            virtual void scale(double factor) = 0;
     };
 }

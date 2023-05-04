@@ -43,6 +43,7 @@ set(SRC_CORE
 # Lights Plugins
 set(LIGHTS_DIRECTORY Lights/src/)
 set(SRC_DIRECTIONAL_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}DirectionalLight.cpp)
+set(SRC_AMBIENT_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}AmbientLight.cpp)
 
 # Math Plugins
 set(MATH_DIRECTORY Math/src/)
@@ -80,6 +81,7 @@ list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY}/${SOURCES_DIRECTORY}
 
 # Plugins
 set(DIRECTIONAL_LIGHT_LIB DirectionalLight)
+set(AMBIENT_LIGHT_LIB AmbientLight)
 set(POINT3D_LIB Point3D)
 set(VECTOR3D_LIB Vector3D)
 set(RECTANGLE3D_LIB Rectangle3D)
@@ -90,6 +92,7 @@ set(RAY_LIB Ray)
 set(LIGHTS_LIB Lights)
 
 add_library(${DIRECTIONAL_LIGHT_LIB} SHARED ${SRC_DIRECTIONAL_LIGHT})
+add_library(${AMBIENT_LIGHT_LIB} SHARED ${SRC_AMBIENT_LIGHT})
 add_library(${POINT3D_LIB} SHARED ${SRC_POINT3D})
 add_library(${VECTOR3D_LIB} SHARED ${SRC_VECTOR3D})
 add_library(${RECTANGLE3D_LIB} SHARED ${SRC_RECTANGLE3D})
@@ -99,6 +102,7 @@ add_library(${CAMERA_LIB} SHARED ${SRC_CAMERA})
 add_library(${RAY_LIB} SHARED ${SRC_RAY})
 
 set_target_properties(${DIRECTIONAL_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
+set_target_properties(${AMBIENT_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
 set_target_properties(${POINT3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
 set_target_properties(${VECTOR3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
 set_target_properties(${RECTANGLE3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
@@ -121,6 +125,7 @@ target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
 
 # Link plugins
 target_link_libraries(${EXECUTABLE_NAME} ${DIRECTIONAL_LIGHT_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${AMBIENT_LIGHT_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${POINT3D_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${VECTOR3D_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${RECTANGLE3D_LIB})

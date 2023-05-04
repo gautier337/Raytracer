@@ -26,6 +26,7 @@ namespace RayTracer {
                 Vector3D &operator-(const Vector3D &vector);
                 Vector3D &operator*(const Vector3D &vector);
                 Vector3D &operator/(const Vector3D &vector);
+                bool &operator==(const Vector3D &vector);
                 Vector3D &operator+=(double value);
                 Vector3D &operator-=(double value);
                 Vector3D &operator*=(double value);
@@ -40,6 +41,7 @@ namespace RayTracer {
                 double getY() const;
                 double getZ() const;
                 Vector3D normalize();
+                Vector3D cross(const Vector3D &v);
                 void rotate(Vector3D axis, double angle);
 
             protected:
