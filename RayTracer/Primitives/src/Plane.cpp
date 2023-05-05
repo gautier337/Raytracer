@@ -217,6 +217,18 @@ void RayTracer::Primitives::Plane::scale(double factor)
     return;
 }
 
+std::string RayTracer::Primitives::Plane::getType() const {
+    return "Plane";
+}
+
+RayTracer::Render::Color RayTracer::Primitives::Plane::getColor() const {
+    return this->color;
+}
+
+void RayTracer::Primitives::Plane::setColor(RayTracer::Render::Color color) {
+    this->color = color;
+}
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Plane> createPlane(
     std::string axis,
     double position,

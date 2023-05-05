@@ -74,6 +74,8 @@ double RayTracer::Primitives::Sphere::getIntersectionPoint(View::Ray ray)
     double b = 2.0 * oc.dot(ray.getDirection());
     double c = oc.dot(oc) - this->radius * this->radius;
     double discriminant = b * b - 4 * a * c;
+    if (discriminant < 0)
+        return -1;
     double closestT = (-b - sqrt(discriminant)) / (2.0 * a);
     if (closestT < 0)
         closestT = (-b + sqrt(discriminant)) / (2.0 * a);
@@ -159,6 +161,18 @@ void RayTracer::Primitives::Sphere::rotate(Math::Vector3D axis, double angle)
 void RayTracer::Primitives::Sphere::scale(double factor)
 {
     this->radius *= factor;
+}
+
+std::string RayTracer::Primitives::Sphere::getType() const {
+    return "Sphere";
+}
+
+RayTracer::Render::Color RayTracer::Primitives::Sphere::getColor() const {
+    return this->color;
+}
+
+void RayTracer::Primitives::Sphere::setColor(RayTracer::Render::Color color) {
+    this->color = color;
 }
 
 extern "C" std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(

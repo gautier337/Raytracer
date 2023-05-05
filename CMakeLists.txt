@@ -2,12 +2,17 @@ cmake_minimum_required(VERSION 3.0)
 project(raytracer)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
+set(OpenGL_GL_PREFERENCE GLVND)
 
 # SFML Library
 find_package(SFML 2.5
         COMPONENTS
         system window graphics audio REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
+
+# OpenGL Library
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIR})
 
 # libConfig library
 find_package(PkgConfig REQUIRED)
@@ -17,6 +22,7 @@ link_directories(${LIBCONFIG++_LIBRARY_DIRS})
 
 include_directories(
         Core/include
+        ImGUI
         RayTracer/include
         RayTracer/Lights/include
         RayTracer/Math/include
@@ -37,6 +43,17 @@ set(CORE_DIRECTORY Core/)
 set(SRC_CORE
         src/RayTracer.cpp
         src/parse_config.cpp
+)
+
+# ImGUI Sources
+set(IMGUI_DIRECTORY ImGUI/)
+set(SRC_IMGUI
+        imgui_demo.cpp
+        imgui_draw.cpp
+        imgui_tables.cpp
+        imgui_widgets.cpp
+        imgui-SFML.cpp
+        imgui.cpp
 )
 
 # Lights Plugins
@@ -78,6 +95,7 @@ set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")
 # Transform all paths to absolute paths
 list(TRANSFORM SRC_MAIN PREPEND ${CORE_DIRECTORY})
 list(TRANSFORM SRC_CORE PREPEND ${CORE_DIRECTORY})
+list(TRANSFORM SRC_IMGUI PREPEND ${IMGUI_DIRECTORY})
 list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY}/${SOURCES_DIRECTORY})
 
 # Set plugins names
@@ -138,10 +156,12 @@ add_executable(
         ${EXECUTABLE_NAME}
         ${SRC_MAIN}
         ${SRC_CORE}
+        ${SRC_IMGUI}
         ${SRC_RAYTRACER}
 )
 
 target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS} ${LIBCONFIG++_LIBRARIES})
+target_link_libraries(${EXECUTABLE_NAME} OpenGL::GL)
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
 
 # Link plugins

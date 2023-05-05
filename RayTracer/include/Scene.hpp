@@ -33,6 +33,7 @@ namespace RayTracer {
             void rotateCamera(Math::Vector3D rotation, double angle);
             void resetCamera();
             Factory getFactory() const;
+            std::vector<std::unique_ptr<IPrimitives>> &getPrimitives();
 
         private:
             Factory factory;

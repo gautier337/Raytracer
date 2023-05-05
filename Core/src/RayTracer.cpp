@@ -14,7 +14,22 @@
 #include "Color.hpp"
 #include "Signatures.hpp"
 #include "parse_config.hpp"
+#include "imgui.h"
+#include "imgui-SFML.h"
 #include <memory>
+
+std::vector<sf::RectangleShape> setPixels(int screenWidth, int screenHeight, int pixelSize)
+{
+    std::vector<sf::RectangleShape> points;
+    const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
+
+    for (int i = 0; i < numPixels; i++) {
+        sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize));
+        point.setPosition((i % (screenWidth / pixelSize)) * pixelSize, (i / (screenWidth / pixelSize)) * pixelSize);
+        points.push_back(point);
+    }
+    return points;
+}
 
 int raytracer(std::string const &sceneFile)
 {
@@ -39,18 +54,15 @@ int raytracer(std::string const &sceneFile)
     sf::Event event;
     bool shouldUpdatePoints = true;
 
-    std::vector<sf::RectangleShape> points;
-    const int pixelSize = 1;
-    const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
+    int pixelSize = 5;
+    std::vector<sf::RectangleShape> points = setPixels(screenWidth, screenHeight, pixelSize);
 
-    for (int i = 0; i < numPixels; i++) {
-        sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize));
-        point.setPosition((i % screenHeight) * pixelSize, (i / screenHeight) * pixelSize);
-        points.push_back(point);
-    }
+    ImGui::SFML::Init(window);
 
+    sf::Clock deltaClock;
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
+            ImGui::SFML::ProcessEvent(window, event);
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed) {
@@ -98,6 +110,51 @@ int raytracer(std::string const &sceneFile)
                 }
             }
         }
+
+        ImGui::SFML::Update(window, deltaClock.restart());
+
+        ImGui::Begin("RayTracer");
+        ImGui::Text("Camera position: %f %f %f",
+            scene.getCamera().getOrigin().getX(),
+            scene.getCamera().getOrigin().getY(),
+            scene.getCamera().getOrigin().getZ()
+        );
+
+        ImGui::Button("Reset Camera");
+        if (ImGui::IsItemClicked()) {
+            shouldUpdatePoints = true;
+            scene.resetCamera();
+        }
+
+        ImGui::SliderInt("Pixel Size", &pixelSize, 1, 20);
+        if (ImGui::IsItemEdited()) {
+            shouldUpdatePoints = true;
+            points = setPixels(screenWidth, screenHeight, pixelSize);
+        }
+
+        for (auto &primitive : scene.getPrimitives()) {
+            RayTracer::Render::Color primitiveColor = primitive->getColor();
+            float color[4] = {
+                (float)primitiveColor.getR(),
+                (float)primitiveColor.getG(),
+                (float)primitiveColor.getB(),
+                (float)primitiveColor.getA()
+            };
+            ImGui::ColorEdit3(primitive->getType().c_str(), color);
+            if (memcmp(&color, &primitiveColor, sizeof(float) * 4) != 0) {
+                shouldUpdatePoints = true;
+                primitive->setColor(
+                    RayTracer::Render::Color(
+                        static_cast<double>(color[0]),
+                        static_cast<double>(color[1]),
+                        static_cast<double>(color[2]),
+                        static_cast<double>(color[3])
+                    )
+                );
+            }
+        }
+        ImGui::End();
+
         scene.render(pixelSize, screenWidth, screenHeight);
         std::vector<std::vector<RayTracer::Render::Color>> pixels = scene.getPixels();
         int nb_rows = pixels.size();
@@ -121,7 +178,9 @@ int raytracer(std::string const &sceneFile)
         window.clear();
         for (const auto &point : points)
             window.draw(point);
+        ImGui::SFML::Render(window);
         window.display();
     }
+    ImGui::SFML::Shutdown();
     return SUCCESS;
 }

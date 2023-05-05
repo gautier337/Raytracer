@@ -300,3 +300,8 @@ RayTracer::Factory RayTracer::Scene::getFactory() const
 {
     return this->factory;
 }
+
+std::vector<std::unique_ptr<RayTracer::IPrimitives>> &RayTracer::Scene::getPrimitives()
+{
+    return this->primitives;
+}

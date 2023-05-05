@@ -11,6 +11,7 @@
 #include "Ray.hpp"
 #include "Color.hpp"
 #include "ILights.hpp"
+#include <string>
 
 namespace RayTracer {
     namespace Primitives {
