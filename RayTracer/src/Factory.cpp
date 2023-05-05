@@ -22,6 +22,12 @@ RayTracer::Factory::~Factory()
 void RayTracer::Factory::loadAllPlugins()
 {
     try {
+        // Builders
+        this->loadPlugin("IceCreamBuilder", "./plugins/builders/IceCreamBuilder.so");
+
+        // Directors
+        this->loadPlugin("IceCreamDirector", "./plugins/directors/IceCreamDirector.so");
+
         // Lights
         this->loadPlugin("AmbientLight", "./plugins/lights/AmbientLight.so");
         this->loadPlugin("DirectionalLight", "./plugins/lights/DirectionalLight.so");

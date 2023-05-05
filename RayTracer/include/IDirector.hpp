@@ -14,7 +14,6 @@ namespace RayTracer {
     class IDirector {
         public:
             virtual ~IDirector() = default;
-            virtual void setBuilder(IBuilder builder) = 0;
             virtual void make(
                 std::string const &type,
                 Math::Point3D position,

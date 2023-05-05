@@ -155,3 +155,10 @@ void RayTracer::Directors::IceCreamDirector::createThreeScoopsIceCream(
         RayTracer::Render::Color(0.384, 0.203, 0.070, 1)
     );
 }
+
+extern "C" std::unique_ptr<RayTracer::Directors::IceCreamDirector> createIceCreamDirector(
+    RayTracer::Builders::IceCreamBuilder builder
+)
+{
+    return std::make_unique<RayTracer::Directors::IceCreamDirector>(builder);
+}

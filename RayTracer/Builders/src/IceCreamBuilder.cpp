@@ -84,3 +84,8 @@ RayTracer::CustomObject RayTracer::Builders::IceCreamBuilder::getObject() const
 {
     return this->iceCream;
 }
+
+extern "C" std::unique_ptr<RayTracer::Builders::IceCreamBuilder> createIceCreamBuilder()
+{
+    return std::make_unique<RayTracer::Builders::IceCreamBuilder>();
+}
