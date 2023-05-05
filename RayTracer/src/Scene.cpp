@@ -100,13 +100,13 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                 double base_radius = config.getDoubleFromSetting(primitives["cones"][i]["base_radius"]);
                 double apex_radius = config.getDoubleFromSetting(primitives["cones"][i]["apex_radius"]);
                 double height = config.getDoubleFromSetting(primitives["cones"][i]["height"]);
-                // std::unique_ptr<Render::Color> primitiveColor = this->factory.createPlugin<ColorSignature>(
-                //     "Color",
-                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["r"]),
-                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["g"]),
-                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["b"]),
-                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["a"])
-                // );
+                std::unique_ptr<Render::Color> primitiveColor = this->factory.createPlugin<ColorSignature>(
+                    "Color",
+                    config.getDoubleFromSetting(primitives["cones"][i]["color"]["r"]),
+                    config.getDoubleFromSetting(primitives["cones"][i]["color"]["g"]),
+                    config.getDoubleFromSetting(primitives["cones"][i]["color"]["b"]),
+                    config.getDoubleFromSetting(primitives["cones"][i]["color"]["a"])
+                );
 
                 std::unique_ptr<Primitives::Cone> cone = this->factory.createPlugin<ConeSignature>(
                     "Cone",
@@ -114,7 +114,8 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                     *axis,
                     base_radius,
                     apex_radius,
-                    height
+                    height,
+                    *primitiveColor
                 );
                 this->addPrimitive(std::make_unique<Primitives::Cone>(*cone));
             }

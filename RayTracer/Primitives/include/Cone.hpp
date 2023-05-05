@@ -23,7 +23,14 @@ namespace RayTracer {
             public:
                 Cone();
                 ~Cone();
-                Cone(Math::Point3D center, Math::Vector3D axis, double base_radius, double apex_radius, double height);
+                Cone(
+                    Math::Point3D center,
+                    Math::Vector3D axis,
+                    double base_radius,
+                    double apex_radius,
+                    double height,
+                    Render::Color color
+                );
                 Cone(const Cone &cone);
                 Cone(Cone &&cone);
                 Cone &operator=(const Cone &cone);

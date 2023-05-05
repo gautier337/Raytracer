@@ -17,15 +17,40 @@ RayTracer::Primitives::Cone::~Cone()
 {
 }
 
-RayTracer::Primitives::Cone::Cone(RayTracer::Math::Point3D center, RayTracer::Math::Vector3D axis, double base_radius, double apex_radius, double height) : center(center), axis(axis), base_radius(base_radius), apex_radius(apex_radius), height(height)
+RayTracer::Primitives::Cone::Cone(
+    RayTracer::Math::Point3D center,
+    RayTracer::Math::Vector3D axis,
+    double base_radius,
+    double apex_radius,
+    double height,
+    RayTracer::Render::Color color
+) :
+    center(center),
+    axis(axis),
+    base_radius(base_radius),
+    apex_radius(apex_radius),
+    height(height),
+    color(color)
 {
 }
 
-RayTracer::Primitives::Cone::Cone(const Cone &cone) : center(cone.center), axis(cone.axis), base_radius(cone.base_radius), apex_radius(cone.apex_radius), height(cone.height)
+RayTracer::Primitives::Cone::Cone(const Cone &cone) :
+    center(cone.center),
+    axis(cone.axis),
+    base_radius(cone.base_radius),
+    apex_radius(cone.apex_radius),
+    height(cone.height),
+    color(cone.color)
 {
 }
 
-RayTracer::Primitives::Cone::Cone(Cone &&cone) : center(cone.center), axis(cone.axis), base_radius(cone.base_radius), apex_radius(cone.apex_radius), height(cone.height)
+RayTracer::Primitives::Cone::Cone(Cone &&cone) :
+    center(cone.center),
+    axis(cone.axis),
+    base_radius(cone.base_radius),
+    apex_radius(cone.apex_radius),
+    height(cone.height),
+    color(cone.color)
 {
 }
 
@@ -36,6 +61,7 @@ RayTracer::Primitives::Cone &RayTracer::Primitives::Cone::operator=(const Cone &
     this->base_radius = cone.base_radius;
     this->apex_radius = cone.apex_radius;
     this->height = cone.height;
+    this->color = cone.color;
     return *this;
 }
 
@@ -46,6 +72,7 @@ RayTracer::Primitives::Cone &RayTracer::Primitives::Cone::operator=(Cone &&cone)
     this->base_radius = cone.base_radius;
     this->apex_radius = cone.apex_radius;
     this->height = cone.height;
+    this->color = cone.color;
     return *this;
 }
 
@@ -211,7 +238,8 @@ extern "C" std::unique_ptr<RayTracer::Primitives::Cone> createCone(
     RayTracer::Math::Vector3D axis,
     double base_radius,
     double apex_radius,
-    double height
+    double height,
+    RayTracer::Render::Color color
 )
 {
     return std::make_unique<RayTracer::Primitives::Cone>(
@@ -219,6 +247,7 @@ extern "C" std::unique_ptr<RayTracer::Primitives::Cone> createCone(
         axis,
         base_radius,
         apex_radius,
-        height
+        height,
+        color
     );
 }

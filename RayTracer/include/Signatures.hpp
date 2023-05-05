@@ -63,7 +63,8 @@ using ConeSignature = std::unique_ptr<RayTracer::Primitives::Cone>(
     RayTracer::Math::Vector3D,
     double,
     double,
-    double
+    double,
+    RayTracer::Render::Color
 );
 
 // Render
