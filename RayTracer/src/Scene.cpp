@@ -8,6 +8,7 @@
 #include "Scene.hpp"
 #include "Camera.hpp"
 #include "Sphere.hpp"
+#include "Cone.hpp"
 #include "Signatures.hpp"
 #include <algorithm>
 #include <iostream>
@@ -83,6 +84,39 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                     *primitiveColor
                 );
                 this->addPrimitive(std::make_unique<Primitives::Plane>(*plane));
+            }
+        }
+
+        if (primitives.exists("cones")) {
+            for (int i = 0; i < primitives["cones"].getLength(); i++) {
+                double x_center = config.getDoubleFromSetting(primitives["cones"][i]["center"]["x"]);
+                double y_center = config.getDoubleFromSetting(primitives["cones"][i]["center"]["y"]);
+                double z_center = config.getDoubleFromSetting(primitives["cones"][i]["center"]["z"]);
+                std::unique_ptr<Math::Point3D> center = this->factory.createPlugin<Point3DSignature>("Point3D", x_center, y_center, z_center);
+                double x_axis = config.getDoubleFromSetting(primitives["cones"][i]["axis"]["x"]);
+                double y_axis = config.getDoubleFromSetting(primitives["cones"][i]["axis"]["y"]);
+                double z_axis = config.getDoubleFromSetting(primitives["cones"][i]["axis"]["z"]);
+                std::unique_ptr<Math::Vector3D> axis = this->factory.createPlugin<Vector3DSignature>("Vector3D", x_axis, y_axis, z_axis);
+                double base_radius = config.getDoubleFromSetting(primitives["cones"][i]["base_radius"]);
+                double apex_radius = config.getDoubleFromSetting(primitives["cones"][i]["apex_radius"]);
+                double height = config.getDoubleFromSetting(primitives["cones"][i]["height"]);
+                // std::unique_ptr<Render::Color> primitiveColor = this->factory.createPlugin<ColorSignature>(
+                //     "Color",
+                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["r"]),
+                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["g"]),
+                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["b"]),
+                //     config.getDoubleFromSetting(primitives["cone"][i]["color"]["a"])
+                // );
+
+                std::unique_ptr<Primitives::Cone> cone = this->factory.createPlugin<ConeSignature>(
+                    "Cone",
+                    *center,
+                    *axis,
+                    base_radius,
+                    apex_radius,
+                    height
+                );
+                this->addPrimitive(std::make_unique<Primitives::Cone>(*cone));
             }
         }
 
