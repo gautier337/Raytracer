@@ -26,5 +26,5 @@ int main(int argc, char **argv)
     }
     if (check_env() == ERROR)
         return ERROR;
-    return raytracer_cone(argv[1]);
+    return raytracer(argv[1]);
 }
