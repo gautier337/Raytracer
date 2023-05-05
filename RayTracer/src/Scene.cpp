@@ -215,7 +215,7 @@ RayTracer::Scene::~Scene()
 {
 }
 
-void RayTracer::Scene::addPrimitive(std::unique_ptr<IPrimitives> primitive)
+void RayTracer::Scene::addPrimitive(std::unique_ptr<IPrimitive> primitive)
 {
     this->primitives.push_back(std::move(primitive));
 }
@@ -252,13 +252,13 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
             auto &sortedPrimitives = primitives;
 
             std::sort(sortedPrimitives.begin(), sortedPrimitives.end(), [&ray](
-                std::unique_ptr<IPrimitives> const &a, std::unique_ptr<IPrimitives> const &b) {
+                std::unique_ptr<IPrimitive> const &a, std::unique_ptr<IPrimitive> const &b) {
                 double distA = a->getIntersectionPoint(ray);
                 double distB = b->getIntersectionPoint(ray);
                 return std::abs(distA - distB) < std::numeric_limits<double>::epsilon() ? false : distA < distB;
             });
 
-            for (std::unique_ptr<IPrimitives> &primitive : sortedPrimitives) {
+            for (std::unique_ptr<IPrimitive> &primitive : sortedPrimitives) {
                 if (primitive->hits(ray)) {
                     color = primitive->computeColor(ray, this->lights);
                     break;
@@ -301,7 +301,7 @@ RayTracer::Factory RayTracer::Scene::getFactory() const
     return this->factory;
 }
 
-std::vector<std::unique_ptr<RayTracer::IPrimitives>> &RayTracer::Scene::getPrimitives()
+std::vector<std::unique_ptr<RayTracer::IPrimitive>> &RayTracer::Scene::getPrimitives()
 {
     return this->primitives;
 }

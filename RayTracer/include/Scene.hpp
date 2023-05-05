@@ -23,7 +23,7 @@ namespace RayTracer {
             Scene();
             Scene(const ParseConfig &config);
             ~Scene();
-            void addPrimitive(std::unique_ptr<IPrimitives> primitive);
+            void addPrimitive(std::unique_ptr<IPrimitive> primitive);
             void addLight(std::unique_ptr<ILights> light);
             void setCamera(std::unique_ptr<View::Camera> camera);
             std::vector<std::vector<Render::Color>> getPixels() const;
@@ -33,13 +33,13 @@ namespace RayTracer {
             void rotateCamera(Math::Vector3D rotation, double angle);
             void resetCamera();
             Factory getFactory() const;
-            std::vector<std::unique_ptr<IPrimitives>> &getPrimitives();
+            std::vector<std::unique_ptr<IPrimitive>> &getPrimitives();
 
         private:
             Factory factory;
             std::unique_ptr<View::Camera> camera;
             std::unique_ptr<View::Camera> original_camera;
-            std::vector<std::unique_ptr<IPrimitives>> primitives;
+            std::vector<std::unique_ptr<IPrimitive>> primitives;
             std::vector<std::unique_ptr<ILights>> lights;
             std::vector<std::vector<Render::Color>> pixels;
     };

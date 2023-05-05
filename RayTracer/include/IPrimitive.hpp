@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** B-OOP-400-BDX-4-1-raytracer-max.peixoto
 ** File description:
-** IPrimitives
+** IPrimitive
 */
 
 #pragma once
@@ -14,9 +14,9 @@
 #include <memory>
 
 namespace RayTracer {
-    class IPrimitives {
+    class IPrimitive {
         public:
-            virtual ~IPrimitives() = default;
+            virtual ~IPrimitive() = default;
             virtual double getIntersectionPoint(View::Ray ray) = 0;
             virtual bool hits(View::Ray ray) = 0;
             virtual Render::Color computeColor(

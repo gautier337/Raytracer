@@ -11,7 +11,7 @@
 #include "Vector3D.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
-#include "IPrimitives.hpp"
+#include "IPrimitive.hpp"
 #include "ILights.hpp"
 #include <iostream>
 #include <vector>
@@ -19,7 +19,7 @@
 
 namespace RayTracer {
     namespace Primitives {
-        class Cone : public IPrimitives {
+        class Cone : public IPrimitive {
             public:
                 Cone();
                 ~Cone();

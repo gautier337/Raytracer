@@ -57,7 +57,9 @@ int raytracer(std::string const &sceneFile)
     int pixelSize = 5;
     std::vector<sf::RectangleShape> points = setPixels(screenWidth, screenHeight, pixelSize);
 
-    ImGui::SFML::Init(window);
+    bool isInit = ImGui::SFML::Init(window);
+    if (!isInit)
+        return ERROR;
 
     sf::Clock deltaClock;
     while (window.isOpen()) {

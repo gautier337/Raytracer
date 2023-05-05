@@ -10,13 +10,13 @@
 #include "Vector3D.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
-#include "IPrimitives.hpp"
+#include "IPrimitive.hpp"
 #include "ILights.hpp"
 #include <string>
 
 namespace RayTracer {
     namespace Primitives {
-        class Plane : public IPrimitives {
+        class Plane : public IPrimitive {
             public:
                 ~Plane();
                 Plane(

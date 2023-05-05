@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "IPrimitives.hpp"
+#include "IPrimitive.hpp"
 #include "Point3D.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
@@ -16,7 +16,7 @@
 
 namespace RayTracer {
     namespace Primitives {
-        class Sphere : public IPrimitives {
+        class Sphere : public IPrimitive {
             public:
                 ~Sphere();
                 Sphere(
