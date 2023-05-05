@@ -18,6 +18,19 @@
 #include "imgui-SFML.h"
 #include <memory>
 
+std::vector<sf::RectangleShape> setPixels(int screenWidth, int screenHeight, int pixelSize)
+{
+    std::vector<sf::RectangleShape> points;
+    const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
+
+    for (int i = 0; i < numPixels; i++) {
+        sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize));
+        point.setPosition((i % (screenWidth / pixelSize)) * pixelSize, (i / (screenWidth / pixelSize)) * pixelSize);
+        points.push_back(point);
+    }
+    return points;
+}
+
 int raytracer(std::string const &sceneFile)
 {
     ParseConfig config(sceneFile);
@@ -41,15 +54,8 @@ int raytracer(std::string const &sceneFile)
     sf::Event event;
     bool shouldUpdatePoints = true;
 
-    std::vector<sf::RectangleShape> points;
-    const int pixelSize = 5;
-    const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
-
-    for (int i = 0; i < numPixels; i++) {
-        sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize * pixelSize));
-        point.setPosition((i % screenHeight) * pixelSize, (i / screenHeight) * pixelSize * pixelSize);
-        points.push_back(point);
-    }
+    int pixelSize = 5;
+    std::vector<sf::RectangleShape> points = setPixels(screenWidth, screenHeight, pixelSize);
 
     ImGui::SFML::Init(window);
 
@@ -118,6 +124,12 @@ int raytracer(std::string const &sceneFile)
         if (ImGui::IsItemClicked()) {
             shouldUpdatePoints = true;
             scene.resetCamera();
+        }
+
+        ImGui::SliderInt("Pixel Size", &pixelSize, 1, 20);
+        if (ImGui::IsItemEdited()) {
+            shouldUpdatePoints = true;
+            points = setPixels(screenWidth, screenHeight, pixelSize);
         }
 
         for (auto &primitive : scene.getPrimitives()) {
