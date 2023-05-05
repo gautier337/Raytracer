@@ -245,6 +245,11 @@ void RayTracer::Primitives::Cylinder::setColor(RayTracer::Render::Color color)
     this->color = color;
 };
 
+std::unique_ptr<RayTracer::IPrimitive> RayTracer::Primitives::Cylinder::clone() const
+{
+    return std::make_unique<RayTracer::Primitives::Cylinder>(*this);
+}
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Cylinder> createCylinder(
     RayTracer::Math::Point3D center,
     RayTracer::Math::Vector3D axis,

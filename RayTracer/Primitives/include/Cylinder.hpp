@@ -44,6 +44,7 @@ namespace RayTracer {
                 std::string getType() const override;
                 Render::Color getColor() const override;
                 void setColor(Render::Color color) override;
+                std::unique_ptr<IPrimitive> clone() const override;
 
             protected:
             private:
