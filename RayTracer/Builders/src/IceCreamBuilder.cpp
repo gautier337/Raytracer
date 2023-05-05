@@ -63,7 +63,7 @@ void RayTracer::Builders::IceCreamBuilder::createCone(
         height,
         color
     );
-    this->iceCream.addPrimitive(cone);
+    this->iceCream.addPrimitive(std::make_unique<Primitives::Cone>(cone));
 }
 
 void RayTracer::Builders::IceCreamBuilder::createScoop(
@@ -72,12 +72,12 @@ void RayTracer::Builders::IceCreamBuilder::createScoop(
     Render::Color color
 )
 {
-    Primitives::Sphere sphere(
+    Primitives::Sphere scoop(
         center,
         radius,
         color
     );
-    this->iceCream.addPrimitive(sphere);
+    this->iceCream.addPrimitive(std::make_unique<Primitives::Sphere>(scoop));
 }
 
 RayTracer::CustomObject RayTracer::Builders::IceCreamBuilder::getObject() const

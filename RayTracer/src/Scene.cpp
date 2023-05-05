@@ -176,7 +176,7 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
         std::unique_ptr<Builders::IceCreamBuilder> iceCreamBuilder = this->factory.createPlugin<IceCreamBuilderSignature>("IceCreamBuilder");
         std::unique_ptr<Directors::IceCreamDirector> iceCreamDirector = this->factory.createPlugin<IceCreamDirectorSignature>("IceCreamDirector", *iceCreamBuilder);
             std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", -2, 0, 2);
-        iceCreamDirector->make("one", *origin, 1);
+        iceCreamDirector->make("three", *origin, 1);
         this->addCustomObject(std::make_unique<CustomObject>(iceCreamDirector->getObject()));
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
@@ -274,6 +274,13 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
             for (std::unique_ptr<IPrimitive> &primitive : sortedPrimitives) {
                 if (primitive->hits(ray)) {
                     color = primitive->computeColor(ray, this->lights);
+                    break;
+                }
+            }
+
+            for (std::unique_ptr<CustomObject> &object : this->customObjects) {
+                if (object->hits(ray)) {
+                    color = object->computeColor(ray, this->lights);
                     break;
                 }
             }

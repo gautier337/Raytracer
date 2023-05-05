@@ -175,6 +175,11 @@ void RayTracer::Primitives::Sphere::setColor(RayTracer::Render::Color color) {
     this->color = color;
 }
 
+std::unique_ptr<RayTracer::IPrimitive> RayTracer::Primitives::Sphere::clone() const
+{
+    return std::make_unique<RayTracer::Primitives::Sphere>(*this);
+}
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
     RayTracer::Math::Point3D center,
     double radius,

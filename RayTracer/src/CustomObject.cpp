@@ -17,8 +17,10 @@ RayTracer::CustomObject::~CustomObject()
 
 RayTracer::CustomObject::CustomObject(const CustomObject &customObject)
 {
-    this->primitives = customObject.primitives;
+    for (const auto &primitive : customObject.primitives)
+        this->primitives.emplace_back(primitive->clone());
 }
+
 
 RayTracer::CustomObject::CustomObject(CustomObject &&customObject)
 {
@@ -29,7 +31,8 @@ RayTracer::CustomObject &RayTracer::CustomObject::operator=(
     const CustomObject &customObject
 )
 {
-    this->primitives = customObject.primitives;
+    for (const auto &primitive : customObject.primitives)
+        this->primitives.emplace_back(primitive->clone());
     return *this;
 }
 
@@ -42,10 +45,10 @@ RayTracer::CustomObject &RayTracer::CustomObject::operator=(
 }
 
 void RayTracer::CustomObject::addPrimitive(
-    IPrimitive &primitive
+    std::unique_ptr<IPrimitive> primitive
 )
 {
-    this->primitives.push_back(&primitive);
+    this->primitives.push_back(std::move(primitive));
 }
 
 double RayTracer::CustomObject::getIntersectionPoint(View::Ray ray)

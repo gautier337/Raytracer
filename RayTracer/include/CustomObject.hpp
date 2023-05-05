@@ -18,7 +18,7 @@ namespace RayTracer {
             CustomObject(CustomObject &&customObject);
             CustomObject &operator=(const CustomObject &customObject);
             CustomObject &operator=(CustomObject &&customObject);
-            void addPrimitive(IPrimitive &primitive);
+            void addPrimitive(std::unique_ptr<IPrimitive> primitive);
             double getIntersectionPoint(View::Ray ray);
             bool hits(View::Ray ray);
             Render::Color computeColor(
@@ -28,7 +28,7 @@ namespace RayTracer {
 
         protected:
         private:
-            std::vector<IPrimitive *> primitives;
+            std::vector<std::unique_ptr<IPrimitive>> primitives;
             double closestT;
     };
 }
