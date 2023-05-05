@@ -11,3 +11,4 @@ build
 vgcore.*
 valgrind.log
 *.ppm
+imgui.ini

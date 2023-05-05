@@ -14,6 +14,8 @@
 #include "Color.hpp"
 #include "Signatures.hpp"
 #include "parse_config.hpp"
+#include "imgui.h"
+#include "imgui-SFML.h"
 #include <memory>
 
 int raytracer(std::string const &sceneFile)
@@ -49,8 +51,12 @@ int raytracer(std::string const &sceneFile)
         points.push_back(point);
     }
 
+    ImGui::SFML::Init(window);
+
+    sf::Clock deltaClock;
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
+            ImGui::SFML::ProcessEvent(window, event);
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed) {
@@ -98,6 +104,17 @@ int raytracer(std::string const &sceneFile)
                 }
             }
         }
+
+        ImGui::SFML::Update(window, deltaClock.restart());
+
+        ImGui::Begin("Raytracer");
+        ImGui::Text("Camera position: %f %f %f",
+            scene.getCamera().getOrigin().getX(),
+            scene.getCamera().getOrigin().getY(),
+            scene.getCamera().getOrigin().getZ()
+        );
+        ImGui::End();
+
         scene.render(pixelSize, screenWidth, screenHeight);
         std::vector<std::vector<RayTracer::Render::Color>> pixels = scene.getPixels();
         int nb_rows = pixels.size();
@@ -121,7 +138,9 @@ int raytracer(std::string const &sceneFile)
         window.clear();
         for (const auto &point : points)
             window.draw(point);
+        ImGui::SFML::Render(window);
         window.display();
     }
+    ImGui::SFML::Shutdown();
     return SUCCESS;
 }

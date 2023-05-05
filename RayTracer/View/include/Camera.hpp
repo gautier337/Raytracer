@@ -24,6 +24,7 @@ namespace RayTracer {
                 Ray ray(double u, double v);
                 void translate(Math::Vector3D translation);
                 void rotate(Math::Vector3D rotation, double angle);
+                Math::Point3D getOrigin() const;
 
             protected:
             private:
