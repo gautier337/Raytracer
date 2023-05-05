@@ -33,10 +33,10 @@ namespace RayTracer {
                     double radius,
                     Render::Color color
                 );
+                CustomObject getObject() const override;
 
             private:
-                Primitives::Cone cone;
-                std::vector<Primitives::Sphere> scoops;
+                CustomObject iceCream;
         };
     };
 }

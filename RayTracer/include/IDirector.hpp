@@ -7,6 +7,7 @@
 
 #pragma once
 #include "IBuilder.hpp"
+#include "CustomObject.hpp"
 #include <string>
 
 namespace RayTracer {
@@ -14,6 +15,11 @@ namespace RayTracer {
         public:
             virtual ~IDirector() = default;
             virtual void setBuilder(IBuilder builder) = 0;
-            virtual void make(std::string const &type) = 0;
+            virtual void make(
+                std::string const &type,
+                Math::Point3D position,
+                double scale
+            ) = 0;
+            virtual CustomObject getObject() const = 0;
     };
 }

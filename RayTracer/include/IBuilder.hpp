@@ -6,10 +6,12 @@
 */
 
 #pragma once
+#include "CustomObject.hpp"
 
 namespace RayTracer {
     class IBuilder {
         public:
             virtual ~IBuilder() = default;
+            virtual CustomObject getObject() const = 0;
     };
 }

@@ -7,7 +7,8 @@
 
 #include "IceCreamBuilder.hpp"
 
-RayTracer::Builders::IceCreamBuilder::IceCreamBuilder()
+RayTracer::Builders::IceCreamBuilder::IceCreamBuilder() :
+    iceCream()
 {
 }
 
@@ -19,24 +20,21 @@ RayTracer::Builders::IceCreamBuilder::IceCreamBuilder(
     const RayTracer::Builders::IceCreamBuilder &iceCreamBuilder
 )
 {
-    this->cone = iceCreamBuilder.cone;
-    this->scoops = iceCreamBuilder.scoops;
+    this->iceCream = iceCreamBuilder.iceCream;
 }
 
 RayTracer::Builders::IceCreamBuilder::IceCreamBuilder(
     RayTracer::Builders::IceCreamBuilder &&iceCreamBuilder
 )
 {
-    this->cone = std::move(iceCreamBuilder.cone);
-    this->scoops = std::move(iceCreamBuilder.scoops);
+    this->iceCream = std::move(iceCreamBuilder.iceCream);
 }
 
 RayTracer::Builders::IceCreamBuilder &RayTracer::Builders::IceCreamBuilder::operator=(
     const RayTracer::Builders::IceCreamBuilder &iceCreamBuilder
 )
 {
-    this->cone = iceCreamBuilder.cone;
-    this->scoops = iceCreamBuilder.scoops;
+    this->iceCream = iceCreamBuilder.iceCream;
     return *this;
 }
 
@@ -44,9 +42,8 @@ RayTracer::Builders::IceCreamBuilder &RayTracer::Builders::IceCreamBuilder::oper
     RayTracer::Builders::IceCreamBuilder &&iceCreamBuilder
 )
 {
-    this->cone = std::move(iceCreamBuilder.cone);
-    this->scoops = std::move(iceCreamBuilder.scoops);
-    return (*this);
+    this->iceCream = std::move(iceCreamBuilder.iceCream);
+    return *this;
 }
 
 void RayTracer::Builders::IceCreamBuilder::createCone(
@@ -58,7 +55,15 @@ void RayTracer::Builders::IceCreamBuilder::createCone(
     Render::Color color
 )
 {
-    this->cone = Primitives::Cone(center, axis, base_radius, apex_radius, height, color);
+    Primitives::Cone cone(
+        center,
+        axis,
+        base_radius,
+        apex_radius,
+        height,
+        color
+    );
+    this->iceCream.addPrimitive(cone);
 }
 
 void RayTracer::Builders::IceCreamBuilder::createScoop(
@@ -67,5 +72,15 @@ void RayTracer::Builders::IceCreamBuilder::createScoop(
     Render::Color color
 )
 {
-    this->scoops.push_back(Primitives::Sphere(center, radius, color));
+    Primitives::Sphere sphere(
+        center,
+        radius,
+        color
+    );
+    this->iceCream.addPrimitive(sphere);
+}
+
+RayTracer::CustomObject RayTracer::Builders::IceCreamBuilder::getObject() const
+{
+    return this->iceCream;
 }
