@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(raytracer)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
+set(OpenGL_GL_PREFERENCE GLVND)
 
 # SFML Library
 find_package(SFML 2.5

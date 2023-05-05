@@ -161,6 +161,14 @@ void RayTracer::Primitives::Sphere::scale(double factor)
     this->radius *= factor;
 }
 
+std::string RayTracer::Primitives::Sphere::getType() const {
+    return "Sphere";
+}
+
+RayTracer::Render::Color RayTracer::Primitives::Sphere::getColor() const {
+    return this->color;
+}
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
     RayTracer::Math::Point3D center,
     double radius,

@@ -42,12 +42,12 @@ int raytracer(std::string const &sceneFile)
     bool shouldUpdatePoints = true;
 
     std::vector<sf::RectangleShape> points;
-    const int pixelSize = 1;
+    const int pixelSize = 5;
     const int numPixels = (screenWidth / pixelSize) * (screenHeight / pixelSize);
 
     for (int i = 0; i < numPixels; i++) {
-        sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize));
-        point.setPosition((i % screenHeight) * pixelSize, (i / screenHeight) * pixelSize);
+        sf::RectangleShape point(sf::Vector2f(pixelSize, pixelSize * pixelSize));
+        point.setPosition((i % screenHeight) * pixelSize, (i / screenHeight) * pixelSize * pixelSize);
         points.push_back(point);
     }
 
@@ -107,12 +107,23 @@ int raytracer(std::string const &sceneFile)
 
         ImGui::SFML::Update(window, deltaClock.restart());
 
-        ImGui::Begin("Raytracer");
+        ImGui::Begin("RayTracer");
         ImGui::Text("Camera position: %f %f %f",
             scene.getCamera().getOrigin().getX(),
             scene.getCamera().getOrigin().getY(),
             scene.getCamera().getOrigin().getZ()
         );
+
+        for (auto &primitive : scene.getPrimitives()) {
+            RayTracer::Render::Color primitiveColor = primitive->getColor();
+            float color[4] = {
+                (float)primitiveColor.getR(),
+                (float)primitiveColor.getG(),
+                (float)primitiveColor.getB(),
+                (float)primitiveColor.getA()
+            };
+            ImGui::ColorEdit3(primitive->getType().c_str(), (float *)&color);
+        }
         ImGui::End();
 
         scene.render(pixelSize, screenWidth, screenHeight);

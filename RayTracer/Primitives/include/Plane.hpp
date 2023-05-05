@@ -12,6 +12,7 @@
 #include "Color.hpp"
 #include "IPrimitives.hpp"
 #include "ILights.hpp"
+#include <string>
 
 namespace RayTracer {
     namespace Primitives {
@@ -37,6 +38,8 @@ namespace RayTracer {
                 void translate(Math::Vector3D translation) override;
                 void rotate(Math::Vector3D rotation, double angle) override;
                 void scale(double factor) override;
+                std::string getType() const override;
+                Render::Color getColor() const override;
 
             protected:
             private:
