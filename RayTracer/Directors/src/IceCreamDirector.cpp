@@ -62,6 +62,7 @@ void RayTracer::Directors::IceCreamDirector::make(
         return createTwoScoopsIceCream(position, scale);
     if (type == "three")
         return createThreeScoopsIceCream(position, scale);
+    throw std::invalid_argument("Invalid type");
 }
 
 RayTracer::CustomObject RayTracer::Directors::IceCreamDirector::getObject() const
@@ -78,7 +79,7 @@ void RayTracer::Directors::IceCreamDirector::createOneScoopIceCream(
     this->builder.createCone(
         position,
         RayTracer::Math::Vector3D(0, 1, 0),
-        0.5 * scale,
+        0.470 * scale,
         0,
         1 * scale,
         RayTracer::Render::Color(0.960, 0.960, 0.862, 1)
@@ -87,7 +88,7 @@ void RayTracer::Directors::IceCreamDirector::createOneScoopIceCream(
     // Strawberry scoop
     this->builder.createScoop(
         position + RayTracer::Math::Vector3D(0, 1 * scale, 0),
-        0.5 * scale,
+        0.470 * scale,
         RayTracer::Render::Color(0.749, 0.188, 0.188, 1)
     );
 }
@@ -101,7 +102,7 @@ void RayTracer::Directors::IceCreamDirector::createTwoScoopsIceCream(
     this->builder.createCone(
         position,
         RayTracer::Math::Vector3D(0, 1, 0),
-        0.5 * scale,
+        0.470 * scale,
         0,
         1 * scale,
         RayTracer::Render::Color(0.960, 0.960, 0.862, 1)
@@ -109,15 +110,15 @@ void RayTracer::Directors::IceCreamDirector::createTwoScoopsIceCream(
 
     // Strawberry scoop
     this->builder.createScoop(
-        position + RayTracer::Math::Vector3D(-0.25, 1.1 * scale, 0),
-        0.5 * scale,
+        position + RayTracer::Math::Vector3D(-0.25, 1.25 * scale, 0),
+        0.470 * scale,
         RayTracer::Render::Color(0.749, 0.188, 0.188, 1)
     );
 
     // Vanilla scoop
     this->builder.createScoop(
-        position + RayTracer::Math::Vector3D(0.25, 1.1 * scale, 0),
-        0.5 * scale,
+        position + RayTracer::Math::Vector3D(0.25, 1.25 * scale, 0),
+        0.470 * scale,
         RayTracer::Render::Color(0.882, 0.807, 0.603, 1)
     );
 }
@@ -130,7 +131,7 @@ void RayTracer::Directors::IceCreamDirector::createThreeScoopsIceCream(
     this->builder.createCone(
         position,
         RayTracer::Math::Vector3D(0, 1, 0),
-        0.5 * scale,
+        0.470 * scale,
         0,
         1 * scale,
         RayTracer::Render::Color(0.960, 0.960, 0.862, 1)
@@ -138,22 +139,22 @@ void RayTracer::Directors::IceCreamDirector::createThreeScoopsIceCream(
 
     // Strawberry scoop
     this->builder.createScoop(
-        position + RayTracer::Math::Vector3D(-0.25, 1.1 * scale, 0),
-        0.5 * scale,
+        position + RayTracer::Math::Vector3D(-0.25, 1.25 * scale, 0),
+        0.470 * scale,
         RayTracer::Render::Color(0.749, 0.188, 0.188, 1)
     );
 
     // Vanilla scoop
     this->builder.createScoop(
-        position + RayTracer::Math::Vector3D(0.25, 1.1 * scale, 0),
-        0.5 * scale,
+        position + RayTracer::Math::Vector3D(0.25, 1.25 * scale, 0),
+        0.470 * scale,
         RayTracer::Render::Color(0.882, 0.807, 0.603, 1)
     );
 
     // Chocolate scoop
     this->builder.createScoop(
-        position + RayTracer::Math::Vector3D(0, 1.45 * scale, 0),
-        0.5 * scale,
+        position + RayTracer::Math::Vector3D(0, 1.5 * scale, 0),
+        0.470 * scale,
         RayTracer::Render::Color(0.384, 0.203, 0.070, 1)
     );
 }
