@@ -74,6 +74,8 @@ double RayTracer::Primitives::Sphere::getIntersectionPoint(View::Ray ray)
     double b = 2.0 * oc.dot(ray.getDirection());
     double c = oc.dot(oc) - this->radius * this->radius;
     double discriminant = b * b - 4 * a * c;
+    if (discriminant < 0)
+        return -1;
     double closestT = (-b - sqrt(discriminant)) / (2.0 * a);
     if (closestT < 0)
         closestT = (-b + sqrt(discriminant)) / (2.0 * a);
