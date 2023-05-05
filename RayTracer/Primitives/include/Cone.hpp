@@ -44,6 +44,9 @@ namespace RayTracer {
                 void translate(Math::Vector3D translation) override;
                 void rotate(Math::Vector3D axis, double angle) override;
                 void scale(double factor) override;
+                std::string getType() const override;
+                Render::Color getColor() const override;
+                void setColor(Render::Color color) override;
 
             protected:
             private:

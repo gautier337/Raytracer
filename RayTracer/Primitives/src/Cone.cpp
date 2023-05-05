@@ -233,6 +233,21 @@ double RayTracer::Primitives::Cone::getIntersectionPoint(View::Ray ray)
     }
 }
 
+std::string RayTracer::Primitives::Cone::getType() const
+{
+    return "Cone";
+};
+
+RayTracer::Render::Color RayTracer::Primitives::Cone::getColor() const
+{
+    return this->color;
+}
+
+void RayTracer::Primitives::Cone::setColor(RayTracer::Render::Color color)
+{
+    this->color = color;
+};
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Cone> createCone(
     RayTracer::Math::Point3D center,
     RayTracer::Math::Vector3D axis,
