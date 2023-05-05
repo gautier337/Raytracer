@@ -14,6 +14,7 @@
 #include "Sphere.hpp"
 #include "Color.hpp"
 #include "Cone.hpp"
+#include "Cylinder.hpp"
 #include "Camera.hpp"
 #include "Ray.hpp"
 
@@ -62,6 +63,13 @@ using ConeSignature = std::unique_ptr<RayTracer::Primitives::Cone>(
     RayTracer::Math::Point3D,
     RayTracer::Math::Vector3D,
     double,
+    double,
+    double,
+    RayTracer::Render::Color
+);
+using CylinderSignature = std::unique_ptr<RayTracer::Primitives::Cylinder>(
+    RayTracer::Math::Point3D,
+    RayTracer::Math::Vector3D,
     double,
     double,
     RayTracer::Render::Color
