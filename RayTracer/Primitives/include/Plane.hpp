@@ -40,6 +40,7 @@ namespace RayTracer {
                 void scale(double factor) override;
                 std::string getType() const override;
                 Render::Color getColor() const override;
+                void setColor(Render::Color color);
 
             protected:
             private:

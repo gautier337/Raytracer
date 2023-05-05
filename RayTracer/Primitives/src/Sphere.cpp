@@ -169,6 +169,10 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::getColor() const {
     return this->color;
 }
 
+void RayTracer::Primitives::Sphere::setColor(RayTracer::Render::Color color) {
+    this->color = color;
+}
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Sphere> createSphere(
     RayTracer::Math::Point3D center,
     double radius,

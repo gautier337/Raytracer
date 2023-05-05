@@ -28,5 +28,6 @@ namespace RayTracer {
             virtual void scale(double factor) = 0;
             virtual std::string getType() const = 0;
             virtual Render::Color getColor() const = 0;
+            virtual void setColor(Render::Color color) = 0;
     };
 }

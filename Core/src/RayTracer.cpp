@@ -114,6 +114,12 @@ int raytracer(std::string const &sceneFile)
             scene.getCamera().getOrigin().getZ()
         );
 
+        ImGui::Button("Reset Camera");
+        if (ImGui::IsItemClicked()) {
+            shouldUpdatePoints = true;
+            scene.resetCamera();
+        }
+
         for (auto &primitive : scene.getPrimitives()) {
             RayTracer::Render::Color primitiveColor = primitive->getColor();
             float color[4] = {
@@ -122,7 +128,18 @@ int raytracer(std::string const &sceneFile)
                 (float)primitiveColor.getB(),
                 (float)primitiveColor.getA()
             };
-            ImGui::ColorEdit3(primitive->getType().c_str(), (float *)&color);
+            ImGui::ColorEdit3(primitive->getType().c_str(), color);
+            if (memcmp(&color, &primitiveColor, sizeof(float) * 4) != 0) {
+                shouldUpdatePoints = true;
+                primitive->setColor(
+                    RayTracer::Render::Color(
+                        static_cast<double>(color[0]),
+                        static_cast<double>(color[1]),
+                        static_cast<double>(color[2]),
+                        static_cast<double>(color[3])
+                    )
+                );
+            }
         }
         ImGui::End();
 
