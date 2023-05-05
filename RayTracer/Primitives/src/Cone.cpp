@@ -116,7 +116,28 @@ bool RayTracer::Primitives::Cone::hits(View::Ray ray)
     RayTracer::Math::Vector3D cone_to_intersection = intersection - coneOrigin;
     double projected_height = cone_to_intersection.dot(axis_normalized);
 
-    return projected_height >= 0 && projected_height <= height;
+    bool within_cone_height = projected_height >= 0 && projected_height <= height;
+
+    RayTracer::Math::Vector3D base_center = Math::Vector3D(
+        coneOrigin.getX(),
+        coneOrigin.getY(),
+        coneOrigin.getZ() - base_radius * 4
+    ) + axis_normalized * height;
+    double plane_d = -(axis_normalized.dot(base_center));
+    double t_base = -(rayOrigin.dot(axis_normalized) + plane_d) / rayDirection.dot(axis_normalized);
+
+    if (t_base < 0) {
+        return within_cone_height;
+    }
+
+    RayTracer::Math::Vector3D intersection_base = rayOrigin + rayDirection * t_base;
+    RayTracer::Math::Vector3D base_to_intersection_base = intersection_base - base_center;
+    double distance_to_base_center = base_to_intersection_base.length();
+    bool within_base_radius = distance_to_base_center <= base_radius;
+
+    bool on_base_circle = std::abs(distance_to_base_center - base_radius) < 1e-8;
+
+    return within_cone_height || (within_base_radius && !on_base_circle);
 }
 
 RayTracer::Render::Color RayTracer::Primitives::Cone::computeColor(
