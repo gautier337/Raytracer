@@ -148,6 +148,21 @@ RayTracer::Render::Color RayTracer::Primitives::Cone::computeColor(
     return newColor;
 }
 
+void RayTracer::Primitives::Cone::translate(RayTracer::Math::Vector3D translation)
+{
+    this->center = this->center + translation;
+}
+
+void RayTracer::Primitives::Cone::rotate(RayTracer::Math::Vector3D axis, double angle)
+{
+    return;
+}
+
+void RayTracer::Primitives::Cone::scale(double factor)
+{
+    return;
+}
+
 double RayTracer::Primitives::Cone::getIntersectionPoint(View::Ray ray)
 {
     RayTracer::Math::Vector3D rayDirection = ray.getDirection();

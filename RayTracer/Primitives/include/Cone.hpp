@@ -28,12 +28,15 @@ namespace RayTracer {
                 Cone(Cone &&cone);
                 Cone &operator=(const Cone &cone);
                 Cone &operator=(Cone &&cone);
-                bool hits(View::Ray ray);
+                double getIntersectionPoint(View::Ray ray) override;
+                bool hits(View::Ray ray) override;
                 Render::Color computeColor(
                         View::Ray ray,
                         std::vector<std::unique_ptr<ILights>> &lights
                 ) override;
-                double getIntersectionPoint(View::Ray ray);
+                void translate(Math::Vector3D translation) override;
+                void rotate(Math::Vector3D axis, double angle) override;
+                void scale(double factor) override;
 
             protected:
             private:
