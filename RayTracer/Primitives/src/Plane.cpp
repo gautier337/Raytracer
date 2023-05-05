@@ -229,6 +229,11 @@ void RayTracer::Primitives::Plane::setColor(RayTracer::Render::Color color) {
     this->color = color;
 }
 
+std::unique_ptr<RayTracer::IPrimitive> RayTracer::Primitives::Plane::clone() const
+{
+    return std::make_unique<RayTracer::Primitives::Plane>(*this);
+}
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Plane> createPlane(
     std::string axis,
     double position,

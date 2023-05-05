@@ -23,6 +23,8 @@ link_directories(${LIBCONFIG++_LIBRARY_DIRS})
 include_directories(
         Core/include
         ImGUI
+        RayTracer/Builders/include
+        RayTracer/Directors/include
         RayTracer/include
         RayTracer/Lights/include
         RayTracer/Math/include
@@ -57,6 +59,13 @@ set(SRC_IMGUI
         imgui.cpp
 )
 
+# Builders Plugins
+set(BUILDERS_DIRECTORY Builders/src/)
+set(SRC_ICE_CREAM_BUILDER ${RAYTRACER_DIRECTORY}${BUILDERS_DIRECTORY}IceCreamBuilder.cpp)
+
+# Directors Plugins
+set(DIRECTORS_DIRECTORY Directors/src/)
+set(SRC_ICE_CREAM_DIRECTOR ${RAYTRACER_DIRECTORY}${DIRECTORS_DIRECTORY}IceCreamDirector.cpp)
 
 # Lights Plugins
 set(LIGHTS_DIRECTORY Lights/src/)
@@ -89,6 +98,7 @@ set(SRC_RAY ${RAYTRACER_DIRECTORY}${VIEW_DIRECTORY}Ray.cpp)
 # Raytracer Sources
 set(SOURCES_DIRECTORY src/)
 set(SRC_RAYTRACER
+        CustomObject.cpp
         Factory.cpp
         Library.cpp
         Scene.cpp
@@ -105,6 +115,10 @@ list(TRANSFORM SRC_IMGUI PREPEND ${IMGUI_DIRECTORY})
 list(TRANSFORM SRC_RAYTRACER PREPEND ${RAYTRACER_DIRECTORY}/${SOURCES_DIRECTORY})
 
 # Set plugins names
+set(ICE_CREAM_BUILDER_LIB IceCreamBuilder)
+
+set(ICE_CREAM_DIRECTOR_LIB IceCreamDirector)
+
 set(AMBIENT_LIGHT_LIB AmbientLight)
 set(DIRECTIONAL_LIGHT_LIB DirectionalLight)
 
@@ -125,6 +139,10 @@ set(RAY_LIB Ray)
 
 
 # Add plugins
+add_library(${ICE_CREAM_BUILDER_LIB} SHARED ${SRC_ICE_CREAM_BUILDER})
+
+add_library(${ICE_CREAM_DIRECTOR_LIB} SHARED ${SRC_ICE_CREAM_DIRECTOR})
+
 add_library(${AMBIENT_LIGHT_LIB} SHARED ${SRC_AMBIENT_LIGHT})
 add_library(${DIRECTIONAL_LIGHT_LIB} SHARED ${SRC_DIRECTIONAL_LIGHT})
 
@@ -142,7 +160,12 @@ add_library(${COLOR_LIB} SHARED ${SRC_COLOR})
 add_library(${CAMERA_LIB} SHARED ${SRC_CAMERA})
 add_library(${RAY_LIB} SHARED ${SRC_RAY})
 
+
 # Set plugins output directory
+set_target_properties(${ICE_CREAM_BUILDER_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/builders/)
+
+set_target_properties(${ICE_CREAM_DIRECTOR_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/directors/)
+
 set_target_properties(${AMBIENT_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
 set_target_properties(${DIRECTIONAL_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
 
@@ -175,7 +198,12 @@ target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS} ${LIBCONFIG++_LIBRARIE
 target_link_libraries(${EXECUTABLE_NAME} OpenGL::GL)
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics)
 
+
 # Link plugins
+target_link_libraries(${EXECUTABLE_NAME} ${ICE_CREAM_BUILDER_LIB})
+
+target_link_libraries(${EXECUTABLE_NAME} ${ICE_CREAM_DIRECTOR_LIB})
+
 target_link_libraries(${EXECUTABLE_NAME} ${AMBIENT_LIGHT_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${DIRECTIONAL_LIGHT_LIB})
 

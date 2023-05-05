@@ -10,6 +10,8 @@
 #include "Sphere.hpp"
 #include "Cone.hpp"
 #include "Cylinder.hpp"
+#include "IceCreamBuilder.hpp"
+#include "IceCreamDirector.hpp"
 #include "Signatures.hpp"
 #include <algorithm>
 #include <iostream>
@@ -203,6 +205,12 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                 this->addLight(std::make_unique<Lights::AmbientLight>(*light));
             }
         }
+
+        std::unique_ptr<Builders::IceCreamBuilder> iceCreamBuilder = this->factory.createPlugin<IceCreamBuilderSignature>("IceCreamBuilder");
+        std::unique_ptr<Directors::IceCreamDirector> iceCreamDirector = this->factory.createPlugin<IceCreamDirectorSignature>("IceCreamDirector", *iceCreamBuilder);
+            std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", -2, 0, 2);
+        iceCreamDirector->make("two", *origin, 1);
+        this->addCustomObject(std::make_unique<CustomObject>(iceCreamDirector->getObject()));
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         exit(84);
@@ -258,6 +266,11 @@ void RayTracer::Scene::addLight(std::unique_ptr<ILights> light)
     this->lights.push_back(std::move(light));
 }
 
+void RayTracer::Scene::addCustomObject(std::unique_ptr<CustomObject> object)
+{
+    this->customObjects.push_back(std::move(object));
+}
+
 void RayTracer::Scene::setCamera(std::unique_ptr<View::Camera> camera)
 {
     this->camera = std::move(camera);
@@ -294,6 +307,13 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
             for (std::unique_ptr<IPrimitive> &primitive : sortedPrimitives) {
                 if (primitive->hits(ray)) {
                     color = primitive->computeColor(ray, this->lights);
+                    break;
+                }
+            }
+
+            for (std::unique_ptr<CustomObject> &object : this->customObjects) {
+                if (object->hits(ray)) {
+                    color = object->computeColor(ray, this->lights);
                     break;
                 }
             }

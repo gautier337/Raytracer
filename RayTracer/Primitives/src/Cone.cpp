@@ -252,6 +252,11 @@ void RayTracer::Primitives::Cone::setColor(RayTracer::Render::Color color)
     this->color = color;
 };
 
+std::unique_ptr<RayTracer::IPrimitive> RayTracer::Primitives::Cone::clone() const
+{
+    return std::make_unique<RayTracer::Primitives::Cone>(*this);
+}
+
 extern "C" std::unique_ptr<RayTracer::Primitives::Cone> createCone(
     RayTracer::Math::Point3D center,
     RayTracer::Math::Vector3D axis,
