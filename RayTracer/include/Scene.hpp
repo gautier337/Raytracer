@@ -6,11 +6,9 @@
 */
 
 #include "Factory.hpp"
-#include "Rectangle3D.hpp"
-#include "Plane.hpp"
-#include "Sphere.hpp"
-#include "DirectionalLight.hpp"
-#include "AmbientLight.hpp"
+#include "IPrimitive.hpp"
+#include "ILights.hpp"
+#include "CustomObject.hpp"
 #include "Camera.hpp"
 #include "Color.hpp"
 #include "parse_config.hpp"
@@ -25,6 +23,7 @@ namespace RayTracer {
             ~Scene();
             void addPrimitive(std::unique_ptr<IPrimitive> primitive);
             void addLight(std::unique_ptr<ILights> light);
+            void addCustomObject(std::unique_ptr<CustomObject> customObject);
             void setCamera(std::unique_ptr<View::Camera> camera);
             std::vector<std::vector<Render::Color>> getPixels() const;
             void render(int pixelSize, int width, int height);
@@ -41,6 +40,7 @@ namespace RayTracer {
             std::unique_ptr<View::Camera> original_camera;
             std::vector<std::unique_ptr<IPrimitive>> primitives;
             std::vector<std::unique_ptr<ILights>> lights;
+            std::vector<std::unique_ptr<CustomObject>> customObjects;
             std::vector<std::vector<Render::Color>> pixels;
     };
 };

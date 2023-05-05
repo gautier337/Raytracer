@@ -8,6 +8,10 @@
 #pragma once
 #include <memory>
 
+#include "IceCreamBuilder.hpp"
+
+#include "IceCreamDirector.hpp"
+
 #include "AmbientLight.hpp"
 #include "DirectionalLight.hpp"
 
@@ -23,6 +27,15 @@
 
 #include "Camera.hpp"
 #include "Ray.hpp"
+
+// Builders
+using IceCreamBuilderSignature = std::unique_ptr<RayTracer::Builders::IceCreamBuilder>(
+);
+
+// Directors
+using IceCreamDirectorSignature = std::unique_ptr<RayTracer::Directors::IceCreamDirector>(
+    RayTracer::Builders::IceCreamBuilder
+);
 
 // Lights
 using AmbientLightSignature = std::unique_ptr<RayTracer::Lights::AmbientLight>(
