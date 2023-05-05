@@ -25,6 +25,10 @@ primitives:
     planes = (
         { axis = "Z"; position = -5000; color = { r = 1; g = 1; b = 0; a = 1 }; }
     );
+    # Cone
+    cones = (
+        { center = { x = 0; y = 0; z = 2; }; axis = {x = 0; y = 1; z = 0;}; base_radius = 0.5; apex_radius = 0 ;height = 1 ; color = { r = 0; g = 0; b = 1; a = 1;}; }
+    );
 };
 
 # Light configuration

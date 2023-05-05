@@ -13,6 +13,7 @@
 #include "Rectangle3D.hpp"
 #include "Sphere.hpp"
 #include "Color.hpp"
+#include "Cone.hpp"
 #include "Camera.hpp"
 #include "Ray.hpp"
 
@@ -54,6 +55,14 @@ using Rectangle3DSignature = std::unique_ptr<RayTracer::Primitives::Rectangle3D>
 );
 using SphereSignature = std::unique_ptr<RayTracer::Primitives::Sphere>(
     RayTracer::Math::Point3D,
+    double,
+    RayTracer::Render::Color
+);
+using ConeSignature = std::unique_ptr<RayTracer::Primitives::Cone>(
+    RayTracer::Math::Point3D,
+    RayTracer::Math::Vector3D,
+    double,
+    double,
     double,
     RayTracer::Render::Color
 );

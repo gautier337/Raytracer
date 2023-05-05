@@ -34,6 +34,7 @@ void RayTracer::Factory::loadAllPlugins()
         this->loadPlugin("Plane", "./plugins/primitives/Plane.so");
         this->loadPlugin("Rectangle3D", "./plugins/primitives/Rectangle3D.so");
         this->loadPlugin("Sphere", "./plugins/primitives/Sphere.so");
+        this->loadPlugin("Cone", "./plugins/primitives/Cone.so");
 
         // Render
         this->loadPlugin("Color", "./plugins/render/Color.so");
