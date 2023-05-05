@@ -230,6 +230,20 @@ double RayTracer::Primitives::Cylinder::getIntersectionPoint(View::Ray ray)
     }
 }
 
+std::string RayTracer::Primitives::Cylinder::getType() const
+{
+    return "Cylinder";
+};
+
+RayTracer::Render::Color RayTracer::Primitives::Cylinder::getColor() const
+{
+    return this->color;
+}
+
+void RayTracer::Primitives::Cylinder::setColor(RayTracer::Render::Color color)
+{
+    this->color = color;
+};
 
 extern "C" std::unique_ptr<RayTracer::Primitives::Cylinder> createCylinder(
     RayTracer::Math::Point3D center,

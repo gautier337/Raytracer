@@ -32,7 +32,6 @@ void RayTracer::Factory::loadAllPlugins()
         this->loadPlugin("Vector3D", "./plugins/math/Vector3D.so");
 
         // Primitives
-        this->loadPlugin("Cone", "./plugins/primitives/Cone.so");
         this->loadPlugin("Plane", "./plugins/primitives/Plane.so");
         this->loadPlugin("Sphere", "./plugins/primitives/Sphere.so");
         this->loadPlugin("Cone", "./plugins/primitives/Cone.so");

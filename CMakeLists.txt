@@ -115,11 +115,8 @@ set(VECTOR3D_LIB Vector3D)
 set(CONE_LIB Cone)
 set(PLANE_LIB Plane)
 set(SPHERE_LIB Sphere)
-<<<<<<< HEAD
-=======
 set(CONE_LIB Cone)
 set(CYLINDER_LIB Cylinder)
->>>>>>> feature/Cylinder
 
 set(COLOR_LIB Color)
 
@@ -135,7 +132,6 @@ add_library(${POINT3D_LIB} SHARED ${SRC_POINT3D})
 add_library(${RECTANGLE3D_LIB} SHARED ${SRC_RECTANGLE3D})
 add_library(${VECTOR3D_LIB} SHARED ${SRC_VECTOR3D})
 
-add_library(${CONE_LIB} SHARED ${SRC_CONE})
 add_library(${PLANE_LIB} SHARED ${SRC_PLANE})
 add_library(${SPHERE_LIB} SHARED ${SRC_SPHERE})
 add_library(${CONE_LIB} SHARED ${SRC_CONE})

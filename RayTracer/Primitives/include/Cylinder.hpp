@@ -10,7 +10,7 @@
 #include "Vector3D.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
-#include "IPrimitives.hpp"
+#include "IPrimitive.hpp"
 #include "ILights.hpp"
 #include <iostream>
 #include <vector>
@@ -18,7 +18,7 @@
 
 namespace RayTracer {
     namespace Primitives {
-        class Cylinder : public IPrimitives {
+        class Cylinder : public IPrimitive {
             public:
                 Cylinder();
                 ~Cylinder();
@@ -41,6 +41,9 @@ namespace RayTracer {
                 void translate(Math::Vector3D translation) override;
                 void rotate(Math::Vector3D axis, double angle) override;
                 void scale(double factor) override;
+                std::string getType() const override;
+                Render::Color getColor() const override;
+                void setColor(Render::Color color) override;
 
             protected:
             private:
