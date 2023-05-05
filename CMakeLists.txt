@@ -74,6 +74,8 @@ set(PRIMITIVES_DIRECTORY Primitives/src/)
 set(SRC_CONE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Cone.cpp)
 set(SRC_PLANE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Plane.cpp)
 set(SRC_SPHERE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Sphere.cpp)
+set(SRC_CONE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Cone.cpp)
+set(SRC_CYLINDER ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Cylinder.cpp)
 
 # Render Plugins
 set(RENDER_DIRECTORY Render/src/)
@@ -113,6 +115,11 @@ set(VECTOR3D_LIB Vector3D)
 set(CONE_LIB Cone)
 set(PLANE_LIB Plane)
 set(SPHERE_LIB Sphere)
+<<<<<<< HEAD
+=======
+set(CONE_LIB Cone)
+set(CYLINDER_LIB Cylinder)
+>>>>>>> feature/Cylinder
 
 set(COLOR_LIB Color)
 
@@ -131,6 +138,8 @@ add_library(${VECTOR3D_LIB} SHARED ${SRC_VECTOR3D})
 add_library(${CONE_LIB} SHARED ${SRC_CONE})
 add_library(${PLANE_LIB} SHARED ${SRC_PLANE})
 add_library(${SPHERE_LIB} SHARED ${SRC_SPHERE})
+add_library(${CONE_LIB} SHARED ${SRC_CONE})
+add_library(${CYLINDER_LIB} SHARED ${SRC_CYLINDER})
 
 add_library(${COLOR_LIB} SHARED ${SRC_COLOR})
 
@@ -148,6 +157,8 @@ set_target_properties(${VECTOR3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAK
 set_target_properties(${CONE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
 set_target_properties(${PLANE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
 set_target_properties(${SPHERE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+set_target_properties(${CONE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+set_target_properties(${CYLINDER_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
 
 set_target_properties(${COLOR_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/render/)
 
@@ -179,6 +190,8 @@ target_link_libraries(${EXECUTABLE_NAME} ${VECTOR3D_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${CONE_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${PLANE_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${SPHERE_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${CONE_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${CYLINDER_LIB})
 
 target_link_libraries(${EXECUTABLE_NAME} ${COLOR_LIB})
 
