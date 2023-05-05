@@ -278,6 +278,13 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
                 }
             }
 
+            for (std::unique_ptr<CustomObject> &object : this->customObjects) {
+                if (object->hits(ray)) {
+                    color = object->computeColor(ray, this->lights);
+                    break;
+                }
+            }
+
             this->pixels[index / height][index % height] = color;
             index++;
         }
