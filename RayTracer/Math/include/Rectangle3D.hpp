@@ -8,13 +8,10 @@
 #pragma once
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
-#include "Ray.hpp"
-#include "Color.hpp"
-#include "ILights.hpp"
 #include <string>
 
 namespace RayTracer {
-    namespace Primitives {
+    namespace Math {
         class Rectangle3D {
             public:
                 ~Rectangle3D();

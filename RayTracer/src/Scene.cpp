@@ -28,7 +28,7 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
             std::unique_ptr<Math::Vector3D> bottom_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 1, 0, 0);
             std::unique_ptr<Math::Vector3D> left_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 0, 1, 0);
             std::unique_ptr<Render::Color> color = this->factory.createPlugin<ColorSignature>("Color", 0, 0, 0, 0);
-            std::unique_ptr<Primitives::Rectangle3D> screen = this->factory.createPlugin<Rectangle3DSignature>(
+            std::unique_ptr<Math::Rectangle3D> screen = this->factory.createPlugin<Rectangle3DSignature>(
                 "Rectangle3D",
                 *origin,
                 *bottom_side,

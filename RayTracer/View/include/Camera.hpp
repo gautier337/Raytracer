@@ -16,7 +16,7 @@ namespace RayTracer {
             public:
                 Camera() = default;
                 ~Camera();
-                Camera(Math::Point3D origin, Primitives::Rectangle3D screen);
+                Camera(Math::Point3D origin, Math::Rectangle3D screen);
                 Camera(const Camera &camera);
                 Camera(Camera &&camera);
                 Camera &operator=(const Camera &camera);
@@ -29,7 +29,7 @@ namespace RayTracer {
             protected:
             private:
                 Math::Point3D origin;
-                Primitives::Rectangle3D screen;
+                Math::Rectangle3D screen;
         };
     };
 };

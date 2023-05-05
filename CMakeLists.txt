@@ -34,6 +34,7 @@ include_directories(
 set(EXECUTABLE_NAME "raytracer")
 set(RAYTRACER_DIRECTORY RayTracer/)
 
+# Main Sources
 set(SRC_MAIN
         src/main.cpp
 )
@@ -56,6 +57,7 @@ set(SRC_IMGUI
         imgui.cpp
 )
 
+
 # Lights Plugins
 set(LIGHTS_DIRECTORY Lights/src/)
 set(SRC_AMBIENT_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}AmbientLight.cpp)
@@ -64,14 +66,14 @@ set(SRC_DIRECTIONAL_LIGHT ${RAYTRACER_DIRECTORY}${LIGHTS_DIRECTORY}DirectionalLi
 # Math Plugins
 set(MATH_DIRECTORY Math/src/)
 set(SRC_POINT3D ${RAYTRACER_DIRECTORY}${MATH_DIRECTORY}Point3D.cpp)
+set(SRC_RECTANGLE3D ${RAYTRACER_DIRECTORY}${MATH_DIRECTORY}Rectangle3D.cpp)
 set(SRC_VECTOR3D ${RAYTRACER_DIRECTORY}${MATH_DIRECTORY}Vector3D.cpp)
 
 # Primitives Plugins
 set(PRIMITIVES_DIRECTORY Primitives/src/)
-set(SRC_PLANE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Plane.cpp)
-set(SRC_RECTANGLE3D ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Rectangle3D.cpp)
-set(SRC_SPHERE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Sphere.cpp)
 set(SRC_CONE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Cone.cpp)
+set(SRC_PLANE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Plane.cpp)
+set(SRC_SPHERE ${RAYTRACER_DIRECTORY}${PRIMITIVES_DIRECTORY}Sphere.cpp)
 
 # Render Plugins
 set(RENDER_DIRECTORY Render/src/)
@@ -90,6 +92,8 @@ set(SRC_RAYTRACER
         Scene.cpp
 )
 
+
+# Set compiler flags
 set(CMAKE_CPP_FLAGS "-Wall -Wextra -Werror -fno-gnu-unique")
 
 # Transform all paths to absolute paths
@@ -103,12 +107,12 @@ set(AMBIENT_LIGHT_LIB AmbientLight)
 set(DIRECTIONAL_LIGHT_LIB DirectionalLight)
 
 set(POINT3D_LIB Point3D)
+set(RECTANGLE3D_LIB Rectangle3D)
 set(VECTOR3D_LIB Vector3D)
 
-set(PLANE_LIB Plane)
-set(RECTANGLE3D_LIB Rectangle3D)
-set(SPHERE_LIB Sphere)
 set(CONE_LIB Cone)
+set(PLANE_LIB Plane)
+set(SPHERE_LIB Sphere)
 
 set(COLOR_LIB Color)
 
@@ -121,12 +125,12 @@ add_library(${AMBIENT_LIGHT_LIB} SHARED ${SRC_AMBIENT_LIGHT})
 add_library(${DIRECTIONAL_LIGHT_LIB} SHARED ${SRC_DIRECTIONAL_LIGHT})
 
 add_library(${POINT3D_LIB} SHARED ${SRC_POINT3D})
+add_library(${RECTANGLE3D_LIB} SHARED ${SRC_RECTANGLE3D})
 add_library(${VECTOR3D_LIB} SHARED ${SRC_VECTOR3D})
 
-add_library(${PLANE_LIB} SHARED ${SRC_PLANE})
-add_library(${RECTANGLE3D_LIB} SHARED ${SRC_RECTANGLE3D})
-add_library(${SPHERE_LIB} SHARED ${SRC_SPHERE})
 add_library(${CONE_LIB} SHARED ${SRC_CONE})
+add_library(${PLANE_LIB} SHARED ${SRC_PLANE})
+add_library(${SPHERE_LIB} SHARED ${SRC_SPHERE})
 
 add_library(${COLOR_LIB} SHARED ${SRC_COLOR})
 
@@ -138,12 +142,12 @@ set_target_properties(${AMBIENT_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY $
 set_target_properties(${DIRECTIONAL_LIGHT_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/lights/)
 
 set_target_properties(${POINT3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
+set_target_properties(${RECTANGLE3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
 set_target_properties(${VECTOR3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/math/)
 
-set_target_properties(${PLANE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
-set_target_properties(${RECTANGLE3D_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
-set_target_properties(${SPHERE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
 set_target_properties(${CONE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+set_target_properties(${PLANE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
+set_target_properties(${SPHERE_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/primitives/)
 
 set_target_properties(${COLOR_LIB} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/plugins/render/)
 
@@ -169,12 +173,12 @@ target_link_libraries(${EXECUTABLE_NAME} ${AMBIENT_LIGHT_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${DIRECTIONAL_LIGHT_LIB})
 
 target_link_libraries(${EXECUTABLE_NAME} ${POINT3D_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${RECTANGLE3D_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${VECTOR3D_LIB})
 
-target_link_libraries(${EXECUTABLE_NAME} ${PLANE_LIB})
-target_link_libraries(${EXECUTABLE_NAME} ${RECTANGLE3D_LIB})
-target_link_libraries(${EXECUTABLE_NAME} ${SPHERE_LIB})
 target_link_libraries(${EXECUTABLE_NAME} ${CONE_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${PLANE_LIB})
+target_link_libraries(${EXECUTABLE_NAME} ${SPHERE_LIB})
 
 target_link_libraries(${EXECUTABLE_NAME} ${COLOR_LIB})
 

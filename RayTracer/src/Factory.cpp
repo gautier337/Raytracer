@@ -28,13 +28,13 @@ void RayTracer::Factory::loadAllPlugins()
 
         // Math
         this->loadPlugin("Point3D", "./plugins/math/Point3D.so");
+        this->loadPlugin("Rectangle3D", "./plugins/math/Rectangle3D.so");
         this->loadPlugin("Vector3D", "./plugins/math/Vector3D.so");
 
         // Primitives
-        this->loadPlugin("Plane", "./plugins/primitives/Plane.so");
-        this->loadPlugin("Rectangle3D", "./plugins/primitives/Rectangle3D.so");
-        this->loadPlugin("Sphere", "./plugins/primitives/Sphere.so");
         this->loadPlugin("Cone", "./plugins/primitives/Cone.so");
+        this->loadPlugin("Plane", "./plugins/primitives/Plane.so");
+        this->loadPlugin("Sphere", "./plugins/primitives/Sphere.so");
 
         // Render
         this->loadPlugin("Color", "./plugins/render/Color.so");

@@ -15,7 +15,7 @@ RayTracer::View::Camera::~Camera()
 
 RayTracer::View::Camera::Camera(
     RayTracer::Math::Point3D origin,
-    RayTracer::Primitives::Rectangle3D screen
+    RayTracer::Math::Rectangle3D screen
 ) :
     origin(origin),
     screen(screen)
@@ -77,7 +77,7 @@ RayTracer::Math::Point3D RayTracer::View::Camera::getOrigin() const
 
 extern "C" std::unique_ptr<RayTracer::View::Camera> createCamera(
     RayTracer::Math::Point3D origin,
-    RayTracer::Primitives::Rectangle3D screen
+    RayTracer::Math::Rectangle3D screen
 )
 {
     return std::make_unique<RayTracer::View::Camera>(origin, screen);
