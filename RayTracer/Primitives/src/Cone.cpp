@@ -85,7 +85,7 @@ RayTracer::Math::Vector3D normalize(const RayTracer::Math::Vector3D& vec)
 bool RayTracer::Primitives::Cone::hits(View::Ray ray)
 {
     RayTracer::Math::Vector3D rayDirection = ray.getDirection();
-    RayTracer::Math::Point3D rayOriginPoint = ray.getOrigin();
+    Math::Point3D rayOriginPoint = ray.getOrigin();
 
     RayTracer::Math::Vector3D rayOrigin(rayOriginPoint.getX(), rayOriginPoint.getY(), rayOriginPoint.getZ());
     RayTracer::Math::Vector3D coneOrigin(center.getX(), center.getY(), center.getZ());
@@ -110,17 +110,19 @@ bool RayTracer::Primitives::Cone::hits(View::Ray ray)
 
     if (t0 < 0) {
         t0 = t1;
-        if (t0 < 0)
-            return false;
+        if (t0 < 0) return false;
     }
-
     RayTracer::Math::Vector3D intersection = rayOrigin + rayDirection * t0;
     RayTracer::Math::Vector3D cone_to_intersection = intersection - coneOrigin;
     double projected_height = cone_to_intersection.dot(axis_normalized);
 
     bool within_cone_height = projected_height >= 0 && projected_height <= height;
 
-    RayTracer::Math::Vector3D base_center = coneOrigin + axis_normalized * height;
+    RayTracer::Math::Vector3D base_center = Math::Vector3D(
+        coneOrigin.getX(),
+        coneOrigin.getY(),
+        coneOrigin.getZ() - base_radius * 4
+    ) + axis_normalized * height;
     double plane_d = -(axis_normalized.dot(base_center));
     double t_base = -(rayOrigin.dot(axis_normalized) + plane_d) / rayDirection.dot(axis_normalized);
 
@@ -133,7 +135,9 @@ bool RayTracer::Primitives::Cone::hits(View::Ray ray)
     double distance_to_base_center = base_to_intersection_base.length();
     bool within_base_radius = distance_to_base_center <= base_radius;
 
-    return within_cone_height || within_base_radius;
+    bool on_base_circle = std::abs(distance_to_base_center - base_radius) < 1e-8;
+
+    return within_cone_height || (within_base_radius && !on_base_circle);
 }
 
 RayTracer::Render::Color RayTracer::Primitives::Cone::computeColor(

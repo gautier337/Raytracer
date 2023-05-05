@@ -9,6 +9,7 @@
 #include "Camera.hpp"
 #include "Sphere.hpp"
 #include "Cone.hpp"
+#include "Cylinder.hpp"
 #include "IceCreamBuilder.hpp"
 #include "IceCreamDirector.hpp"
 #include "Signatures.hpp"
@@ -120,6 +121,38 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
                     *primitiveColor
                 );
                 this->addPrimitive(std::make_unique<Primitives::Cone>(*cone));
+            }
+        }
+
+        if (primitives.exists("cylinders")) {
+            for (int i = 0; i < primitives["cylinders"].getLength(); i++) {
+                double x_center = config.getDoubleFromSetting(primitives["cylinders"][i]["center"]["x"]);
+                double y_center = config.getDoubleFromSetting(primitives["cylinders"][i]["center"]["y"]);
+                double z_center = config.getDoubleFromSetting(primitives["cylinders"][i]["center"]["z"]);
+                std::unique_ptr<Math::Point3D> center = this->factory.createPlugin<Point3DSignature>("Point3D", x_center, y_center, z_center);
+                double x_axis = config.getDoubleFromSetting(primitives["cylinders"][i]["axis"]["x"]);
+                double y_axis = config.getDoubleFromSetting(primitives["cylinders"][i]["axis"]["y"]);
+                double z_axis = config.getDoubleFromSetting(primitives["cylinders"][i]["axis"]["z"]);
+                std::unique_ptr<Math::Vector3D> axis = this->factory.createPlugin<Vector3DSignature>("Vector3D", x_axis, y_axis, z_axis);
+                double radius = config.getDoubleFromSetting(primitives["cylinders"][i]["radius"]);
+                double height = config.getDoubleFromSetting(primitives["cylinders"][i]["height"]);
+                std::unique_ptr<Render::Color> primitiveColor = this->factory.createPlugin<ColorSignature>(
+                    "Color",
+                    config.getDoubleFromSetting(primitives["cylinders"][i]["color"]["r"]),
+                    config.getDoubleFromSetting(primitives["cylinders"][i]["color"]["g"]),
+                    config.getDoubleFromSetting(primitives["cylinders"][i]["color"]["b"]),
+                    config.getDoubleFromSetting(primitives["cylinders"][i]["color"]["a"])
+                );
+
+                std::unique_ptr<Primitives::Cylinder> cylinder = this->factory.createPlugin<CylinderSignature>(
+                    "Cylinder",
+                    *center,
+                    *axis,
+                    radius,
+                    height,
+                    *primitiveColor
+                );
+                this->addPrimitive(std::make_unique<Primitives::Cylinder>(*cylinder));
             }
         }
 
