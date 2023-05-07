@@ -48,6 +48,7 @@ int raytracer(std::string const &sceneFile)
     screenWidth = window_height_width[0];
 
     RayTracer::Scene scene(config);
+    // std::cout << "Press ESC to exit" << std::endl;
     RayTracer::Factory factory = scene.getFactory();
     sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Raytracer", sf::Style::Close);
     window.setFramerateLimit(60);
@@ -60,6 +61,7 @@ int raytracer(std::string const &sceneFile)
     bool isInit = ImGui::SFML::Init(window);
     if (!isInit)
         return ERROR;
+
 
     sf::Clock deltaClock;
     while (window.isOpen()) {

@@ -45,3 +45,12 @@ lights :
         { brightness = 0.2; color = { r = 1; g = 1; b = 1; a = 1;}; }
     )
 };
+
+# Custom Objects in the scene
+custom_objects:
+{
+    # List of ice creams
+    ice_creams = (
+        { type = "two"; x = -2; y = 0; z = 2; scale = 1; }
+    );
+};

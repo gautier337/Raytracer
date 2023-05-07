@@ -211,6 +211,22 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
             std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", -2, 0, 2);
         iceCreamDirector->make("two", *origin, 1);
         this->addCustomObject(std::make_unique<CustomObject>(iceCreamDirector->getObject()));
+
+        // auto &custom_objects_config = config.get_setting("custom_objects");
+        // if (custom_objects_config.exists("ice_creams")) {
+        //     for (int i = 0; i < custom_objects_config["ice_creams"].getLength(); i++) {
+        //         std::string type = config.getStringFromSetting(custom_objects_config["ice_creams"][i]["type"]);
+        //         double x = config.getDoubleFromSetting(custom_objects_config["ice_creams"][i]["x"]);
+        //         double y = config.getDoubleFromSetting(custom_objects_config["ice_creams"][i]["y"]);
+        //         double z = config.getDoubleFromSetting(custom_objects_config["ice_creams"][i]["z"]);
+        //         double scale = config.getDoubleFromSetting(custom_objects_config["ice_creams"][i]["scale"]);
+
+        //         std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", x, y, z);
+        //         iceCreamDirector->make(type, *origin, scale);
+        //         this->addCustomObject(std::make_unique<CustomObject>(iceCreamDirector->getObject()));
+        //     }
+        // }
+
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         exit(84);
