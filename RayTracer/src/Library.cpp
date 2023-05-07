@@ -22,22 +22,25 @@ RayTracer::Library::Library(std::string const &path)
 
 RayTracer::Library::~Library()
 {
-    dlclose(this->handle);
+    if (this->handle != nullptr)
+        dlclose(this->handle);
 }
 
 RayTracer::Library::Library(Library const &other)
 {
-    this->handle = other.handle;
+    if (other.handle != nullptr)
+        this->handle = other.handle;
 }
 
 RayTracer::Library::Library(Library &&other)
 {
-    this->handle = other.handle;
+    if (other.handle != nullptr)
+        this->handle = other.handle;
 }
 
 RayTracer::Library &RayTracer::Library::operator=(Library const &other)
 {
-    if (this != &other)
+    if (this != &other && other.handle != nullptr)
         this->handle = other.handle;
 
     return *this;
@@ -45,7 +48,7 @@ RayTracer::Library &RayTracer::Library::operator=(Library const &other)
 
 RayTracer::Library &RayTracer::Library::operator=(Library &&other)
 {
-    if (this != &other)
+    if (this != &other && other.handle != nullptr)
         this->handle = other.handle;
 
     return *this;
