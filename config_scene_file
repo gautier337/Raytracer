@@ -51,6 +51,8 @@ custom_objects:
 {
     # List of ice creams
     ice_creams = (
-        { type = "two"; x = -2; y = 0; z = 2; scale = 1; }
+        { type = "one"; x = -2; y = 0; z = 2; scale = 1; },
+        { type = "two"; x = -5; y = 0; z = 2; scale = 2; },
+        { type = "three"; x = -8; y = 0; z = 2; scale = 3; },
     );
 };
