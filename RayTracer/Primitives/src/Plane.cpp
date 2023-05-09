@@ -87,6 +87,77 @@ RayTracer::Primitives::Plane &RayTracer::Primitives::Plane::operator=(
     return *this;
 }
 
+// double RayTracer::Primitives::Plane::getIntersectionPoint(View::Ray ray)
+// {
+//     double t = 0.0;
+//     double denominator = ray.getDirection().dot(Math::Vector3D(0, 0, 1));
+//     if (std::abs(denominator) > 1e-6) {
+//         t = (position - ray.getOrigin().getZ()) / denominator;
+//         if (t <= 0) {
+//             return -1;
+//         }
+//     } else {
+//         return -1;
+//     }
+//     return t;
+// }
+
+// bool RayTracer::Primitives::Plane::hits(View::Ray ray)
+// {
+//     double t = getIntersectionPoint(ray);
+//     if (t < 0) {
+//         return false;
+//     }
+//     Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * t;
+//     Math::Vector3D normal;
+//     if (axis == "X") {
+//         normal = Math::Vector3D(1, 0, 0);
+//     } else if (axis == "Y") {
+//         normal = Math::Vector3D(0, 1, 0);
+//     } else {
+//         normal = Math::Vector3D(0, 0, 1);
+//     }
+//     if (normal.dot(ray.getDirection()) > 0) {
+//         normal = normal * -1;
+//     }
+//     return true;
+// }
+
+// RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(View::Ray ray,
+//         std::vector<std::unique_ptr<ILights>> &lights)
+// {
+//     double t = getIntersectionPoint(ray);
+//     if (t < 0) {
+//         throw std::runtime_error("No intersection point");
+//     }
+//     Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * t;
+//     Math::Vector3D normal;
+//     if (axis == "X") {
+//         normal = Math::Vector3D(1, 0, 0);
+//     } else if (axis == "Y") {
+//         normal = Math::Vector3D(0, 1, 0);
+//     } else {
+//         normal = Math::Vector3D(0, 0, 1);
+//     }
+//     if (normal.dot(ray.getDirection()) > 0) {
+//         normal = normal * -1;
+//     }
+//     Render::Color color = this->color;
+//     for (const auto &light : lights) {
+//         Math::Vector3D lightDir = light->getDirection().normalize();
+//         double dot = std::max(0.0, normal.dot(lightDir));
+//         double brightness = light->getBrightness();
+//         Render::Color lightColor ((color.getR() * brightness * dot),
+//                                   (color.getG() * brightness * dot),
+//                                   (color.getB() * brightness * dot),
+//                                   color.getA());
+//         color += lightColor;
+//     }
+//     return color;
+// }
+
+
+
 double RayTracer::Primitives::Plane::getIntersectionPoint(View::Ray ray)
 {
     RayTracer::Math::Vector3D w(
