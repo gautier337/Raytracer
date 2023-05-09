@@ -91,6 +91,9 @@ bool RayTracer::Primitives::Sphere::hits(View::Ray ray)
         (ray.getOrigin() - this->center).getZ()
     );
 
+    //check if the camera is after the sphere
+    if (oc.dot(ray.getDirection()) > 0)
+        return false;
     double a = ray.getDirection().dot(ray.getDirection());
     double b = 2.0 * oc.dot(ray.getDirection());
     double c = oc.dot(oc) - this->radius * this->radius;
@@ -104,12 +107,11 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
 )
 {
     RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * this->closestT;
-    RayTracer::Math::Vector3D non_normal(
-        (this->center - hitPoint).getX() * 2,
-        (this->center - hitPoint).getY() * 2,
-        (this->center - hitPoint).getZ() * 2
-    );
+    RayTracer::Math::Vector3D non_normal ((hitPoint.getX() - this->center.getX()), (hitPoint.getY() - this->center.getY()), (hitPoint.getZ() - this->center.getZ()));
     RayTracer::Math::Vector3D normal = non_normal.normalize();
+    if (normal.dot(ray.getDirection()) > 0) {
+        normal = normal * -1;
+    }
 
     RayTracer::Render::Color newColor(0, 0, 0, this->color.getA());
 
