@@ -177,13 +177,12 @@ int raytracer(std::string const &sceneFile)
                 }
             }
             shouldUpdatePoints = false;
+            window.clear();
+            for (const auto &point : points)
+                window.draw(point);
+            ImGui::SFML::Render(window);
+            window.display();
         }
-
-        window.clear();
-        for (const auto &point : points)
-            window.draw(point);
-        ImGui::SFML::Render(window);
-        window.display();
     }
     ImGui::SFML::Shutdown();
     return SUCCESS;
