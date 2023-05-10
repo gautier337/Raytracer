@@ -1,14 +1,15 @@
 #Window settings
 window:
 {
-    width = 1000;
-    height = 1000;
+    width = 500;
+    height = 500;
 };
 
 # Configuration of the camera
 camera:
 {
-    position = { x = 0; y = 0; z = 0;};
+    position = { x = 0; y = 0; z = -1;};
+    screen = { origin = { x = -0.5; y = -0.5; z = 1; }; bottom_side = {x = 1; y = 0; z = 0; }; left_side = {x = 0; y = 1; z = 0;};};
 };
 
 # Primitives in the scene
@@ -16,29 +17,27 @@ primitives:
 {
     # List of spheres
     spheres = (
-        { x = 2; y = 1; z = 2; r = 1; color = { r = 1; g = 0; b = 0; a = 1;}; } ,
-        { x = 5; y = 1; z = 4; r = 1; color = { r = 0; g = 0; b = 1; a = 1;}; } ,
-        { x = -1; y = 2; z = 4; r = 0.5; color = { r = 0; g = 1; b = 0; a = 1;}; },
-        { x = 1; y = 6; z = 4; r = 1; color = { r = 1; g = 0; b = 1; a = 1;}; },
-        { x = 1; y = 1.5; z = 4; r = 1; color = { r = 1; g = 0; b = 1; a = 1;}; }
+        { x = 0; y = 0; z = 3; r = 0.1; color = { r = 1; g = 0; b = 0; a = 1;}; } ,
+        { x = -5; y = 0; z = 4; r = 1; color = { r = 0; g = 0; b = 1; a = 1;}; } ,
+        { x = -1; y = 0; z = 4; r = 1; color = { r = 0; g = 1; b = 0; a = 1;}; },
+        { x = 1; y = 1; z = 4; r = 1; color = { r = 1; g = 0; b = 1; a = 1;}; }
     ) ;
-    
+    # List of planes
+    planes = (
+        { axis = "Y"; position = 5; color = { r = 1; g = 1; b = 0; a = 1 }; },
+        { axis = "Y"; position = -5; color = { r = 1; g = 0; b = 0; a = 1 }; },
+        { axis = "X"; position = 5; color = { r = 1; g = 0; b = 1; a = 1 }; },
+        { axis = "X"; position = -5; color = { r = 0; g = 0; b = 1; a = 1 }; },
+        { axis = "Z"; position = 50; color = { r = 0; g = 1; b = 1; a = 1 }; },
+        { axis = "Z"; position = -50; color = { r = 0; g = 1; b = 0; a = 1 }; }
+    )
     # Cone
     cones = (
         { center = { x = 0; y = 0; z = 2; }; axis = {x = 0; y = 1; z = 0;}; base_radius = 0.5; apex_radius = 0 ;height = 1 ; color = { r = 0; g = 0; b = 1; a = 1;}; }
     );
-    
-    # Planes
-    planes = (
-        { axis = "Z"; position = -5000; color = { r = 1; g = 1; b = 0; a = 1 }; },
-        # { axis = "X"; position = 0; color = { r = 0; g = 1; b = 1; a = 1 }; },
-        # { axis = "Y"; position = 0; color = { r = 1; g = 0; b = 1; a = 1 }; }
-    );
-    
     # Cylinder
     cylinders = (
-        { center = { x = -1; y = 0; z = 1; }; axis = {x = 0; y = 1; z = 0;}; radius = 0.5; height = 1 ; color = { r = 0; g = 0; b = 1; a = 1;}; },
-        { center = { x = 5; y = 0; z = 2; }; axis = {x = 0; y = 1; z = 0;}; radius = 0.5; height = 1 ; color = { r = 0; g = 0; b = 1; a = 1;}; }
+        { center = { x = 1; y = 0; z = 2; }; axis = {x = 0; y = 1; z = 0;}; radius = 0.5; height = 1 ; color = { r = 0; g = 0; b = 1; a = 1;}; }
     );
 };
 
@@ -46,7 +45,7 @@ primitives:
 lights :
 {
     directional = (
-        { brightness = 1; color = {  r = 0; g = 0; b = 1; a = 1;}; point = { x = 0; y = 1; z = 0;}; vector = { x = 0; y = 1; z = 0; }; }
+        { brightness = 0.6; color = {  r = 0; g = 0; b = 1; a = 1;}; point = { x = 0; y = 0; z = 0;}; vector = { x = 0; y = 1; z = 0; }; }
     );
     ambient = (
         { brightness = 0.2; color = { r = 1; g = 1; b = 1; a = 1;}; }

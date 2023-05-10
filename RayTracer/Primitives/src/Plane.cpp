@@ -31,8 +31,8 @@ RayTracer::Primitives::Plane::Plane(
         this->left_side = Math::Vector3D(0, 0, 10000);
         this->origin = Math::Point3D(this->position, 0, 0);
     } else if (this->axis == "Z") {
-        this->bottom_side = Math::Vector3D(0, 10000, 10000);
-        this->left_side = Math::Vector3D(0, 0, 0);
+        this->bottom_side = Math::Vector3D(10000, 0, 0);
+        this->left_side = Math::Vector3D(0, 0, 10000);
         this->origin = Math::Point3D(0, this->position, 0);
     }
 }
@@ -90,41 +90,43 @@ RayTracer::Primitives::Plane &RayTracer::Primitives::Plane::operator=(
 double RayTracer::Primitives::Plane::getIntersectionPoint(View::Ray ray)
 {
     Math::Vector3D normal;
+    Math::Vector3D position;
     if (axis == "X") {
         normal = Math::Vector3D(1, 0, 0);
+        position = Math::Vector3D(this->position, 0, 0);
     } else if (axis == "Y") {
         normal = Math::Vector3D(0, 1, 0);
+        position = Math::Vector3D(0, this->position, 0);
     } else {
         normal = Math::Vector3D(0, 0, 1);
+        position = Math::Vector3D(0, 0, this->position);
     }
-    if (normal.dot(ray.getDirection()) == 0) {
+
+    // Compute the position vector of the plane
+
+    // Compute the vector from the ray origin to the plane position
+    Math::Vector3D originToPosition((position.getX() - ray.getOrigin().getX()),
+                                    (position.getY() - ray.getOrigin().getY()),
+                                    (position.getZ() - ray.getOrigin().getZ()));
+
+    double denom = normal.dot(ray.getDirection());
+    if (std::abs(denom) < 1e-6) {
         return -1;
     }
-    double t = (position - ray.getDirection().dot(normal)) / ray.getDirection().dot(normal);
+    double t = originToPosition.dot(normal) / denom;
     if (t < 0) {
         return -1;
     }
     return t;
 }
 
+
+
 bool RayTracer::Primitives::Plane::hits(View::Ray ray)
 {
     double t = getIntersectionPoint(ray);
-    if (t < 0) {
+    if (t < 0 || t > 100)
         return false;
-    }
-    Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * t;
-    Math::Vector3D normal;
-    if (axis == "X") {
-        normal = Math::Vector3D(1, 0, 0);
-    } else if (axis == "Y") {
-        normal = Math::Vector3D(0, 1, 0);
-    } else {
-        normal = Math::Vector3D(0, 0, 1);
-    }
-    if (normal.dot(ray.getDirection()) > 0) {
-        normal = normal * -1;
-    }
     return true;
 }
 
@@ -140,9 +142,10 @@ RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
     if (!this->hits(ray))
         return newColor;
 
-    RayTracer::Math::Vector3D normal = this->bottom_side.cross(this->left_side);
+    RayTracer::Math::Vector3D normal((ray.getOrigin() + ray.getDirection() * getIntersectionPoint(ray)).getX() - this->origin.getX(),
+                                    (ray.getOrigin() + ray.getDirection() * getIntersectionPoint(ray)).getY() - this->origin.getY(),
+                                    (ray.getOrigin() + ray.getDirection() * getIntersectionPoint(ray)).getZ() - this->origin.getZ());
     normal.normalize();
-
     // Compute ambient color contribution
     RayTracer::Render::Color ambientColor(
         this->color.getR() * lights[0]->getBrightness(),
@@ -152,7 +155,6 @@ RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
     );
     newColor += ambientColor;
 
-    // Compute directional light color contribution
     for (const auto &light : lights) {
         if (light->getDirection() != RayTracer::Math::Vector3D(0, 0, 0)) {
             RayTracer::Math::Vector3D lightDirection = light->getDirection();
