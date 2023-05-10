@@ -114,9 +114,8 @@ double RayTracer::Primitives::Plane::getIntersectionPoint(View::Ray ray)
         return -1;
     }
     double t = originToPosition.dot(normal) / denom;
-    if (t < 0) {
+    if (t < 0)
         return -1;
-    }
     return t;
 }
 
@@ -125,6 +124,7 @@ double RayTracer::Primitives::Plane::getIntersectionPoint(View::Ray ray)
 bool RayTracer::Primitives::Plane::hits(View::Ray ray)
 {
     double t = getIntersectionPoint(ray);
+
     if (t < 0 || t > 100)
         return false;
     return true;
@@ -136,7 +136,8 @@ RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
     std::vector<std::unique_ptr<IPrimitive>> &primitives
 )
 {
-    RayTracer::Render::Color newColor(0, 0, 0, 1);
+    RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * this->getIntersectionPoint(ray);
+    RayTracer::Render::Color newColor(0, 0, 0, this->color.getA());
     RayTracer::Math::Point3D origin = ray.getOrigin();
 
     if (!this->hits(ray))
@@ -146,31 +147,49 @@ RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
                                     (ray.getOrigin() + ray.getDirection() * getIntersectionPoint(ray)).getY() - this->origin.getY(),
                                     (ray.getOrigin() + ray.getDirection() * getIntersectionPoint(ray)).getZ() - this->origin.getZ());
     normal.normalize();
-    // Compute ambient color contribution
-    RayTracer::Render::Color ambientColor(
-        this->color.getR() * lights[0]->getBrightness(),
-        this->color.getG() * lights[0]->getBrightness(),
-        this->color.getB() * lights[0]->getBrightness(),
-        this->color.getA()
-    );
-    newColor += ambientColor;
 
     for (const auto &light : lights) {
-        if (light->getDirection() != RayTracer::Math::Vector3D(0, 0, 0)) {
-            RayTracer::Math::Vector3D lightDirection = light->getDirection();
-            lightDirection.normalize();
-            double dot = normal.dot(lightDirection);
-            if (dot < 0)
-                dot = 0;
-            RayTracer::Render::Color lightColor(
-                this->color.getR() * light->getBrightness() * dot,
-                this->color.getG() * light->getBrightness() * dot,
-                this->color.getB() * light->getBrightness() * dot,
-                this->color.getA()
+        double brightness = light->getBrightness();
+        if (light->getDirection() == RayTracer::Math::Vector3D(0, 0, 0)) {
+            RayTracer::Render::Color ambientColor(
+                this->color.getR() * brightness,
+                this->color.getG() * brightness,
+                this->color.getB() * brightness,
+                this->color.getA() * brightness
             );
-            newColor += lightColor;
+            newColor += ambientColor;
+            continue;
+        }
+
+        RayTracer::Math::Vector3D lightDir = light->getDirection().normalize();
+        double dot = std::max(0.0, -1 * normal.dot(lightDir));
+        RayTracer::Render::Color lightColor(
+            this->color.getR() * dot * brightness,
+            this->color.getG() * dot * brightness,
+            this->color.getB() * dot * brightness,
+            this->color.getA() * dot * brightness
+        );
+
+        newColor += lightColor;
+
+        RayTracer::View::Ray shadowRay(hitPoint, light->getDirection());
+
+        for (const auto &primitive : primitives) {
+            if (primitive.get() == this)
+                break;
+            if (primitive->hits(shadowRay)) {
+                RayTracer::Render::Color shadowColor(
+                    -1 * lightColor.getR() * brightness,
+                    -1 * lightColor.getG() * brightness,
+                    -1 * lightColor.getB() * brightness,
+                    -1 * lightColor.getA() * brightness
+                );
+                newColor += shadowColor;
+                continue;
+            }
         }
     }
+
     return newColor;
 }
 
