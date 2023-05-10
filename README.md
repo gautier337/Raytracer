@@ -3,17 +3,25 @@
 This is our RayTracer project
 
 **Raytracer** **Project**
+
 This project is a Raytracer, which is a computer graphics technique used to create realistic images by simulating the behavior of light in a virtual environment.
 
 **Features**
+
 Our Raytracer project includes the following features:
 
 Primitives: sphere, plane, cone, cylinder, complex object like an ice cream.
+
 Transformations: Translation, Rotation, Scaling.
+
 Lights: Directional light, ambient light, drop shadow.
+
 Material: flat color.
+
 Scene config: add primitives, set up light, set up camera.
+
 Interface: we create a window, you can modify the quality and the colors of object directly inside the program, you can move the camera with Z/Q/S/D/LShift/Space and change rotation of camera with the arrows.
+
 
 **Architecture**
 
