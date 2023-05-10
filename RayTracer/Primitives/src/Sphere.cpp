@@ -119,13 +119,13 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     for (const auto &light : lights) {
         double brightness = light->getBrightness();
         if (light->getDirection() == RayTracer::Math::Vector3D(0, 0, 0)) {
-            RayTracer::Render::Color lightColor(
+            RayTracer::Render::Color ambientColor(
                 this->color.getR() * brightness,
                 this->color.getG() * brightness,
                 this->color.getB() * brightness,
                 this->color.getA()
             );
-            newColor += lightColor;
+            newColor += ambientColor;
             continue;
         }
 
@@ -156,7 +156,6 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
                 continue;
             }
         }
-
     }
 
     return newColor;
