@@ -23,7 +23,8 @@ namespace RayTracer {
             bool hits(View::Ray ray);
             Render::Color computeColor(
                 View::Ray ray,
-                std::vector<std::unique_ptr<ILights>> &lights
+                std::vector<std::unique_ptr<ILights>> &lights,
+                std::vector<std::unique_ptr<IPrimitive>> &primitives
             );
 
         protected:
