@@ -153,7 +153,7 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
                     -1 * lightColor.getA()
                 );
                 newColor += shadowColor;
-                break;
+                continue;
             }
         }
 
