@@ -149,6 +149,14 @@ bool &RayTracer::Math::Vector3D::operator==(const Vector3D &vector)
     return *result;
 }
 
+bool &RayTracer::Math::Vector3D::operator!=(const Vector3D &vector)
+{
+    bool *result = new bool;
+    *result = this->x != vector.getX() || this->y != vector.getY() ||
+        this->z != vector.getZ();
+    return *result;
+}
+
 RayTracer::Math::Vector3D &RayTracer::Math::Vector3D::operator+=(double value)
 {
     this->x += value;

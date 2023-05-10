@@ -137,6 +137,7 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
             this->color.getB() * dot * brightness,
             this->color.getA()
         );
+
         newColor += lightColor;
 
         RayTracer::View::Ray shadowRay(hitPoint, light->getDirection());

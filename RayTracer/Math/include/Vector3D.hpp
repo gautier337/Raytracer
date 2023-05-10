@@ -27,6 +27,7 @@ namespace RayTracer {
                 Vector3D &operator*(const Vector3D &vector);
                 Vector3D &operator/(const Vector3D &vector);
                 bool &operator==(const Vector3D &vector);
+                bool &operator!=(const Vector3D &vector);
                 Vector3D &operator+=(double value);
                 Vector3D &operator-=(double value);
                 Vector3D &operator*=(double value);

@@ -89,65 +89,42 @@ RayTracer::Primitives::Plane &RayTracer::Primitives::Plane::operator=(
 
 double RayTracer::Primitives::Plane::getIntersectionPoint(View::Ray ray)
 {
-    RayTracer::Math::Vector3D w(
-        this->origin.getX() - ray.getOrigin().getX(),
-        this->origin.getY() - ray.getOrigin().getY(),
-        this->origin.getZ() - ray.getOrigin().getZ()
-    );
-    double a = w.dot(ray.getDirection());
-    double b = ray.getDirection().dot(ray.getDirection());
-    double r = a / b;
-
-    if (r < 0)
+    Math::Vector3D normal;
+    if (axis == "X") {
+        normal = Math::Vector3D(1, 0, 0);
+    } else if (axis == "Y") {
+        normal = Math::Vector3D(0, 1, 0);
+    } else {
+        normal = Math::Vector3D(0, 0, 1);
+    }
+    if (normal.dot(ray.getDirection()) == 0) {
         return -1;
-
-    RayTracer::Math::Point3D p = ray.getOrigin() + (ray.getDirection() * r);
-    RayTracer::Math::Vector3D d(
-        p.getX() - this->origin.getX(),
-        p.getY() - this->origin.getY(),
-        p.getZ() - this->origin.getZ()
-    );
-
-    double ddota = d.dot(this->bottom_side);
-    if (ddota < 0 || ddota > this->bottom_side.dot(this->bottom_side))
+    }
+    double t = (position - ray.getDirection().dot(normal)) / ray.getDirection().dot(normal);
+    if (t < 0) {
         return -1;
-
-    double ddotb = d.dot(this->left_side);
-    if (ddotb < 0 || ddotb > this->left_side.dot(this->left_side))
-        return -1;
-
-    return r;
+    }
+    return t;
 }
 
-bool RayTracer::Primitives::Plane::hits(const RayTracer::View::Ray ray)
+bool RayTracer::Primitives::Plane::hits(View::Ray ray)
 {
-    RayTracer::Math::Vector3D w(
-        this->origin.getX() - ray.getOrigin().getX(),
-        this->origin.getY() - ray.getOrigin().getY(),
-        this->origin.getZ() - ray.getOrigin().getZ()
-    );
-    double a = w.dot(ray.getDirection());
-    double b = ray.getDirection().dot(ray.getDirection());
-    double r = a / b;
-
-    if (r < 0)
+    double t = getIntersectionPoint(ray);
+    if (t < 0) {
         return false;
-
-    RayTracer::Math::Point3D p = ray.getOrigin() + (ray.getDirection() * r);
-    RayTracer::Math::Vector3D d(
-        p.getX() - this->origin.getX(),
-        p.getY() - this->origin.getY(),
-        p.getZ() - this->origin.getZ()
-    );
-
-    double ddota = d.dot(this->bottom_side);
-    if (ddota < 0 || ddota > this->bottom_side.dot(this->bottom_side))
-        return false;
-
-    double ddotb = d.dot(this->left_side);
-    if (ddotb < 0 || ddotb > this->left_side.dot(this->left_side))
-        return false;
-
+    }
+    Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * t;
+    Math::Vector3D normal;
+    if (axis == "X") {
+        normal = Math::Vector3D(1, 0, 0);
+    } else if (axis == "Y") {
+        normal = Math::Vector3D(0, 1, 0);
+    } else {
+        normal = Math::Vector3D(0, 0, 1);
+    }
+    if (normal.dot(ray.getDirection()) > 0) {
+        normal = normal * -1;
+    }
     return true;
 }
 
@@ -166,26 +143,31 @@ RayTracer::Render::Color RayTracer::Primitives::Plane::computeColor(
     RayTracer::Math::Vector3D normal = this->bottom_side.cross(this->left_side);
     normal.normalize();
 
+    // Compute ambient color contribution
+    RayTracer::Render::Color ambientColor(
+        this->color.getR() * lights[0]->getBrightness(),
+        this->color.getG() * lights[0]->getBrightness(),
+        this->color.getB() * lights[0]->getBrightness(),
+        this->color.getA()
+    );
+    newColor += ambientColor;
+
+    // Compute directional light color contribution
     for (const auto &light : lights) {
-        if (light->getDirection() == RayTracer::Math::Vector3D(0, 0, 0)) {
+        if (light->getDirection() != RayTracer::Math::Vector3D(0, 0, 0)) {
+            RayTracer::Math::Vector3D lightDirection = light->getDirection();
+            lightDirection.normalize();
+            double dot = normal.dot(lightDirection);
+            if (dot < 0)
+                dot = 0;
             RayTracer::Render::Color lightColor(
-                this->color.getR() * light->getBrightness(),
-                this->color.getG() * light->getBrightness(),
-                this->color.getB() * light->getBrightness(),
+                this->color.getR() * light->getBrightness() * dot,
+                this->color.getG() * light->getBrightness() * dot,
+                this->color.getB() * light->getBrightness() * dot,
                 this->color.getA()
             );
             newColor += lightColor;
         }
-        RayTracer::Math::Vector3D lightDir = light->getDirection().normalize();
-        double dot = std::max(0.0, normal.dot(lightDir));
-        double brightness = light->getBrightness();
-        RayTracer::Render::Color lightColor(
-            this->color.getR() * dot * brightness,
-            this->color.getG() * dot * brightness,
-            this->color.getB() * dot * brightness,
-            this->color.getA()
-        );
-        newColor += lightColor;
     }
     return newColor;
 }

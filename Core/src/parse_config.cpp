@@ -30,8 +30,7 @@ libconfig::Setting &ParseConfig::get_setting(std::string name) const
         libconfig::Setting &camera = config.lookup(name);
         return camera;
     } catch (const libconfig::SettingNotFoundException &nfex) {
-        std::cerr << "Setting '" << name << "' not found in configuration file." << std::endl;
-        exit(ERROR);
+        throw std::runtime_error("Setting not found in configuration file.");
     } catch (const libconfig::SettingTypeException &tex) {
         std::cerr << "Setting type mismatch in configuration file." << std::endl;
         exit(ERROR);
