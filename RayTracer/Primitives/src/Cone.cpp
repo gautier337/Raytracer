@@ -142,7 +142,8 @@ bool RayTracer::Primitives::Cone::hits(View::Ray ray)
 
 RayTracer::Render::Color RayTracer::Primitives::Cone::computeColor(
     RayTracer::View::Ray ray,
-    std::vector<std::unique_ptr<ILights>> &lights
+    std::vector<std::unique_ptr<ILights>> &lights,
+    std::vector<std::unique_ptr<IPrimitive>> &primitives
 )
 {
     RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * this->closestT;

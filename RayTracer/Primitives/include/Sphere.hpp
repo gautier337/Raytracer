@@ -32,7 +32,8 @@ namespace RayTracer {
                 bool hits(View::Ray ray) override;
                 Render::Color computeColor(
                     View::Ray ray,
-                    std::vector<std::unique_ptr<ILights>> &lights
+                    std::vector<std::unique_ptr<ILights>> &lights,
+                    std::vector<std::unique_ptr<IPrimitive>> &primitives
                 ) override;
                 void translate(Math::Vector3D translation) override;
                 void rotate(Math::Vector3D axis, double angle) override;

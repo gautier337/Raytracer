@@ -75,7 +75,8 @@ bool RayTracer::CustomObject::hits(View::Ray ray)
 
 RayTracer::Render::Color RayTracer::CustomObject::computeColor(
     View::Ray ray,
-    std::vector<std::unique_ptr<ILights>> &lights
+    std::vector<std::unique_ptr<ILights>> &lights,
+    std::vector<std::unique_ptr<IPrimitive>> &primitives
 )
 {
     Render::Color color;
@@ -86,7 +87,7 @@ RayTracer::Render::Color RayTracer::CustomObject::computeColor(
         t = primitive->getIntersectionPoint(ray);
         if (t > 0 && (closestT == 0 || t < closestT)) {
             closestT = t;
-            color = primitive->computeColor(ray, lights);
+            color = primitive->computeColor(ray, lights, primitives);
         }
     }
     return color;

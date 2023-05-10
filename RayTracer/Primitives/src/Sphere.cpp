@@ -91,6 +91,8 @@ bool RayTracer::Primitives::Sphere::hits(View::Ray ray)
         (ray.getOrigin() - this->center).getZ()
     );
 
+    if (oc.dot(ray.getDirection()) > 0)
+        return false;
     double a = ray.getDirection().dot(ray.getDirection());
     double b = 2.0 * oc.dot(ray.getDirection());
     double c = oc.dot(oc) - this->radius * this->radius;
@@ -100,7 +102,8 @@ bool RayTracer::Primitives::Sphere::hits(View::Ray ray)
 
 RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::View::Ray ray,
-    std::vector<std::unique_ptr<ILights>> &lights
+    std::vector<std::unique_ptr<ILights>> &lights,
+    std::vector<std::unique_ptr<IPrimitive>> &primitives
 )
 {
     RayTracer::Math::Point3D hitPoint = ray.getOrigin() + ray.getDirection() * this->closestT;
@@ -114,27 +117,45 @@ RayTracer::Render::Color RayTracer::Primitives::Sphere::computeColor(
     RayTracer::Render::Color newColor(0, 0, 0, this->color.getA());
 
     for (const auto &light : lights) {
+        double brightness = light->getBrightness();
         if (light->getDirection() == RayTracer::Math::Vector3D(0, 0, 0)) {
             RayTracer::Render::Color lightColor(
-                this->color.getR() * light->getBrightness(),
-                this->color.getG() * light->getBrightness(),
-                this->color.getB() * light->getBrightness(),
+                this->color.getR() * brightness,
+                this->color.getG() * brightness,
+                this->color.getB() * brightness,
                 this->color.getA()
             );
             newColor += lightColor;
+            continue;
         }
-        RayTracer::Math::Vector3D lightDir = light->getDirection().normalize();
-        double dot = std::max(0.0, normal.dot(lightDir));
-        double brightness = light->getBrightness();
 
+        RayTracer::Math::Vector3D lightDir = light->getDirection().normalize();
+        double dot = std::max(0.0, -1 * normal.dot(lightDir));
         RayTracer::Render::Color lightColor(
             this->color.getR() * dot * brightness,
             this->color.getG() * dot * brightness,
             this->color.getB() * dot * brightness,
             this->color.getA()
         );
-
         newColor += lightColor;
+
+        RayTracer::View::Ray shadowRay(hitPoint, light->getDirection());
+
+        for (const auto &primitive : primitives) {
+            if (primitive.get() == this)
+                break;
+            if (primitive->hits(shadowRay)) {
+                RayTracer::Render::Color shadowColor(
+                    -1 * lightColor.getR() * brightness,
+                    -1 * lightColor.getG() * brightness,
+                    -1 * lightColor.getB() * brightness,
+                    -1 * lightColor.getA()
+                );
+                newColor += shadowColor;
+                break;
+            }
+        }
+
     }
 
     return newColor;

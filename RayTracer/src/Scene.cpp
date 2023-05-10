@@ -317,14 +317,14 @@ void RayTracer::Scene::render(int pixelSize, int width, int height)
 
             for (std::unique_ptr<IPrimitive> &primitive : sortedPrimitives) {
                 if (primitive->hits(ray)) {
-                    color = primitive->computeColor(ray, this->lights);
+                    color = primitive->computeColor(ray, this->lights, this->primitives);
                     break;
                 }
             }
 
             for (std::unique_ptr<CustomObject> &object : this->customObjects) {
                 if (object->hits(ray)) {
-                    color = object->computeColor(ray, this->lights);
+                    color = object->computeColor(ray, this->lights, this->primitives);
                     break;
                 }
             }
