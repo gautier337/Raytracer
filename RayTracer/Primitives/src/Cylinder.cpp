@@ -115,7 +115,8 @@ bool RayTracer::Primitives::Cylinder::hits(View::Ray ray)
 
 RayTracer::Render::Color RayTracer::Primitives::Cylinder::computeColor(
     RayTracer::View::Ray ray,
-    std::vector<std::unique_ptr<ILights>> &lights
+    std::vector<std::unique_ptr<ILights>> &lights,
+    std::vector<std::unique_ptr<IPrimitive>> &primitives
 )
 {
     RayTracer::Render::Color newColor(0, 0, 0, this->color.getA());

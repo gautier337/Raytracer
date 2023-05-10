@@ -35,8 +35,9 @@ namespace RayTracer {
                 double getIntersectionPoint(View::Ray ray) override;
                 bool hits(View::Ray ray);
                 Render::Color computeColor(
-                        View::Ray ray,
-                        std::vector<std::unique_ptr<ILights>> &lights
+                    View::Ray ray,
+                    std::vector<std::unique_ptr<ILights>> &lights,
+                    std::vector<std::unique_ptr<IPrimitive>> &primitives
                 ) override;
                 void translate(Math::Vector3D translation) override;
                 void rotate(Math::Vector3D axis, double angle) override;
