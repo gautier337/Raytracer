@@ -23,14 +23,26 @@ RayTracer::Scene::Scene(const ParseConfig &config) :
     try {
         try {
             auto &camera_config = config.get_setting("camera");
-            if (camera_config.exists("position")) {
+            if (camera_config.exists("position") && camera_config.exists("screen")) {
                 double x = config.getDoubleFromSetting(camera_config["position"]["x"]);
                 double y = config.getDoubleFromSetting(camera_config["position"]["y"]);
                 double z = config.getDoubleFromSetting(camera_config["position"]["z"]);
                 std::unique_ptr<Math::Point3D> position = this->factory.createPlugin<Point3DSignature>("Point3D", x, y, z);
-                std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D", -0.5, -0.5, 1);
-                std::unique_ptr<Math::Vector3D> bottom_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 1, 0, 0);
-                std::unique_ptr<Math::Vector3D> left_side = this->factory.createPlugin<Vector3DSignature>("Vector3D", 0, 1, 0);
+                std::unique_ptr<Math::Point3D> origin = this->factory.createPlugin<Point3DSignature>("Point3D",
+                    config.getDoubleFromSetting(camera_config["screen"]["origin"]["x"]),
+                    config.getDoubleFromSetting(camera_config["screen"]["origin"]["y"]),
+                    config.getDoubleFromSetting(camera_config["screen"]["origin"]["z"])
+                    );
+                std::unique_ptr<Math::Vector3D> bottom_side = this->factory.createPlugin<Vector3DSignature>("Vector3D",
+                    config.getDoubleFromSetting(camera_config["screen"]["bottom_side"]["x"]),
+                    config.getDoubleFromSetting(camera_config["screen"]["bottom_side"]["y"]),
+                    config.getDoubleFromSetting(camera_config["screen"]["bottom_side"]["z"])
+                    );
+                std::unique_ptr<Math::Vector3D> left_side = this->factory.createPlugin<Vector3DSignature>("Vector3D",
+                    config.getDoubleFromSetting(camera_config["screen"]["left_side"]["x"]),
+                    config.getDoubleFromSetting(camera_config["screen"]["left_side"]["y"]),
+                    config.getDoubleFromSetting(camera_config["screen"]["left_side"]["z"])
+                    );
                 std::unique_ptr<Render::Color> color = this->factory.createPlugin<ColorSignature>("Color", 0, 0, 0, 0);
                 std::unique_ptr<Math::Rectangle3D> screen = this->factory.createPlugin<Rectangle3DSignature>(
                     "Rectangle3D",
